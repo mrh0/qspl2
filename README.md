@@ -3,7 +3,7 @@ Quick Statement Programming Language
 
 # Language
 
-Variables:
+Variables & Values:
 ```
   x = 5; //x = 5
   
@@ -15,6 +15,9 @@ Variables:
   a = ["hi", 5]; //a = array("hi", 5)
   a[0]; //returns "hi"
   a[1]; //returns 5
+  
+  out "Hello World"[1]; //Prints 'e'
+  out "Hello World"[0,5]; //Prints 'Hello'
   
   c = (((x*4)/2)+2)
   
