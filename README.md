@@ -29,7 +29,7 @@ Functions:
   x(" World!"); //returns "Hello World!"
 ``` 
 Operators:
-
+```
 Math: '+ - * / % ^'
 
 Boolean: '&& || ! == < > <= >='
@@ -37,3 +37,4 @@ Boolean: '&& || ! == < > <= >='
 Contains: '?'
 
 Is Type: 'is'
+```
