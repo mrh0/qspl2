@@ -12,7 +12,7 @@ Variables & Values:
   
   y = (x = 1); //x and y = 1
   
-  a = ["hi", 5]; //a = array("hi", 5)
+  a = new ["hi", 5]; //a = array("hi", 5)
   a[0]; //returns "hi"
   a[1]; //returns 5
   
