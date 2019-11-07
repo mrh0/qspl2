@@ -21,20 +21,15 @@ Functions:
   //Define:
   
   x = func(arg1, arg2):
-  
     return "Hello"+arg1;
   
   //Call:
-  
   x(" World!"); //returns "Hello World!"
 ``` 
 Operators:
 ```
 Math: '+ - * / % ^'
-
 Boolean: '&& || ! == < > <= >='
-
 Contains: '?'
-
 Is Type: 'is'
 ```
