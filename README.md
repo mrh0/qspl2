@@ -4,7 +4,7 @@ Quick Statement Programming Language
 # Language
 
 Variables:
-
+```
   x = 5; //x = 5
   
   //parentheses important
@@ -15,9 +15,9 @@ Variables:
   a = ["hi", 5]; //a = array("hi", 5)
   
   c = (((x*4)/2)+2)
-
+```
 Functions:
-
+```
   //Define:
   
   x = func(arg1, arg2):
@@ -27,7 +27,7 @@ Functions:
   //Call:
   
   x(" World!"); //returns "Hello World!"
-  
+``` 
 Operators:
 
 Math: '+ - * / % ^'
