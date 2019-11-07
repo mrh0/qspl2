@@ -7,7 +7,7 @@ Variables:
 ```
   x = 5; //x = 5
   
-  //parentheses important
+  //parentheses important [WIP]
   x = (x-1); //x = 4
   
   y = (x = 1); //x and y = 1
