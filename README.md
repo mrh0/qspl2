@@ -16,6 +16,8 @@ Variables & Values:
   a[0]; //returns "hi"
   a[1]; //returns 5
   
+  k = new [new[5,4,3], new[4]];
+  
   out "Hello World"[1]; //Prints 'e'
   out "Hello World"[0,5]; //Prints 'Hello'
   
