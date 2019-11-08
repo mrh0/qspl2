@@ -147,28 +147,34 @@ public class ExpressionEvaluator {
 						v = vals.pop().multi(v);
 					else if (op.equals("/")) 
 						v = vals.pop().div(v);
+					else if (op.equals("%")) 
+						v = vals.pop().mod(v);
+					else if (op.equals("^")) 
+						v = vals.pop().pow(v);
 					else if (op.equals("==")) 
 						v = new TNumber(vals.pop().equals(v)?1:0);
+					else if (op.equals("!=")) 
+						v = new TNumber(vals.pop().equals(v)?0:1);
 					else if (op.equals("<"))
 						v = new TNumber(vals.pop().compare(v)==-1?1:0);
 					else if (op.equals(">")) 
 						v = new TNumber(vals.pop().compare(v)==1?1:0);
 					else if (op.equals("<=")) 
-						v = new TNumber(v.compare(vals.pop())<=0?1:0);
+						v = new TNumber(vals.pop().compare(v)<=0?1:0);
 					else if (op.equals(">=")) 
-						v = new TNumber(v.compare(vals.pop())>=0?1:0);
+						v = new TNumber(vals.pop().compare(v)>=0?1:0);
 					else if (op.equals("!")) 
 						v = new TNumber(v.bool()?0:1);
 					else if (op.equals("&&")) 
 						v = new TNumber(v.bool() && vals.pop().bool()?1:0);
 					else if (op.equals("||")) 
 						v = new TNumber(v.bool() || vals.pop().bool()?1:0);
-					else if (op.equals(".")) // Child Object
-						v = v;
-					else if (op.equals("..")) //Something
-						v = v;
+					else if (op.equals("&"))
+						v = new TNumber(v.intValue() & vals.pop().intValue());
+					else if (op.equals("|"))
+						v = new TNumber(v.intValue() | vals.pop().intValue());
 					else if (op.equals("?")) //Contains
-						v = new TNumber(v.contains(vals.pop())?1:0);
+						v = new TNumber(vals.pop().contains(v)?1:0);
 					else if (op.equals("is")) //is type
 						v = new TNumber((v.getType() == vals.pop().getType())?1:0);
 					else if (op.equals("as")) //as type

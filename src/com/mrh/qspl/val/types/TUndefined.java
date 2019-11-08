@@ -124,4 +124,9 @@ public class TUndefined implements ValueType<Object>{
 			return new TString(this.toString());
 		return TUndefined.getInstance();
 	}
+
+	@Override
+	public int intValue() {
+		return -1;
+	}
 }

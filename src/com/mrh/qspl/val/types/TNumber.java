@@ -2,7 +2,7 @@ package com.mrh.qspl.val.types;
 
 import com.mrh.qspl.val.ValueType;
 
-public class TNumber implements ValueType<Double>{//, Arithmetic<TString, TString>
+public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 
 	final double value;
 	
@@ -136,8 +136,7 @@ public class TNumber implements ValueType<Double>{//, Arithmetic<TString, TStrin
 
 	@Override
 	public ValueType accessor(ValueType[] v) {
-		// TODO Auto-generated method stub
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -152,5 +151,15 @@ public class TNumber implements ValueType<Double>{//, Arithmetic<TString, TStrin
 		if(type == Types.STRING)
 			return new TString(this.toString());
 		return TUndefined.getInstance();
+	}
+
+	@Override
+	public int intValue() {
+		return (int)Math.round(value);
+	}
+
+	@Override
+	public int compareTo(ValueType o) {
+		return compare(o);
 	}
 }

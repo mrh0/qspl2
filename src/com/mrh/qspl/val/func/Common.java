@@ -159,5 +159,69 @@ public class Common {
 			return _this;
 		};
 		s.setVariable("collapse", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY && args.size() == 2) {
+				TArray a = (TArray) _this;
+				if(args.get(0).getType() == Types.NUMBER)
+					a.setIndex(args.get(0).intValue(), args.get(1));
+				if(args.get(0).getType() == Types.ARRAY) {
+					TArray ar = (TArray) args.get(0);
+					for(int i = 0; i < ar.getSize(); i++) {
+						a.setIndex(ar.getIndex(i).intValue(), args.get(1));
+					}
+				}
+			}
+			return _this;
+		};
+		s.setVariable("set", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY && args.size() == 2) {
+				TArray a = (TArray) _this;
+				a.getAll().addAll(args);
+			}
+			return _this;
+		};
+		s.setVariable("add", new Var(new TFunc().define(f), true));
+		s.setVariable("push", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY) {
+				TArray a = (TArray) _this;
+				return a.getAll().remove(a.getSize()-1);
+			}
+			return _this;
+		};
+		s.setVariable("pop", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY) {
+				TArray a = (TArray) _this;
+				return a.getAll().remove(0);
+			}
+			return TUndefined.getInstance();
+		};
+		s.setVariable("dequeue", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY && args.size() == 1) {
+				TArray a = (TArray) _this;
+				return a.getAll().remove(args.get(0).intValue());
+			}
+			return TUndefined.getInstance();
+		};
+		s.setVariable("removeAt", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY && args.size() == 1) {
+				TArray a = (TArray) _this;
+				ValueType vt = a.find(args.get(0));
+				if(!vt.isUndefined())
+					a.getAll().remove(vt);
+			}
+			return _this;
+		};
+		s.setVariable("remove", new Var(new TFunc().define(f), true));
 	}
 }

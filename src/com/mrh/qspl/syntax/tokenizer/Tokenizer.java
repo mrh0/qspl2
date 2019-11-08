@@ -43,10 +43,23 @@ public class Tokenizer {
 	
 	public ArrayList<Token> toTokens(String s) {
 		ts = new ArrayList<Token>();
-		char c;
+		char c = ' ';
+		boolean inComment = false;
 		
 		for(int i = 0; i < s.length(); i++) {
 			c = s.charAt(i);
+			String cs = ((""+c)+(i+1<s.length()?s.charAt(i+1):' '));
+			if(Tokens.isOpenComment(cs))
+				inComment = true;
+			if(Tokens.isCloseComment(cs)) {
+				i++;
+				inComment = false;
+				continue;
+			}
+			if(inComment) {
+				continue;
+			}
+			
 			if(c == '\n')
 				curLine++;
 			if(Tokens.isEndOfStatement(c)) {

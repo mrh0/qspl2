@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mrh.qspl.val.ValueType;
 
-public class TArray implements ValueType{
+public class TArray implements ValueType, Comparable<ValueType>{
 	private ArrayList<ValueType> values;
 	
 	public TArray() {
@@ -37,7 +37,10 @@ public class TArray implements ValueType{
 
 	@Override
 	public ValueType add(ValueType v) {
-		values.add(v);
+		if(v.getType() == Types.ARRAY)
+			values.addAll(((TArray)v).getAll());
+		else
+			values.add(v);
 		return this;
 	}
 
@@ -101,7 +104,6 @@ public class TArray implements ValueType{
 
 	@Override
 	public int compare(ValueType v) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -116,13 +118,11 @@ public class TArray implements ValueType{
 
 	@Override
 	public ValueType childObject(ValueType v) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ValueType[] childObjects(ValueType v) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -153,7 +153,7 @@ public class TArray implements ValueType{
 		if(v.length == 1)
 			return values.get((int)Math.round((double)v[0].get()));
 		if(v.length == 2) {
-			return new TArray(values.subList((int)Math.round((double)v[0].get()), (int)Math.round((double)v[1].get())));
+			return new TArray(values.subList((int)Math.round((double)v[0].get()), (int)Math.round((double)v[1].get()+1)));
 		}
 		return TUndefined.getInstance();
 	}
@@ -186,6 +186,17 @@ public class TArray implements ValueType{
 	public ArrayList<ValueType> getAll(){
 		return values;
 	}
+	
+	public double sum() {
+		double d = 0;
+		for(ValueType vt : values) {
+			if(vt.getType() == Types.ARRAY)
+				d += ((TArray)vt).sum();
+			if(vt.getType() == Types.NUMBER)
+				d += ((TNumber)vt).get();
+		}
+		return d;
+	}
 
 	@Override
 	public ValueType toType(int type) {
@@ -194,5 +205,15 @@ public class TArray implements ValueType{
 		if(type == Types.STRING)
 			return new TString(this.toString());
 		return TUndefined.getInstance();
+	}
+
+	@Override
+	public int intValue() {
+		return -1;
+	}
+
+	@Override
+	public int compareTo(ValueType o) {
+		return 0;
 	}
 }

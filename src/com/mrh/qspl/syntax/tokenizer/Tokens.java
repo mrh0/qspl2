@@ -123,4 +123,12 @@ public class Tokens {
 	public static boolean isComment(String c) {
 		return c.equals("//");
 	}
+	
+	public static boolean isOpenComment(String s) {
+		return s.equals("/*");
+	}
+	
+	public static boolean isCloseComment(String s) {
+		return s.equals("*/");
+	}
 }

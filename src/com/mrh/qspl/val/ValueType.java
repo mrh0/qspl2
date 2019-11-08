@@ -4,4 +4,5 @@ public interface ValueType<T> extends Arithmetic {
 	public T get();
 	public ValueType duplicate();
 	public boolean isUndefined();
+	public int intValue();
 }

@@ -2,7 +2,7 @@ package com.mrh.qspl.val.types;
 
 import com.mrh.qspl.val.ValueType;
 
-public class TString implements ValueType<String>{
+public class TString implements ValueType<String>, Comparable<ValueType>{
 
 	final String s;
 	
@@ -128,7 +128,7 @@ public class TString implements ValueType<String>{
 		if(v.length == 1)
 			return new TString(s.charAt((int)Math.round((double)v[0].get()))+"");
 		if(v.length >= 2)
-			return new TString(s.substring((int)Math.round((double)v[0].get()), (int)Math.round((double)v[1].get()))+"");
+			return new TString(s.substring((int)Math.round((double)v[0].get()), (int)Math.round((double)v[1].get()+1))+"");
 		return null;
 	}
 
@@ -144,5 +144,16 @@ public class TString implements ValueType<String>{
 		if(type == Types.NUMBER)
 			return new TNumber(Double.parseDouble(s));
 		return TUndefined.getInstance();
+	}
+
+	@Override
+	public int intValue() {
+		return -1;
+	}
+
+	@Override
+	public int compareTo(ValueType o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

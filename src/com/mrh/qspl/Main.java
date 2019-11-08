@@ -38,28 +38,4 @@ public class Main {
 		}
 		return r;
 	}
-
-	//Old
-	public static void test() {
-		
-		Tokenizer t = new Tokenizer();
-		VM vm = new VM(t);
-		//t.toTokens("hello == 1221*true, hello(hola) 55d aa3 'hello' ] \"pleb\"l \"\'pl\'eb\" 12");
-		String code = readFromFile("C:\\MRHLang\\arrays.txt");
-		t.toTokens(code);
-		vm.setValue("x", new TFunc());
-		//ExpressionEvaluator ev = new ExpressionEvaluator(vm, t);
-		//System.out.println(t.toString());
-		System.out.println("[PROGRAM OUTPUT]:");
-		vm.eval();
-	}
 }
-/*
- * : = if{
- * :: = while{
- * ; = end
- * lower indent = }
- * 
- * true:: ... = while(true){...}
- * x < 5: ... = if(x < 5){...}
- */

@@ -115,7 +115,6 @@ public class TFunc implements ValueType{
 
 	@Override
 	public ValueType accessor(ValueType[] v) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -131,5 +130,10 @@ public class TFunc implements ValueType{
 		if(type == Types.STRING)
 			return new TString(this.toString());
 		return TUndefined.getInstance();
+	}
+
+	@Override
+	public int intValue() {
+		return -1;
 	}
 }
