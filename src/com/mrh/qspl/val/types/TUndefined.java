@@ -115,4 +115,13 @@ public class TUndefined implements ValueType<Object>{
 	public int getSize() {
 		return 0;
 	}
+	
+	@Override
+	public ValueType toType(int type) {
+		if(type == Types.UNDEFINED)
+			return this;
+		if(type == Types.STRING)
+			return new TString(this.toString());
+		return TUndefined.getInstance();
+	}
 }

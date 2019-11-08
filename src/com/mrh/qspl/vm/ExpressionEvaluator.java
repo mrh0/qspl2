@@ -167,6 +167,8 @@ public class ExpressionEvaluator {
 						v = new TNumber(v.contains(vals.pop())?1:0);
 					else if (op.equals("is")) //is type
 						v = new TNumber((v.getType() == vals.pop().getType())?1:0);
+					else if (op.equals("as")) //as type
+						v = vals.pop().toType(v.getType());
 					else if (op.equals("=")) {
 						Var k = vars.peek();
 						//System.out.println("Set var: " + k + " to " + v);

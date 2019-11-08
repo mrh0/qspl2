@@ -32,4 +32,6 @@ public interface Arithmetic {
 	public int getType();
 	
 	public int getSize();
+	
+	public ValueType toType(int type);
 }

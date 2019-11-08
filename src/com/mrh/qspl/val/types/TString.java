@@ -136,4 +136,13 @@ public class TString implements ValueType<String>{
 	public int getSize() {
 		return s.length();
 	}
+	
+	@Override
+	public ValueType toType(int type) {
+		if(type == Types.STRING)
+			return this;
+		if(type == Types.NUMBER)
+			return new TNumber(Double.parseDouble(s));
+		return TUndefined.getInstance();
+	}
 }

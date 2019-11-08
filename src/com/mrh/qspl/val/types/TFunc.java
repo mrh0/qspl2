@@ -3,13 +3,29 @@ package com.mrh.qspl.val.types;
 import java.util.ArrayList;
 
 import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.func.IFunc;
 import com.mrh.qspl.vm.Scope;
 import com.mrh.qspl.vm.VM;
 
 public class TFunc implements ValueType{
 
+	private IFunc internal = null;
+	
+	public TFunc define(IFunc f) {
+		internal = f;
+		return this;
+	}
+	
 	public ValueType execute(ArrayList<ValueType> args, VM vm) {
+		if(internal != null)
+			return internal.execute(args, vm);
 		return TUndefined.getInstance();
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "internal:func()";
 	}
 	
 	@Override
@@ -106,5 +122,14 @@ public class TFunc implements ValueType{
 	@Override
 	public int getSize() {
 		return 0;
+	}
+	
+	@Override
+	public ValueType toType(int type) {
+		if(type == Types.FUNC)
+			return this;
+		if(type == Types.STRING)
+			return new TString(this.toString());
+		return TUndefined.getInstance();
 	}
 }

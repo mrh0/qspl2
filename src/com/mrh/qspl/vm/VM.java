@@ -3,6 +3,7 @@ package com.mrh.qspl.vm;
 import java.util.Stack;
 
 import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.func.Common;
 import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.var.Var;
 
@@ -12,6 +13,7 @@ public class VM {
 	public VM() {
 		scopeStack = new Stack<Scope>();
 		rootScope = createNewScope("root");
+		Common.defineCommons(rootScope);
 	}
 	
 	public Scope getCurrentScope() {

@@ -18,6 +18,17 @@ public class TUserFunc extends TFunc{
 	}
 	
 	@Override
+	public String toString() {
+		String r = "";
+		for(int i = 0; i < paramaterList.length; i++) {
+			r += paramaterList[i];
+			if(i+1 < paramaterList.length)
+				r += ",";
+		}
+		return "user:func("+r+")";
+	}
+	
+	@Override
 	public ValueType execute(ArrayList<ValueType> args, VM vm) {
 		Scope scope = vm.getCurrentScope();
 		for(int i = 0; i < paramaterList.length; i++) {

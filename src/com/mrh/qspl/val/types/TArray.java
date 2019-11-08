@@ -1,6 +1,7 @@
 package com.mrh.qspl.val.types;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.mrh.qspl.val.ValueType;
 
@@ -16,6 +17,12 @@ public class TArray implements ValueType{
 	}
 	
 	public TArray(ValueType[] v) {
+		values = new ArrayList<ValueType>();
+		for(ValueType k : v)
+			values.add(k);
+	}
+	
+	public TArray(List<ValueType> v) {
 		values = new ArrayList<ValueType>();
 		for(ValueType k : v)
 			values.add(k);
@@ -143,7 +150,12 @@ public class TArray implements ValueType{
 	public ValueType accessor(ValueType[] v) {
 		if(v.length == 0)
 			return new TNumber(getSize());
-		return values.get((int)Math.round((double)v[0].get()));
+		if(v.length == 1)
+			return values.get((int)Math.round((double)v[0].get()));
+		if(v.length == 2) {
+			return new TArray(values.subList((int)Math.round((double)v[0].get()), (int)Math.round((double)v[1].get())));
+		}
+		return TUndefined.getInstance();
 	}
 	
 	@Override
@@ -164,5 +176,14 @@ public class TArray implements ValueType{
 	
 	public ValueType getIndex(int i) {
 		return values.get(i);
+	}
+
+	@Override
+	public ValueType toType(int type) {
+		if(type == Types.ARRAY)
+			return this;
+		if(type == Types.STRING)
+			return new TString(this.toString());
+		return TUndefined.getInstance();
 	}
 }

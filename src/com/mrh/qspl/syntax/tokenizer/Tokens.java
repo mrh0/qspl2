@@ -115,6 +115,8 @@ public class Tokens {
 	public static TokenType tokenSwapType(String t, TokenType prev) {
 		if(t.equals("is"))
 			return TokenType.operator;
+		if(t.equals("as"))
+			return TokenType.operator;
 		return prev;
 	}
 	

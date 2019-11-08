@@ -144,4 +144,13 @@ public class TNumber implements ValueType<Double>{//, Arithmetic<TString, TStrin
 	public int getSize() {
 		return 0;
 	}
+	
+	@Override
+	public ValueType toType(int type) {
+		if(type == Types.NUMBER)
+			return this;
+		if(type == Types.STRING)
+			return new TString(this.toString());
+		return TUndefined.getInstance();
+	}
 }
