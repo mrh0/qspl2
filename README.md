@@ -1,5 +1,5 @@
 # qspl
-Quick Statement Programming Language v1.1
+Quick Statement Programming Language v1.3
 
 # Language
 
