@@ -60,6 +60,16 @@ x::
   out "Hello!";
 ```
 
+Predefined:
+```
+true, false,
+NUMBER, STRING, ARRAY, OBJECT, FUNCTION,
+UNDEFINED, UNDEF, null //All same.
+
+print(string), println(string)
+min(...), max(...), clamp(n, lower, upper), random(lower, upper)
+```
+
 # License
 
 Available under MIT the license more info at: https://tldrlegal.com/license/mit-license
