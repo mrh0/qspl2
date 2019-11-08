@@ -66,7 +66,11 @@ NUMBER, STRING, ARRAY, OBJECT, FUNCTION,
 UNDEFINED, UNDEF, null //All same.
 
 print(string), println(string)
-min(...), max(...), clamp(n, lower, upper), random(lower, upper)
+min(...), max(...), clamp(n, lower, upper), 
+random(lower, upper), 
+round(n), sqrt(n), 
+sin(n), cos(n), tan(n), asin(n), acos(n), atan(n),
+valueOf(string) //get value of variable with name
 ```
 
 # License
