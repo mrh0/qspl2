@@ -25,6 +25,7 @@ Variables & Values:
   
   text = "Hi my name is MrH.";
   out j/" "; //Prints [Hi,my,name,is,MrH.]
+  out j[]; //Prints size (5)
   out j[2]; //Prints 'name'
   
   CONSTANTVALUE = 5; //Constant when variable name is all capital letters
