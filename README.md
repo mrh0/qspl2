@@ -18,10 +18,13 @@ a = new ["hi", 5]; //a = array("hi", 5)
 a[0]; //returns "hi"
 a[1]; //returns 5
 
-k = new [new[5,4,3], new[4]];
+k = new [new[5,4,3], new[4], new [2,7]];
+out k[1]; //Prints [4]
+out k[2][1]; //Prints 7
+out k[0,1]; //Prints [[5,4,3], [4]]
 
 out "Hello World"[1]; //Prints 'e'
-out "Hello World"[0,5]; //Prints 'Hello'
+out "Hello World"[0,4]; //Prints 'Hello'
 
 text = "Hi my name is MrH.";
 out j/" "; //Prints [Hi,my,name,is,MrH.]
@@ -46,9 +49,9 @@ x = 5;
 out x double() double(); //Prints 20
 
 array = new [1,2,3,4];
-x = func(o,i,a):
+func(o,i,a):
   exit (o+1);
-out array map(x); //Prints [2,3,4,5]
+out array map(prev); //Prints [2,3,4,5]
 ``` 
 Operators:
 ```
@@ -65,6 +68,7 @@ out a + 4; //Prints [5.0,3.0,2.0,1.0,9.0,4.0]
 out a - 3; //Prints [5.0,2.0,1.0,9.0,4.0]
 out a / 1; //Prints [5.0,1.0,9.0,4.0]
 out a * 2; //Prints [10.0,2.0,18.0,8.0]
+out a[]; //Prints size (4)
 ```
 Flow control:
 ```
@@ -99,6 +103,7 @@ Predefined:
 ```
 //constants:
 true, false,
+prev, else,
 NUMBER, STRING, ARRAY, OBJECT, FUNCTION,
 UNDEFINED, UNDEF, null //All same.
 
