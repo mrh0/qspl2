@@ -38,6 +38,12 @@ Functions:
   
   //Call:
   x(" World!"); //returns "Hello World!"
+  
+  //Chain:
+  double = func():
+	exit (this*2);
+  x = 5;
+  out x double() double(); //Prints 20
 ``` 
 Operators:
 ```
@@ -60,7 +66,7 @@ x::
   
 j = 5;
 out prev; //prints result of previous statement (5)
-j = 0;
+j = false;
 out else; //prints not result of previous statement (1)
 
 //Prints "Bye":
