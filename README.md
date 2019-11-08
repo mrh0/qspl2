@@ -109,16 +109,23 @@ NUMBER, STRING, ARRAY, OBJECT, FUNCTION,
 UNDEFINED, UNDEF, null //All same.
 
 //functions:
-print(string), println(string)
+print(string), println(string), read(type)
 min(...), max(...), clamp(n, lower, upper), 
 random(lower, upper), 
-round(n), sqrt(n), 
+round(n), sqrt(n), abs(n),
 sin(n), cos(n), tan(n), asin(n), acos(n), atan(n),
 valueOf(string) //Get value of variable with name
 
 //chain functions:
 map(func(value, index, array)) //On Arrays and Strings, returns Array
 collapse() //On Arrays, returns String
+```
+Miscellaneous:
+```
+//One Line Comment.
+/* Multi
+Line
+Comment */
 ```
 
 # License
