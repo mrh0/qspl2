@@ -53,7 +53,14 @@ Contains: '?'
 Is type: 'is'
 As type: 'as'
 ```
-
+Arrays:
+```
+out a = new [5,3,2,1,9]; //Prints [5.0,3.0,2.0,1.0,9.0]
+out a + 4; //Prints [5.0,3.0,2.0,1.0,9.0,4.0]
+out a - 3; //Prints [5.0,2.0,1.0,9.0,4.0]
+out a / 1; //Prints [5.0,1.0,9.0,4.0]
+out a * 2; //Prints [10.0,2.0,18.0,8.0]
+```
 Flow control:
 ```
 //If x print 'Hello!'
