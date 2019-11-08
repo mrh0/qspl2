@@ -16,9 +16,9 @@ public class TFunc implements ValueType{
 		return this;
 	}
 	
-	public ValueType execute(ArrayList<ValueType> args, VM vm) {
+	public ValueType execute(ArrayList<ValueType> args, VM vm, ValueType pThis) {
 		if(internal != null)
-			return internal.execute(args, vm);
+			return internal.execute(args, vm, pThis);
 		return TUndefined.getInstance();
 	}
 	

@@ -51,38 +51,38 @@ public class TArray implements ValueType{
 
 	@Override
 	public ValueType multi(ValueType v) {
-		// TODO Auto-generated method stub
-		return null;
+		for(int i = 0; i < getSize(); i++) {
+			values.set(i, values.get(i).multi(v));
+		}
+		return this;
 	}
 
 	@Override
 	public ValueType div(ValueType v) {
-		// TODO Auto-generated method stub
-		return null;
+		int index  = (int)Math.round((double)v.get());
+		if(index < getSize() && index >= 0)
+			values.remove(index);
+		return this;
 	}
 
 	@Override
 	public ValueType mod(ValueType v) {
-		// TODO Auto-generated method stub
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType pow(ValueType v) {
-		// TODO Auto-generated method stub
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType root() {
-		// TODO Auto-generated method stub
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public boolean bool() {
-		// TODO Auto-generated method stub
-		return false;
+		return getSize() > 0;
 	}
 
 	@Override
@@ -176,6 +176,15 @@ public class TArray implements ValueType{
 	
 	public ValueType getIndex(int i) {
 		return values.get(i);
+	}
+	
+	public ValueType setIndex(int i, ValueType v) {
+		values.set(i, v);
+		return this;
+	}
+	
+	public ArrayList<ValueType> getAll(){
+		return values;
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class QSPL {
 	
 	public QSPL() {
 		tokens = new Tokenizer();
-		vm = new VM();
+		vm = new VM(tokens);
 	}
 	
 	public QSPL insertCode(String c) {
@@ -38,8 +38,7 @@ public class QSPL {
 	}
 	
 	public boolean execute() {
-		ExpressionEvaluator ev = new ExpressionEvaluator(vm, tokens);
-		ev.eval();
+		vm.eval();
 		return true;
 	}
 }

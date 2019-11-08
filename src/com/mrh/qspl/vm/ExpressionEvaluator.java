@@ -28,14 +28,14 @@ import com.mrh.qspl.vm.stacks.ValStack;
 
 public class ExpressionEvaluator {
 	private Stack<String> ops;
-	private ValStack vals;
+	protected ValStack vals;
 	private Stack<Var> vars;
 	private Stack<TokenType> types;
 	private BracketStack brackets;
 	private VM vm;
 	private Tokenizer tokens;
 	private boolean breakCalled;
-	private boolean exitCalled;
+	protected boolean exitCalled;
 	
 	public ExpressionEvaluator(VM vm, Tokenizer tokens) {
 		this.vm = vm;
@@ -56,7 +56,7 @@ public class ExpressionEvaluator {
 		vars.pop();
 	}
 	
-	private boolean evalStatement(Statement statement, boolean oneliner) {
+	private boolean evalStatement(Statement statement, boolean oneliner, ValueType previousResult) {
 		ops = new Stack<String>();
 		vals = new ValStack(this);
 		vars = new Stack<Var>();
@@ -119,15 +119,19 @@ public class ExpressionEvaluator {
 					if(bi.getPrev() != null && bi.getPrev() instanceof TFunc) {
 						if(!prev.getToken().equals("("))
 							bi.add(vals.pop());
-						vm.createNewScope("func:"+bi);
-						ValueType rv = ((TFunc) bi.getPrev()).execute(bi.getParameters(), vm);
+						ValueType pThis = TUndefined.getInstance();
+						if(!vals.isEmpty())
+							pThis = vals.pop();
+						vm.executeFunction((TFunc) bi.getPrev(), bi.getParameters(), pThis);
+						/*vm.createNewScope("func:"+bi);
+						ValueType rv = ((TFunc) bi.getPrev()).execute(bi.getParameters(), vm, pThis);
 						if(rv != null)
 							vals.push(rv);
 						else {
 							walkThrough(((TUserFunc) bi.getPrev()).getRefBlock());
 							exitCalled = false;
 						}
-						vm.popScope();
+						vm.popScope();*/
 						
 					}
 				}
@@ -160,9 +164,9 @@ public class ExpressionEvaluator {
 					else if (op.equals("||")) 
 						v = new TNumber(v.bool() || vals.pop().bool()?1:0);
 					else if (op.equals(".")) // Child Object
-						v = TUndefined.getInstance();
+						v = v;
 					else if (op.equals("..")) //Something
-						v = TUndefined.getInstance();
+						v = v;
 					else if (op.equals("?")) //Contains
 						v = new TNumber(v.contains(vals.pop())?1:0);
 					else if (op.equals("is")) //is type
@@ -194,6 +198,12 @@ public class ExpressionEvaluator {
 				if(s.equals("exit")) {
 					exitCalled = true;
 				}
+				if(s.equals("prev")) {
+					vals.push(previousResult);
+				}
+				if(s.equals("else")) {
+					vals.push(new TNumber(previousResult.bool()?0:1));
+				}
 				if(s.equals("break")) {
 					//System.out.println("[BREAK]");
 					breakCalled = true;
@@ -224,11 +234,13 @@ public class ExpressionEvaluator {
 		return vals.isEmpty() && vars.isEmpty() && ops.isEmpty();
 	}
 
-	private void walkThrough(Block b) {
+	protected void walkThrough(Block b) {
+		ValueType previousResult = TUndefined.getInstance();
 		ArrayList<Statement> a = b.getAll();
 		for(int i = 0; i < a.size() && !exitCalled; i++) {
 			Statement s = a.get(i);
-			boolean ss = evalStatement(s, false);
+			boolean ss = evalStatement(s, false, previousResult);
+			previousResult = vals.peek();
 			if(ss && s.hasNext())
 				walkThrough(s.getNext());
 			if(s.getEndType() == StatementEndType.WHILE && ss && !breakCalled && !exitCalled) {

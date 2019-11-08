@@ -29,10 +29,11 @@ public class TUserFunc extends TFunc{
 	}
 	
 	@Override
-	public ValueType execute(ArrayList<ValueType> args, VM vm) {
+	public ValueType execute(ArrayList<ValueType> args, VM vm, ValueType pThis) {
 		Scope scope = vm.getCurrentScope();
+		scope.setVariable("this", new Var(pThis, true));
 		for(int i = 0; i < paramaterList.length; i++) {
-			scope.setVariable(paramaterList[i], new Var((i < args.size())?args.get(i):TUndefined.getInstance()));
+			scope.setVariable(paramaterList[i], new Var((i < args.size())?args.get(i):TUndefined.getInstance(), false));
 		}
 		return null;
 	}
