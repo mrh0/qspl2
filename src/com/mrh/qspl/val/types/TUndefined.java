@@ -110,4 +110,9 @@ public class TUndefined implements ValueType<Object>{
 	public ValueType accessor(ValueType[] v) {
 		return getInstance();
 	}
+
+	@Override
+	public int getSize() {
+		return 0;
+	}
 }

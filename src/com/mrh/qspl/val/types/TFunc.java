@@ -9,7 +9,7 @@ import com.mrh.qspl.vm.VM;
 public class TFunc implements ValueType{
 
 	public ValueType execute(ArrayList<ValueType> args, VM vm) {
-		return new TNumber(25);//new TNumber((double)args.get(0).get()*(double)args.get(1).get());
+		return TUndefined.getInstance();
 	}
 	
 	@Override
@@ -101,5 +101,10 @@ public class TFunc implements ValueType{
 	public ValueType accessor(ValueType[] v) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int getSize() {
+		return 0;
 	}
 }

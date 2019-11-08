@@ -11,7 +11,7 @@ public class Tokens {
 		none			//nothing
 	}
 	
-	public static String[] keywords = {"out", "return", "exit", "else", "break", "continue", "as", "in", "var", "return", "func", "num", "str", "obj", "new"};
+	public static String[] keywords = {"out", "exit", "else", "break", "continue", "as", "in", "func", "new"};
 	
 	public static boolean isKeyword(String s) {
 		for(String x : keywords)

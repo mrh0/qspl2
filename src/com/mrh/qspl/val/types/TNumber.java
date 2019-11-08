@@ -139,4 +139,9 @@ public class TNumber implements ValueType<Double>{//, Arithmetic<TString, TStrin
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public int getSize() {
+		return 0;
+	}
 }

@@ -30,4 +30,6 @@ public interface Arithmetic {
 	public ValueType accessor(ValueType[] v);
 	
 	public int getType();
+	
+	public int getSize();
 }

@@ -80,8 +80,16 @@ public class TArray implements ValueType{
 
 	@Override
 	public boolean equals(ValueType v) {
-		// TODO Auto-generated method stub
-		return false;
+		if(!(v instanceof TArray))
+			return false;
+		if(getSize() != v.getSize())
+			return false;
+		TArray va = (TArray)v;
+		for(int i = 0; i < getSize(); i++) {
+			if(!va.getIndex(i).equals(getIndex(i)))
+				return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -92,7 +100,10 @@ public class TArray implements ValueType{
 
 	@Override
 	public boolean contains(ValueType v) {
-		// TODO Auto-generated method stub
+		for(int i = 0; i < getSize(); i++) {
+			if(v.equals(getIndex(i)))
+				return true;
+		}
 		return false;
 	}
 
@@ -120,7 +131,6 @@ public class TArray implements ValueType{
 
 	@Override
 	public ValueType duplicate() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -131,6 +141,8 @@ public class TArray implements ValueType{
 
 	@Override
 	public ValueType accessor(ValueType[] v) {
+		if(v.length == 0)
+			return new TNumber(getSize());
 		return values.get((int)Math.round((double)v[0].get()));
 	}
 	
@@ -143,5 +155,14 @@ public class TArray implements ValueType{
 				r += ",";
 		}
 		return r+"]";
+	}
+
+	@Override
+	public int getSize() {
+		return values.size();
+	}
+	
+	public ValueType getIndex(int i) {
+		return values.get(i);
 	}
 }

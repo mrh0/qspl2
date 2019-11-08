@@ -21,6 +21,11 @@ import com.mrh.qspl.vm.stacks.BracketItem;
 import com.mrh.qspl.vm.stacks.BracketStack;
 import com.mrh.qspl.vm.stacks.ValStack;
 
+/**
+ * Expression Evaluator.
+ * @author MRH0
+ */
+
 public class ExpressionEvaluator {
 	private Stack<String> ops;
 	private ValStack vals;
@@ -161,7 +166,7 @@ public class ExpressionEvaluator {
 					else if (op.equals("?")) //Contains
 						v = new TNumber(v.contains(vals.pop())?1:0);
 					else if (op.equals("is")) //is type
-						v = new TNumber(v.contains(vals.pop())?1:0);
+						v = new TNumber((v.getType() == vals.pop().getType())?1:0);
 					else if (op.equals("=")) {
 						Var k = vars.peek();
 						//System.out.println("Set var: " + k + " to " + v);

@@ -49,8 +49,13 @@ public class TString implements ValueType<String>{
 
 	@Override
 	public ValueType div(ValueType v) {
-		if(v instanceof TString) 
-			return new TString(s.replaceAll((String)v.get(), ""));
+		if(v instanceof TString) {
+			String[] k = s.split((String)v.get());
+			ValueType[] j = new ValueType[k.length];
+			for(int i = 0; i < k.length; i++)
+				j[i] = new TString(k[i]);
+			return new TArray(j);
+		}
 		return null;
 	}
 
@@ -91,6 +96,8 @@ public class TString implements ValueType<String>{
 
 	@Override
 	public boolean contains(ValueType v) {
+		if(v instanceof TString)
+			return s.indexOf((String)v.get())!=-1;
 		return false;
 	}
 
@@ -117,9 +124,16 @@ public class TString implements ValueType<String>{
 	@Override
 	public ValueType accessor(ValueType[] v) {
 		if(v.length == 1)
+			return new TNumber(getSize());
+		if(v.length == 1)
 			return new TString(s.charAt((int)Math.round((double)v[0].get()))+"");
 		if(v.length >= 2)
 			return new TString(s.substring((int)Math.round((double)v[0].get()), (int)Math.round((double)v[1].get()))+"");
 		return null;
+	}
+
+	@Override
+	public int getSize() {
+		return s.length();
 	}
 }

@@ -19,7 +19,7 @@ import com.mrh.qspl.vm.VM;
 public class Main {
 
 	public static void main(String[] args) {
-		String code = readFromFile("C:\\MRHLang\\arrays.txt");
+		String code = readFromFile("C:\\MRHLang\\misc.txt");
 		System.out.println("[PROGRAM OUTPUT]:");
 		new QSPL().insertCode(code).execute();
 	}
