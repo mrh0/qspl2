@@ -57,6 +57,7 @@ Operators:
 ```
 Math: '+ - * / % ^'
 Boolean: '&& || ! == < > <= >='
+Binary: '& |'
 Contains: '?'
 Is type: 'is'
 As type: 'as'
