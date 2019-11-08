@@ -45,7 +45,7 @@ exit (this*2);
 x = 5;
 out x double() double(); //Prints 20
 
-array = [1,2,3,4];
+array = new [1,2,3,4];
 x = func(o,i,a):
   exit (o+1);
 out array map(x); //Prints [2,3,4,5]
