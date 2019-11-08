@@ -33,7 +33,6 @@ Variables & Values:
 Functions:
 ```
   //Define:
-  
   x = func(arg1, arg2):
     exit "Hello"+arg1;
   
