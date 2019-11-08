@@ -45,7 +45,8 @@ Operators:
 Math: '+ - * / % ^'
 Boolean: '&& || ! == < > <= >='
 Contains: '?'
-Is Type: 'is'
+Is type: 'is'
+As type: 'as'
 ```
 
 Flow control:
