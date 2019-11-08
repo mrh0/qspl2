@@ -108,10 +108,11 @@ min(...), max(...), clamp(n, lower, upper),
 random(lower, upper), 
 round(n), sqrt(n), 
 sin(n), cos(n), tan(n), asin(n), acos(n), atan(n),
-valueOf(string) //get value of variable with name
+valueOf(string) //Get value of variable with name
 
 //chain functions:
-map(func(value, index, array))
+map(func(value, index, array)) //On Arrays and Strings, returns Array
+collapse() //On Arrays, returns String
 ```
 
 # License
