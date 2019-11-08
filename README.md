@@ -5,45 +5,50 @@ Quick Statement Programming Language v1.1
 
 Variables & Values:
 ```
-  x = 5; //x = 5
-  
-  //parentheses important [WIP]
-  x = (x-1); //x = 4
-  
-  c = (((x*4)/2)+2) //c = 10
-  
-  y = (x = 1); //x and y = 1
-  
-  a = new ["hi", 5]; //a = array("hi", 5)
-  a[0]; //returns "hi"
-  a[1]; //returns 5
-  
-  k = new [new[5,4,3], new[4]];
-  
-  out "Hello World"[1]; //Prints 'e'
-  out "Hello World"[0,5]; //Prints 'Hello'
-  
-  text = "Hi my name is MrH.";
-  out j/" "; //Prints [Hi,my,name,is,MrH.]
-  out j[]; //Prints size (5)
-  out j[2]; //Prints 'name'
-  
-  CONSTANTVALUE = 5; //Constant when variable name is all capital letters
+x = 5; //x = 5
+
+//parentheses important [WIP]
+x = (x-1); //x = 4
+
+c = (((x*4)/2)+2) //c = 10
+
+y = (x = 1); //x and y = 1
+
+a = new ["hi", 5]; //a = array("hi", 5)
+a[0]; //returns "hi"
+a[1]; //returns 5
+
+k = new [new[5,4,3], new[4]];
+
+out "Hello World"[1]; //Prints 'e'
+out "Hello World"[0,5]; //Prints 'Hello'
+
+text = "Hi my name is MrH.";
+out j/" "; //Prints [Hi,my,name,is,MrH.]
+out j[]; //Prints size (5)
+out j[2]; //Prints 'name'
+
+CONSTANTVALUE = 5; //Constant when variable name is all capital letters
 ```
 Functions:
 ```
-  //Define:
-  x = func(arg1, arg2):
-    exit "Hello"+arg1;
-  
-  //Call:
-  x(" World!"); //returns "Hello World!"
-  
-  //Chain:
-  double = func():
-	exit (this*2);
-  x = 5;
-  out x double() double(); //Prints 20
+//Define:
+x = func(arg1, arg2):
+exit "Hello"+arg1;
+
+//Call:
+x(" World!"); //returns "Hello World!"
+
+//Chain (functional):
+double = func():
+exit (this*2);
+x = 5;
+out x double() double(); //Prints 20
+
+array = [1,2,3,4];
+x = func(o,i,a):
+  exit (o+1);
+out array map(x); //Prints [2,3,4,5]
 ``` 
 Operators:
 ```
@@ -92,16 +97,21 @@ prev:
 
 Predefined:
 ```
+//constants:
 true, false,
 NUMBER, STRING, ARRAY, OBJECT, FUNCTION,
 UNDEFINED, UNDEF, null //All same.
 
+//functions:
 print(string), println(string)
 min(...), max(...), clamp(n, lower, upper), 
 random(lower, upper), 
 round(n), sqrt(n), 
 sin(n), cos(n), tan(n), asin(n), acos(n), atan(n),
 valueOf(string) //get value of variable with name
+
+//chain functions:
+map(func(value, index, array))
 ```
 
 # License
