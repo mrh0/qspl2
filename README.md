@@ -57,6 +57,24 @@ x:
 //While x print 'Hello!'
 x::
   out "Hello!";
+  
+j = 5;
+out prev; //prints result of previous statement (5)
+j = 0;
+out else; //prints not result of previous statement (1)
+
+//Prints "Bye":
+-3:
+  out "Hi";
+else:
+  out "Bye";
+  
+//Prints "Hi" and "Bye":
+4:
+  out "Hi";
+prev:
+  out "Bye";
+
 ```
 
 Predefined:
