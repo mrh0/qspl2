@@ -108,17 +108,20 @@ prev, else,
 NUMBER, STRING, ARRAY, OBJECT, FUNCTION,
 UNDEFINED, UNDEF, null //All same.
 
-//functions:
+//functions: ([n]umber)
 print(string), println(string), read(type)
 min(...), max(...), clamp(n, lower, upper), 
 random(lower, upper), 
 round(n), sqrt(n), abs(n),
 sin(n), cos(n), tan(n), asin(n), acos(n), atan(n),
-valueOf(string) //Get value of variable with name
+valueOf(string), //Get value of variable with name
+stop(), sleep(millis)
 
-//chain functions:
-map(func(value, index, array)) //On Arrays and Strings, returns Array
-collapse() //On Arrays, returns String
+//chain functions: ([v]alue, [i]ndex, [a]rray)
+map(func(v, i, a)) //On Arrays and Strings, returns Array
+collapse(), //On Arrays, returns String
+set(i, v), set([...], v), add(v), push(v), 
+pop(), dequeue(), remove(v), removeAt(i),
 ```
 Miscellaneous:
 ```
