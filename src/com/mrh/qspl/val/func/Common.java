@@ -1,6 +1,7 @@
 package com.mrh.qspl.val.func;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import com.mrh.qspl.val.ValueType;
 import com.mrh.qspl.val.types.TArray;
@@ -55,7 +56,7 @@ public class Common {
 			for(int i = 0; i < args.size(); i++) {
 				r+=args.get(i).toString();
 				if(i+1 < args.size())
-					r+=",";
+					r+=", ";
 			}
 			System.out.print(r);
 			return new TString(r);
@@ -67,12 +68,42 @@ public class Common {
 			for(int i = 0; i < args.size(); i++) {
 				r+=args.get(i).toString();
 				if(i+1 < args.size())
-					r+=",";
+					r+=", ";
 			}
 			System.out.println(r);
 			return new TString(r);
 		};
 		s.setVariable("println", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			Scanner scan = new Scanner(System.in);
+			ValueType r = TUndefined.getInstance();
+			if(args.size() >= 1) {
+				if(args.get(0).getType() == Types.NUMBER) {
+					return new TNumber(scan.nextDouble());
+				}
+			} 
+			return new TString(scan.nextLine());
+		};
+		s.setVariable("read", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			System.exit(0);
+			return TUndefined.getInstance();
+		};
+		s.setVariable("stop", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			try {
+				Thread.sleep(args.get(0).intValue());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return TUndefined.getInstance();
+		};
+		s.setVariable("sleep", new Var(new TFunc().define(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			double from = 0;
@@ -97,6 +128,13 @@ public class Common {
 			return new TNumber((double)Math.round((double)args.get(0).get()));
 		};
 		s.setVariable("round", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			return new TNumber((double)Math.abs((double)args.get(0).get()));
+		};
+		s.setVariable("abs", new Var(new TFunc().define(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)

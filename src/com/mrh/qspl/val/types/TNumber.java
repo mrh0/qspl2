@@ -32,11 +32,12 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	
 	@Override
 	public ValueType add(ValueType v) {
+		System.out.println("add"+value+v.get());
 		if(v instanceof TNumber) 
 			return new TNumber(value + (double)v.get());
 		if(v instanceof TString) 
 			return new TString(value+((String)v.get()));
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 			return new TNumber(value - (double)v.get());
 		if(v instanceof TString)
 			System.err.println("Cannot subtract string from number");
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 			return new TNumber(value * (double)v.get());
 		if(v instanceof TString)
 			System.err.println("Cannot multiply string with a number");
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 			return new TNumber(value / (double)v.get());
 		if(v instanceof TString)
 			System.err.println("Cannot multiply string with a number");
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 			return new TNumber(value % (double)v.get());
 		if(v instanceof TString)
 			System.err.println("Cannot multiply string with a number");
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 			return new TNumber(Math.pow(value, (double)v.get()));
 		if(v instanceof TString)
 			System.err.println("Cannot multiply string with a number");
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override

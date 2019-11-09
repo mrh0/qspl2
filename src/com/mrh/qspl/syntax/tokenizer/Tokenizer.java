@@ -45,24 +45,29 @@ public class Tokenizer {
 		ts = new ArrayList<Token>();
 		char c = ' ';
 		boolean inComment = false;
+		boolean inLineComment = false;
 		
 		for(int i = 0; i < s.length(); i++) {
 			c = s.charAt(i);
 			String cs = ((""+c)+(i+1<s.length()?s.charAt(i+1):' '));
 			if(Tokens.isOpenComment(cs))
 				inComment = true;
+			if(Tokens.isLineComment(cs))
+				inLineComment = true;
+			if(c =='\n' && inLineComment)
+				inLineComment = false;
 			if(Tokens.isCloseComment(cs)) {
 				i++;
 				inComment = false;
 				continue;
 			}
-			if(inComment) {
+			if(inComment || inLineComment) {
 				continue;
 			}
 			
 			if(c == '\n')
 				curLine++;
-			if(Tokens.isEndOfStatement(c)) {
+			if(Tokens.isEndOfStatement(c) && stringStack.isEmpty()) {
 				StatementEndType set = StatementEndType.END;
 				if(c == ':') {
 					set = StatementEndType.IF;

@@ -131,4 +131,8 @@ public class Tokens {
 	public static boolean isCloseComment(String s) {
 		return s.equals("*/");
 	}
+	
+	public static boolean isLineComment(String s) {
+		return s.equals("//");
+	}
 }

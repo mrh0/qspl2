@@ -40,10 +40,15 @@ public class ValStack{
 	}
 	
 	public ValueType pop() {
-		if(isEmpty())
-			return null;
-		if(this.vals.peek().var != null)
+		if(isEmpty()) {
+			System.out.println("POP: UNDEF");
+			return TUndefined.getInstance();
+		}
+		if(this.vals.peek().var != null) {
+			System.out.println("POP: VAR");
 			ee.popVar();
+		}
+		System.out.println("POP: " + this.vals.peek().val);
 		return this.vals.pop().val;
 	}
 	

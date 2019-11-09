@@ -1,7 +1,10 @@
 package com.mrh.qspl;
 
+import java.util.ArrayList;
+
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
 import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.types.TFunc;
 import com.mrh.qspl.vm.ExpressionEvaluator;
 import com.mrh.qspl.vm.VM;
 
@@ -21,7 +24,12 @@ public class QSPL {
 	
 	public QSPL insertCode(String c) {
 		tokens.toTokens(c);
+		System.out.println(tokens.toString());
 		return this;
+	}
+	
+	public ValueType executeFunction(TFunc func, ArrayList<ValueType> args, ValueType _this) {
+		return vm.executeFunction(func, args, _this);
 	}
 	
 	public QSPL clearCode() {

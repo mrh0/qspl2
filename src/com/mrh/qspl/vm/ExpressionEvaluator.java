@@ -139,8 +139,10 @@ public class ExpressionEvaluator {
 				if(!ops.isEmpty()) {
 					String op = ops.pop();
 					ValueType v = vals.pop();
-					if (op.equals("+")) 
+					if (op.equals("+")) {
+						System.out.println("add: "+(vals.peek()+":"+v));
 						v = vals.pop().add(v);
+					}
 					else if (op.equals("-")) 
 						v = vals.pop().sub(v);
 					else if (op.equals("*")) 

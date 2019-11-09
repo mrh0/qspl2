@@ -30,7 +30,7 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 			return new TString(s+v.get());
 		if(v instanceof TString) 
 			return new TString(s+v.get());
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -39,12 +39,12 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 			return new TString(s.replace((String)v.get(), ""));
 		if(v instanceof TString) 
 			return new TString(s.replace((String)v.get(), ""));
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType multi(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -56,22 +56,22 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 				j[i] = new TString(k[i]);
 			return new TArray(j);
 		}
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType mod(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType pow(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType root() {
-		return null;
+		return TUndefined.getInstance();
 	}
 	
 	@Override
