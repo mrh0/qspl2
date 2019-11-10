@@ -7,12 +7,9 @@ Variables & Values:
 ```
 x = 5; //x = 5
 
-//parentheses important [WIP]
-x = (x-1); //x = 4
+x = x-1; //x = 4
 
 c = (((x*4)/2)+2) //c = 10
-
-y = (x = 1); //x and y = 1
 
 a = new ["hi", 5]; //a = array("hi", 5)
 a[0]; //returns "hi"
@@ -36,28 +33,28 @@ CONSTANTVALUE = 5; //Constant when variable name is all capital letters
 Functions:
 ```
 //Define:
-x = func(arg1, arg2):
-exit "Hello"+arg1;
+x = func arg1 arg2:
+  exit "Hello"+arg1;
 
 //Call:
-x(" World!"); //returns "Hello World!"
+x[" World!"]; //returns "Hello World!"
 
 //Chain (functional):
-double = func():
-exit (this*2);
+double = func:
+  exit this*2;
 x = 5;
-out x double() double(); //Prints 20
+out x double[] double[]; //Prints 20
 
 array = new [1,2,3,4];
-func(o,i,a):
+func o i a:
   exit (o+1);
-out array map(prev); //Prints [2,3,4,5]
+out array map[prev]; //Prints [2,3,4,5]
 ``` 
 Operators:
 ```
-Math: '+ - * / % ^'
+Math: '+ - * / %'
 Boolean: '&& || ! == < > <= >='
-Binary: '& |'
+Binary: '& | ^'
 Contains: '?'
 Is type: 'is'
 As type: 'as'
@@ -109,19 +106,19 @@ NUMBER, STRING, ARRAY, OBJECT, FUNCTION,
 UNDEFINED, UNDEF, null //All same.
 
 //functions: ([n]umber)
-print(string), println(string), read(type)
-min(...), max(...), clamp(n, lower, upper), 
-random(lower, upper), 
-round(n), sqrt(n), abs(n),
-sin(n), cos(n), tan(n), asin(n), acos(n), atan(n),
-valueOf(string), //Get value of variable with name
-stop(), sleep(millis)
+print[string], println[string], read[type]
+min[...], max[...], clamp[n, lower, upper], 
+random[lower, upper], 
+round[n], sqrt[n], abs[n],
+sin[n], cos[n], tan[n], asin[n], acos[n], atan[n],
+valueOf[string], //Get value of variable with name
+stop[], sleep[millis]
 
 //chain functions: ([v]alue, [i]ndex, [a]rray)
-map(func(v, i, a)) //On Arrays and Strings, returns Array
-collapse(), //On Arrays, returns String
-set(i, v), set([...], v), add(v), push(v), 
-pop(), dequeue(), remove(v), removeAt(i),
+map[func(v, i, a)] //On Arrays and Strings, returns Array
+collapse[], //On Arrays, returns String
+set[i, v], set[[...], v], add[v], push[v], 
+pop[], dequeue[], remove[v], removeAt[i],
 ```
 Miscellaneous:
 ```
