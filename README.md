@@ -95,7 +95,9 @@ else:
 prev:
   out "Bye";
   
-//Loops can also use keywords 'continue' and 'break'.
+//Loops can also use keywords:
+continue; //Go to loop start.
+break; //Stop loop.
 
 ```
 
@@ -112,9 +114,10 @@ UNDEFINED, UNDEF, null //All same.
 print[string], println[string], read[type]
 min[...], max[...], clamp[n, lower, upper], 
 random[lower, upper], 
-round[n], sqrt[n], abs[n], pow[n, x]
+round[n], sqrt[n], abs[n], pow[n, x], floor[n], ceil[n],
 sin[n], cos[n], tan[n], asin[n], acos[n], atan[n],
-valueOf[string], //Get value of variable with name
+valueOf[string], //Get value of variable with name.
+parametersOf[func], //Get parameter names of function.
 stop[], sleep[millis],
 if[b], condition[b, t, f]
 
