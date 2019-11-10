@@ -15,7 +15,7 @@ a = new ["hi", 5]; //a = array("hi", 5)
 a[0]; //returns "hi"
 a[1]; //returns 5
 
-k = new [new[5,4,3], new[4], new [2,7]];
+k = new [new[5,4,3], new[4], new [2,7]]; // 'new' can allso be written as '§'
 out k[1]; //Prints [4]
 out k[2][1]; //Prints 7
 out k[0,1]; //Prints [[5,4,3], [4]]
