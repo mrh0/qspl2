@@ -61,7 +61,7 @@ public class Tokens {
 	}
 	
 	public static boolean isSeperator(char c) {
-		if(c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}' || c == '\t' || c == '\n' || c == '\r' || c == ' ' || c == ';' || c == ',')
+		if(c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}' || c == '\t' || c == '\n' || c == '\r' || c == ' ' || c == ';')// || c == ','
 			return true;
 		return false;
 	}
@@ -107,7 +107,7 @@ public class Tokens {
 	}
 	
 	public static boolean isOperator(char c) {
-		if(c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '!' || c == '=' || c == '<' || c == '>' || c == '&' || c == '|' || c == '?' || c == ':' || c == '~' || c == '^')
+		if(c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '!' || c == '=' || c == '<' || c == '>' || c == '&' || c == '|' || c == '?' || c == ':' || c == '~' || c == '^' || c == ',' || c == '$')
 			return true;
 		return false;
 	}

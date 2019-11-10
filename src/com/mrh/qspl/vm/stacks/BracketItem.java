@@ -1,8 +1,6 @@
 package com.mrh.qspl.vm.stacks;
 
 import java.util.ArrayList;
-
-import com.mrh.qspl.syntax.tokenizer.Token;
 import com.mrh.qspl.val.ValueType;
 
 public class BracketItem {

@@ -13,7 +13,7 @@ public class Token {
 	
 	@Override
 	public String toString() {
-		return "[" + token + "](" + type.toString() + ")";
+		return token+"|";//return "[" + token + "](" + type.toString() + ")";
 	}
 	
 	public TokenType getType() {

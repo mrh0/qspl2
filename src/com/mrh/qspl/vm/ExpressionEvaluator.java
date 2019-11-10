@@ -16,6 +16,7 @@ import com.mrh.qspl.val.types.TNumber;
 import com.mrh.qspl.val.types.TString;
 import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.val.types.TUserFunc;
+import com.mrh.qspl.val.types.Types;
 import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.stacks.BracketItem;
 import com.mrh.qspl.vm.stacks.BracketStack;
@@ -70,30 +71,34 @@ public class ExpressionEvaluator {
 		
 		ArrayList<String> funcArgNames = new ArrayList<String>();
 		
-		vals.push(new TNumber(0));
+		//vals.push(new TNumber(0));
 		for(Token token : statement.getTokens()) {
 			String s = token.getToken();
 			TokenType t = token.getType();
 			
+			System.out.println("T: " + s);
+			
 			if(funcDefine) {
-				if(t == TokenType.identifier)
+				if(t == TokenType.identifier) {
 					funcArgNames.add(s);
-				if(s.equals(")")) {
+					continue;
+				}
+				if(s.equals(","))
+					continue;
+				if(t != TokenType.identifier) {
 					funcDefine = false;
 					vals.push(new TUserFunc(statement.getNext(), funcArgNames.toArray(new String[0])));
 					//System.out.println("Defined func");
 				}
-				continue;
 			}
-			
-			if (s.equals("(")) {
-				brackets.push(new BracketItem('(', vals.pop()));
-			}
+			/*if (s.equals("[")) {
+				brackets.push(new BracketItem('[', vals.pop()));
+			}*/
 			else if(s.equals("[")) {
-				brackets.push(new BracketItem('[', (!prev.getToken().equals("new"))?vals.pop():null));
-			}
-			else if (t.equals(TokenType.operator)) {
-				ops.push(s);
+				ValueType vt = (!prev.getToken().equals("new"))?vals.pop():null;
+				if(vt!=null)
+					vals.push(new TArray());
+				brackets.push(new BracketItem('[', vt));
 			}
 			else if(s.equals(",")) {
 				if(!brackets.isEmpty())
@@ -102,6 +107,7 @@ public class ExpressionEvaluator {
 			else if(s.equals("]")) {
 				if(!brackets.isEmpty()) {
 					BracketItem bi = brackets.pop();
+					System.out.println("BI: "+bi);
 					if(!prev.getToken().equals("[")) 
 						bi.add(vals.pop());
 					if(bi.getPrev() == null) {
@@ -112,17 +118,27 @@ public class ExpressionEvaluator {
 						vals.push(vt);
 					}
 				}
-			}
-			else if (s.equals(")")) { // Pop, evaluate, and push result if token is ")".
-				if(!brackets.isEmpty()) {
+			//}
+			//else if (s.equals("]")) { // Pop, evaluate, and push result if token is ")".
+				/*if(!brackets.isEmpty()) {
 					BracketItem bi = brackets.pop();
 					if(bi.getPrev() != null && bi.getPrev() instanceof TFunc) {
-						if(!prev.getToken().equals("("))
-							bi.add(vals.pop());
+						//if(!prev.getToken().equals("["))
+						//	bi.add(vals.pop());
 						ValueType pThis = TUndefined.getInstance();
+						
+						System.out.println("EXECUTED");
+						ValueType vargs = vals.pop();
 						if(!vals.isEmpty())
-							pThis = vals.pop();
-						vm.executeFunction((TFunc) bi.getPrev(), bi.getParameters(), pThis);
+							pThis = TUndefined.getInstance();
+						TArray args;
+						if(vargs.getType() == Types.ARRAY)
+							args=(TArray)vargs;
+						else {
+							ValueType[] vt = {vargs};
+							args = new TArray(vt);
+						}
+						vals.push(vm.executeFunction((TFunc) bi.getPrev(), args.getAll(), pThis));
 						/*vm.createNewScope("func:"+bi);
 						ValueType rv = ((TFunc) bi.getPrev()).execute(bi.getParameters(), vm, pThis);
 						if(rv != null)
@@ -131,20 +147,26 @@ public class ExpressionEvaluator {
 							walkThrough(((TUserFunc) bi.getPrev()).getRefBlock());
 							exitCalled = false;
 						}
-						vm.popScope();*/
+						vm.popScope();*/ /*
 						
 					}
-				}
-				//System.out.println(s + ":"+vals.peek().get());
+				}*/
+			}
+			else if(t == TokenType.operator) {
+				ops.push(s);
 				if(!ops.isEmpty()) {
 					String op = ops.pop();
 					ValueType v = vals.pop();
+					if(!ops.isEmpty())
+						System.out.println("OP: "+vals.peek().get()+" "+s+" "+v);
+					else
+						System.out.println("OP: "+s+" "+v);
 					if (op.equals("+")) {
-						System.out.println("add: "+(vals.peek()+":"+v));
 						v = vals.pop().add(v);
 					}
-					else if (op.equals("-")) 
+					else if (op.equals("-")) {
 						v = vals.pop().sub(v);
+					}
 					else if (op.equals("*")) 
 						v = vals.pop().multi(v);
 					else if (op.equals("/")) 
@@ -181,6 +203,27 @@ public class ExpressionEvaluator {
 						v = new TNumber((v.getType() == vals.pop().getType())?1:0);
 					else if (op.equals("as")) //as type
 						v = vals.pop().toType(v.getType());
+					/*else if (op.equals(","))
+						v = TArray.merge(vals.pop(), v);*/
+					else if (op.equals("$")) {
+						ArrayList<ValueType> pa = new ArrayList<>();
+						ValueType f = vals.pop();
+						ValueType _this = TUndefined.getInstance();
+						if(!vals.isEmpty())
+							_this = vals.pop();
+						
+						if(v.getType() == Types.ARRAY)
+							pa = (((TArray)v).getAll());
+						else {
+							pa.add(v);
+						}
+						if(f.getType() == Types.ARRAY)
+							v = f.accessor(pa.toArray(new ValueType[0]));
+						if(f.getType() == Types.FUNC) {
+							v = vm.executeFunction((TFunc) f, pa, _this);
+							System.out.println("EXECUTED" + _this + ":" +v);
+						}
+					}
 					else if (op.equals("=")) {
 						Var k = vars.peek();
 						//System.out.println("Set var: " + k + " to " + v);

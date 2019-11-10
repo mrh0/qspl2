@@ -24,10 +24,12 @@ public class ValStack{
 	}
 	
 	public void push(ValueType item) {
+		System.out.println("PUSH:  " + item);
 		this.vals.push(new ValVarItem(item, null));
 	}
 	
 	public void push(ValueType item, Var var) {
+		System.out.println("PUSH: VAR " + item);
 		this.vals.push(new ValVarItem(item, var));
 	}
 	
@@ -41,11 +43,10 @@ public class ValStack{
 	
 	public ValueType pop() {
 		if(isEmpty()) {
-			System.out.println("POP: UNDEF");
+			System.out.println("POP: Empty UNDEF");
 			return TUndefined.getInstance();
 		}
 		if(this.vals.peek().var != null) {
-			System.out.println("POP: VAR");
 			ee.popVar();
 		}
 		System.out.println("POP: " + this.vals.peek().val);

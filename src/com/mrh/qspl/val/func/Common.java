@@ -215,14 +215,26 @@ public class Common {
 		s.setVariable("set", new Var(new TFunc().define(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
-			if(_this.getType() == Types.ARRAY && args.size() == 2) {
+			if(_this.getType() == Types.ARRAY && args.size() > 0) {
 				TArray a = (TArray) _this;
 				a.getAll().addAll(args);
 			}
 			return _this;
 		};
-		s.setVariable("add", new Var(new TFunc().define(f), true));
 		s.setVariable("push", new Var(new TFunc().define(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY && args.size() == 1) {
+				TArray a = (TArray) _this;
+				a.getAll().add(args.get(0));
+			}
+			if(_this.getType() == Types.ARRAY && args.size() > 1) {
+				TArray a = (TArray) _this;
+				a.getAll().add(args.get(0).intValue(), args.get(1));
+			}
+			return _this;
+		};
+		s.setVariable("add", new Var(new TFunc().define(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY) {

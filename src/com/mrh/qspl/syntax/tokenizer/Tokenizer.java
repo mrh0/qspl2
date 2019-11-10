@@ -12,10 +12,13 @@ public class Tokenizer {
 	ArrayList<Token> ts;
 	TokenType cur = TokenType.none;
 	TokenType last = TokenType.none;
+	TokenType lasti = TokenType.none;
 	
 	Stack<Character> bracketStack;
 	Stack<Character> stringStack;
 	Stack<Block> blockStack;
+	
+	GMCL mc;
 	
 	Statement lastStatement;
 	
@@ -36,6 +39,9 @@ public class Tokenizer {
 		lastStatement = new Statement(0, new Token[0]);
 		lastStatement.setBlock(new Block());
 		blockStack.add(lastStatement.getNext());
+		
+		mc = new GMCL();
+		mc.push();
 		
 		lineIndent = 0;
 		prevIndent = 0;
@@ -176,6 +182,85 @@ public class Tokenizer {
 		cur = type;
 	}
 	
+	private int opValue(String s) {
+		if(s.equals("&&"))
+			return 2;
+		if(s.equals("||"))
+			return 2;
+		if(s.equals("^"))
+			return 4;
+		if(s.equals("is"))
+			return 3;
+		if(s.equals("as"))
+			return 3;
+		if(s.equals("*"))
+			return 3;
+		if(s.equals("/"))
+			return 3;
+		if(s.equals("+"))
+			return 2;
+		if(s.equals("-"))
+			return 2;
+		if(s.equals("("))
+			return 0;
+		if(s.equals(","))
+			return 1;
+		if(s.equals("="))
+			return -1;
+		if(s.equals("="))
+			return 1;
+		return 1;
+	}
+	
+	private void gotNewToken(Token t) {
+		TokenType tt = t.getType();
+		String tss = t.getToken();
+		
+		//System.out.println("IN: " + t);// + ":" + lasti);
+		if(tss.equals("[")) {
+			mc.push();
+			gmc().postfixList.add(t);
+		}
+		else if(tss.equals("]")) {
+			finishPart();
+			gmc().postfixList.add(t);
+			ArrayList<Token> tl = mc.pop();
+			gmc().postfixList.addAll(tl);
+		}
+		else if(tss.equals(",")) {
+			finishPart();
+			//gmc().postfixList.add(t);
+			ArrayList<Token> tl = mc.pop();
+			gmc().postfixList.addAll(tl);
+			//toggle
+			mc.push();
+			gmc().postfixList.add(t);
+		}
+		else if(tt == TokenType.literal || tt == TokenType.identifier || tt == TokenType.string || tt == TokenType.keyword) {
+			gmc().postfixList.add(t);
+		}
+		else if(tss.equals("(")) {
+			gmc().opStack.push(t);
+		}
+		else if(tss.equals(")")) {
+			Token top = gmc().opStack.pop();
+			System.out.println(gmc().opStack);
+			while(!top.getToken().equals("(")) {// && !top.getToken().equals("[")
+				gmc().postfixList.add(top);
+				top = gmc().opStack.pop();
+			}
+		}
+		else if(tt == TokenType.operator) {
+			while(!gmc().opStack.isEmpty() && (opValue(gmc().opStack.peek().getToken()) >= opValue(tss))) {
+				gmc().postfixList.add(gmc().opStack.pop());
+			}
+			gmc().opStack.push(t);
+		}
+		else {
+			gmc().tokStack.add(t);
+		}
+	}
+	
 	private Token end() {
 		//check if w is keyword
 		cur = Tokens.tokenSwapType(w, cur);
@@ -183,16 +268,26 @@ public class Tokenizer {
 		if(cur == TokenType.identifier)
 			if(Tokens.isKeyword(w))
 				cur = TokenType.keyword;
-		last = cur;
-		cur = TokenType.none;
 		
-		if(w.length() > 0 || last == TokenType.string) {
-			Token t = new Token(w, last);
-			ts.add(t);
+		//last = cur;
+		//cur = TokenType.none;
+		
+		if(w.length() > 0 || cur == TokenType.string) {
+			Token t = new Token(w, cur);
+			gotNewToken(t);//ts.add(t);
 			w = "";
+			
+			if(cur != TokenType.none)
+				lasti = cur;
+			
+			last = cur;
+			cur = TokenType.none;
 			return t;
 		}
 		w = "";
+		
+		last = cur;
+		cur = TokenType.none;
 		return null;
 	}
 	
@@ -222,9 +317,43 @@ public class Tokenizer {
 		return !stringStack.isEmpty();
 	}
 	
+	private class GMCL{
+		Stack<MapContext> stack;
+		public GMCL() {
+			stack = new Stack<MapContext>();
+		}
+		
+		public MapContext get() {
+			return stack.peek();
+		}
+		
+		public ArrayList<Token> pop() {
+			return stack.pop().postfixList;
+		}
+		
+		public void push() {
+			stack.add(new MapContext());
+		}
+	}
+	
+	private MapContext gmc() {
+		return mc.get();
+	}
+	
+	//Postfix last step
+	private void finishPart() {
+		while(!gmc().opStack.isEmpty())
+			gmc().postfixList.add(gmc().opStack.pop());
+		System.out.println("FINISHED PART: " + gmc().postfixList);
+		ts = gmc().postfixList;
+	}
+	
 	private Statement endStatement(StatementEndType set) {
-		ts.add(0, new Token("(", TokenType.seperator));
-		ts.add(new Token(")", TokenType.seperator));
+		finishPart();
+		
+		mc = new GMCL();
+		mc.push();
+		
 		Statement s = new Statement(curLine, ts.toArray(new Token[0]), set);
 		String ind = "";
 		ts.clear();

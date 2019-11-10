@@ -216,4 +216,12 @@ public class TArray implements ValueType, Comparable<ValueType>{
 	public int compareTo(ValueType o) {
 		return 0;
 	}
+	
+	public static TArray merge(ValueType v1, ValueType v2) {
+		TArray a = new TArray();
+		a.add(v1);
+		a.getAll().add(v2);
+		System.out.println("new array" + a.getAll());
+		return a;
+	}
 }
