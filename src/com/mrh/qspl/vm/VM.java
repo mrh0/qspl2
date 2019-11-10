@@ -50,7 +50,7 @@ public class VM {
 			ev.exitCalled = false;
 		}
 		this.popScope();
-		return ev.vals.peek();
+		return ev.vals.pop();
 	}
 	
 	protected Var getVar(String name) {

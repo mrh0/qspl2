@@ -32,7 +32,6 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	
 	@Override
 	public ValueType add(ValueType v) {
-		System.out.println("add"+value+v.get());
 		if(v instanceof TNumber) 
 			return new TNumber(value + (double)v.get());
 		if(v instanceof TString) 

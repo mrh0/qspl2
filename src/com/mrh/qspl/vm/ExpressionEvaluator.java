@@ -47,8 +47,9 @@ public class ExpressionEvaluator {
 	
 	public void eval() {
 		walkThrough(this.tokens.getRootBlock());
-		if(vals != null && !vals.isEmpty() && vals.peek() != null)
+		if(vals != null && !vals.isEmpty() && vals.peek() != null) {
 			System.out.println("[RESULT:"+vals.size()+"]: "+vals.pop().get());
+		}
 		else
 			System.err.println("Finished with empty stack.");
 	}
@@ -76,7 +77,7 @@ public class ExpressionEvaluator {
 			String s = token.getToken();
 			TokenType t = token.getType();
 			
-			System.out.println("T: " + s);
+			//System.out.println("T: " + s);
 			
 			if(funcDefine) {
 				if(t == TokenType.identifier) {
@@ -88,13 +89,9 @@ public class ExpressionEvaluator {
 				if(t != TokenType.identifier) {
 					funcDefine = false;
 					vals.push(new TUserFunc(statement.getNext(), funcArgNames.toArray(new String[0])));
-					//System.out.println("Defined func");
 				}
 			}
-			/*if (s.equals("[")) {
-				brackets.push(new BracketItem('[', vals.pop()));
-			}*/
-			else if(s.equals("[")) {
+			if(s.equals("[")) {
 				ValueType vt = (!prev.getToken().equals("new"))?vals.pop():null;
 				brackets.push(new BracketItem('[', vt));
 			}
@@ -105,60 +102,36 @@ public class ExpressionEvaluator {
 			else if(s.equals("]")) {
 				if(!brackets.isEmpty()) {
 					BracketItem bi = brackets.pop();
-					System.out.println("BI: "+bi);
+					//System.out.println("BI: "+bi);
 					if(!prev.getToken().equals("[")) 
 						bi.add(vals.pop());
 					if(bi.getPrev() == null) {
 						vals.push(new TArray(bi.getParameters()));
 					}
 					else {
-						ValueType vt = bi.getPrev().accessor(bi.getParameters().toArray(new ValueType[0]));
-						vals.push(vt);
+						ValueType prevp = bi.getPrev();
+						if(prevp.getType() == Types.FUNC) {
+							ValueType _this = vals.isEmpty()?TUndefined.getInstance():vals.pop();
+							ValueType vt = ((TFunc) prevp).execute(bi.getParameters(), vm, _this);
+							vals.push(vt);
+							//System.out.println("EXEC:" + _this + " par:" + bi.getParameters() + " ret:" + vals.peek());
+						}
+						else {
+							ValueType vt = prevp.accessor(bi.getParameters().toArray(new ValueType[0]));
+							vals.push(vt);
+						}
 					}
 				}
-			//}
-			//else if (s.equals("]")) { // Pop, evaluate, and push result if token is ")".
-				/*if(!brackets.isEmpty()) {
-					BracketItem bi = brackets.pop();
-					if(bi.getPrev() != null && bi.getPrev() instanceof TFunc) {
-						//if(!prev.getToken().equals("["))
-						//	bi.add(vals.pop());
-						ValueType pThis = TUndefined.getInstance();
-						
-						System.out.println("EXECUTED");
-						ValueType vargs = vals.pop();
-						if(!vals.isEmpty())
-							pThis = TUndefined.getInstance();
-						TArray args;
-						if(vargs.getType() == Types.ARRAY)
-							args=(TArray)vargs;
-						else {
-							ValueType[] vt = {vargs};
-							args = new TArray(vt);
-						}
-						vals.push(vm.executeFunction((TFunc) bi.getPrev(), args.getAll(), pThis));
-						/*vm.createNewScope("func:"+bi);
-						ValueType rv = ((TFunc) bi.getPrev()).execute(bi.getParameters(), vm, pThis);
-						if(rv != null)
-							vals.push(rv);
-						else {
-							walkThrough(((TUserFunc) bi.getPrev()).getRefBlock());
-							exitCalled = false;
-						}
-						vm.popScope();*/ /*
-						
-					}
-				}*/
 			}
 			else if(t == TokenType.operator) {
 				ops.push(s);
 				if(!ops.isEmpty()) {
 					String op = ops.pop();
 					ValueType v = vals.pop();
-					if(!ops.isEmpty())
+					/*if(!ops.isEmpty())
 						System.out.println("OP: "+vals.peek().get()+" "+s+" "+v);
 					else
-						System.out.println("OP: "+s+" "+v);
+						System.out.println("OP: "+s+" "+v);*/
 					if (op.equals("+")) {
 						v = vals.pop().add(v);
 					}
@@ -171,8 +144,6 @@ public class ExpressionEvaluator {
 						v = vals.pop().div(v);
 					else if (op.equals("%")) 
 						v = vals.pop().mod(v);
-					else if (op.equals("^")) 
-						v = vals.pop().pow(v);
 					else if (op.equals("==")) 
 						v = new TNumber(vals.pop().equals(v)?1:0);
 					else if (op.equals("!=")) 
@@ -195,14 +166,14 @@ public class ExpressionEvaluator {
 						v = new TNumber(v.intValue() & vals.pop().intValue());
 					else if (op.equals("|"))
 						v = new TNumber(v.intValue() | vals.pop().intValue());
+					else if (op.equals("^")) 
+						v = new TNumber(v.intValue() ^ vals.pop().intValue());
 					else if (op.equals("?")) //Contains
 						v = new TNumber(vals.pop().contains(v)?1:0);
 					else if (op.equals("is")) //is type
 						v = new TNumber((v.getType() == vals.pop().getType())?1:0);
 					else if (op.equals("as")) //as type
 						v = vals.pop().toType(v.getType());
-					/*else if (op.equals(","))
-						v = TArray.merge(vals.pop(), v);*/
 					else if (op.equals("$")) {
 						ArrayList<ValueType> pa = new ArrayList<>();
 						ValueType f = vals.pop();

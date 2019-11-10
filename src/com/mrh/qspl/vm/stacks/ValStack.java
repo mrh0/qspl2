@@ -2,6 +2,7 @@ package com.mrh.qspl.vm.stacks;
 
 import java.util.Stack;
 
+import com.mrh.qspl.debug.Debug;
 import com.mrh.qspl.val.ValueType;
 import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.var.Var;
@@ -24,12 +25,14 @@ public class ValStack{
 	}
 	
 	public void push(ValueType item) {
-		System.out.println("PUSH:  " + item);
+		if(Debug.enabled())
+			System.out.println("PUSH:  " + item);
 		this.vals.push(new ValVarItem(item, null));
 	}
 	
 	public void push(ValueType item, Var var) {
-		System.out.println("PUSH: VAR " + item);
+		if(Debug.enabled())
+			System.out.println("PUSH: VAR " + item);
 		this.vals.push(new ValVarItem(item, var));
 	}
 	
@@ -43,13 +46,15 @@ public class ValStack{
 	
 	public ValueType pop() {
 		if(isEmpty()) {
-			System.out.println("POP: Empty UNDEF");
+			if(Debug.enabled())
+				System.out.println("POP: Empty UNDEF");
 			return TUndefined.getInstance();
 		}
 		if(this.vals.peek().var != null) {
 			ee.popVar();
 		}
-		System.out.println("POP: " + this.vals.peek().val);
+		if(Debug.enabled())
+			System.out.println("POP: " + this.vals.peek().val);
 		return this.vals.pop().val;
 	}
 	

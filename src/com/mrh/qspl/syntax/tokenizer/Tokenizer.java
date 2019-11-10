@@ -270,7 +270,7 @@ public class Tokenizer {
 		}
 		else if(tss.equals(")")) {
 			Token top = gmc().opStack.pop();
-			System.out.println(gmc().opStack);
+			//System.out.println(gmc().opStack);
 			while(!top.getToken().equals("(")) {// && !top.getToken().equals("[")
 				gmc().postfixList.add(top);
 				top = gmc().opStack.pop();
@@ -370,7 +370,7 @@ public class Tokenizer {
 	private void finishPart() {
 		while(!gmc().opStack.isEmpty())
 			gmc().postfixList.add(gmc().opStack.pop());
-		System.out.println("FINISHED PART: " + gmc().postfixList);
+		//System.out.println("FINISHED PART: " + gmc().postfixList);
 		ts = gmc().postfixList;
 	}
 	
