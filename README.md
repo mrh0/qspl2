@@ -73,10 +73,18 @@ Flow control:
 //If x print 'Hello!'
 x:
   out "Hello!";
+; //Add ';' if the line after an indented line is last line of the program.
   
 //While x print 'Hello!'
 x::
   out "Hello!";
+; //Add ';' if the line after an indented line is last line of the program.
+
+//Foreach v in g:
+g = §[1,2,3,4];
+v in g[2]::
+	out v;
+;
   
 j = 5;
 out prev; //prints result of previous statement (5)
