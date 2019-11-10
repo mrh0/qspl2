@@ -183,32 +183,58 @@ public class Tokenizer {
 	}
 	
 	private int opValue(String s) {
+		if(s.equals("is"))
+			return 11;
+		if(s.equals("as"))
+			return 11;
+		if(s.equals("!"))
+			return 11;
+		if(s.equals("~"))
+			return 11;
+		
+		if(s.equals("*"))
+			return 10;
+		if(s.equals("/"))
+			return 10;
+		if(s.equals("%"))
+			return 10;
+		
+		if(s.equals("+"))
+			return 9;
+		if(s.equals("-"))
+			return 9;
+		
+		if(s.equals("<"))
+			return 8;
+		if(s.equals("<="))
+			return 8;
+		if(s.equals(">"))
+			return 8;
+		if(s.equals(">="))
+			return 8;
+		if(s.equals("!="))
+			return 7;
+		if(s.equals("=="))
+			return 7;
+		
+		
+		if(s.equals("&"))
+			return 6;
+		if(s.equals("^"))
+			return 5;
+		if(s.equals("|"))
+			return 4;
+		
 		if(s.equals("&&"))
-			return 2;
+			return 3;
 		if(s.equals("||"))
 			return 2;
-		if(s.equals("^"))
-			return 4;
-		if(s.equals("is"))
-			return 3;
-		if(s.equals("as"))
-			return 3;
-		if(s.equals("*"))
-			return 3;
-		if(s.equals("/"))
-			return 3;
-		if(s.equals("+"))
-			return 2;
-		if(s.equals("-"))
-			return 2;
+		
 		if(s.equals("("))
+			return 1;
+		
+		if(s.equals("="))
 			return 0;
-		if(s.equals(","))
-			return 1;
-		if(s.equals("="))
-			return -1;
-		if(s.equals("="))
-			return 1;
 		return 1;
 	}
 	

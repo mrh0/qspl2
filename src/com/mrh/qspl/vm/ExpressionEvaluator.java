@@ -96,8 +96,6 @@ public class ExpressionEvaluator {
 			}*/
 			else if(s.equals("[")) {
 				ValueType vt = (!prev.getToken().equals("new"))?vals.pop():null;
-				if(vt!=null)
-					vals.push(new TArray());
 				brackets.push(new BracketItem('[', vt));
 			}
 			else if(s.equals(",")) {
