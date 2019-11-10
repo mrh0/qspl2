@@ -8,12 +8,26 @@ import com.mrh.qspl.vm.Scope;
 import com.mrh.qspl.vm.VM;
 
 public class TFunc implements ValueType{
-
-	private IFunc internal = null;
 	
-	public TFunc define(IFunc f) {
+	protected String[] paramaterList = {};
+	
+	public String[] getParameters() {
+		return paramaterList;
+	}
+
+	private final IFunc internal;
+	
+	public TFunc() {
+		internal = null;
+	}
+	
+	public TFunc(IFunc f) {
 		internal = f;
-		return this;
+	}
+	
+	public TFunc(IFunc f, String...p) {
+		internal = f;
+		paramaterList = p;
 	}
 	
 	public ValueType execute(ArrayList<ValueType> args, VM vm, ValueType pThis) {
@@ -24,43 +38,42 @@ public class TFunc implements ValueType{
 	
 	@Override
 	public String toString() {
-		
 		return "internal:func()";
 	}
 	
 	@Override
 	public ValueType add(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType sub(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType multi(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType div(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType mod(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType pow(ValueType v) {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType root() {
-		return null;
+		return TUndefined.getInstance();
 	}
 
 	@Override
@@ -135,5 +148,12 @@ public class TFunc implements ValueType{
 	@Override
 	public int intValue() {
 		return -1;
+	}
+	
+	public static TFunc from(ValueType v) {
+		if(v instanceof TFunc)
+			return (TFunc)v;
+		System.err.println(v + " is not a function.");
+		return null;
 	}
 }

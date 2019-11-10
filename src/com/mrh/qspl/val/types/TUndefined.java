@@ -4,9 +4,9 @@ import com.mrh.qspl.val.ValueType;
 
 public class TUndefined implements ValueType<Object>{
 	
-	protected static TUndefined instance = null;
+	private static TUndefined instance = null;
 	
-	protected TUndefined() {
+	private TUndefined() {
 		instance = this;
 	}
 	
@@ -78,7 +78,7 @@ public class TUndefined implements ValueType<Object>{
 
 	@Override
 	public ValueType duplicate() {
-		return new TUndefined();
+		return getInstance();
 	}
 
 	@Override

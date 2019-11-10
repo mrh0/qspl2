@@ -10,7 +10,6 @@ import com.mrh.qspl.vm.VM;
 
 public class TUserFunc extends TFunc{
 	private Block ref;
-	private String[] paramaterList;
 	
 	public TUserFunc(Block st, String[] pars) {
 		ref = st;

@@ -27,6 +27,10 @@ public class Common {
 		s.setVariable("STRING", new Var(new TString(""), true));
 		s.setVariable("ARRAY", new Var(new TArray(), true));
 		
+		s.setVariable("PI", new Var(new TNumber(Math.PI), true));
+		s.setVariable("INF", new Var(new TNumber(Double.POSITIVE_INFINITY), true));
+		s.setVariable("NEGINF", new Var(new TNumber(Double.NEGATIVE_INFINITY), true));
+		
 		IFunc f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)
 				return new TNumber(0);
@@ -37,7 +41,7 @@ public class Common {
 			}
 			return min;
 		};
-		s.setVariable("min", new Var(new TFunc().define(f), true));
+		s.setVariable("min", new Var(new TFunc(f, "v", "min"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)
@@ -49,7 +53,33 @@ public class Common {
 			}
 			return max;
 		};
-		s.setVariable("max", new Var(new TFunc().define(f), true));
+		s.setVariable("max", new Var(new TFunc(f, "v", "max"), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() < 3)
+				return new TNumber(0);
+			double v = TNumber.from(args.get(0)).get();
+			double min = TNumber.from(args.get(1)).get();
+			double max = TNumber.from(args.get(2)).get();
+			v = v < min?min:v;
+			v = v > max?max:v;
+			return new TNumber(v);
+		};
+		s.setVariable("clamp", new Var(new TFunc(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() == 0)
+				return new TNumber(0);
+			return new TNumber(args.get(0).bool()?1:0);
+		};
+		s.setVariable("if", new Var(new TFunc(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() < 3)
+				return new TNumber(0);
+			return args.get(0).bool()?args.get(1):args.get(2);
+		};
+		s.setVariable("condition", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			String r = "";
@@ -61,7 +91,7 @@ public class Common {
 			System.out.print(r);
 			return new TString(r);
 		};
-		s.setVariable("print", new Var(new TFunc().define(f), true));
+		s.setVariable("print", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			String r = "";
@@ -73,7 +103,7 @@ public class Common {
 			System.out.println(r);
 			return new TString(r);
 		};
-		s.setVariable("println", new Var(new TFunc().define(f), true));
+		s.setVariable("println", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			Scanner scan = new Scanner(System.in);
@@ -85,13 +115,13 @@ public class Common {
 			} 
 			return new TString(scan.nextLine());
 		};
-		s.setVariable("read", new Var(new TFunc().define(f), true));
+		s.setVariable("read", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			System.exit(0);
 			return TUndefined.getInstance();
 		};
-		s.setVariable("stop", new Var(new TFunc().define(f), true));
+		s.setVariable("stop", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)
@@ -103,16 +133,16 @@ public class Common {
 			}
 			return TUndefined.getInstance();
 		};
-		s.setVariable("sleep", new Var(new TFunc().define(f), true));
+		s.setVariable("sleep", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			double from = 0;
 			double to = 1;
 			if(args.size() == 1)
-				to = (double)args.get(0).get();
+				to = TNumber.from(args.get(0)).get();
 			if(args.size() == 2) {
-				from = (double)args.get(0).get();
-				to = (double)args.get(1).get();
+				from = TNumber.from(args.get(0)).get();
+				to = TNumber.from(args.get(1)).get();
 			}
 			if(from > to)
 				return new TNumber(0);
@@ -120,35 +150,64 @@ public class Common {
 				return new TNumber(from);
 			return new TNumber(Math.random()*(to-from)+from);
 		};
-		s.setVariable("random", new Var(new TFunc().define(f), true));
+		s.setVariable("random", new Var(new TFunc(f, "n", "to"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)
 				return TUndefined.getInstance();
-			return new TNumber((double)Math.round((double)args.get(0).get()));
+			return new TNumber((double)Math.round(TNumber.from(args.get(0)).get()));
 		};
-		s.setVariable("round", new Var(new TFunc().define(f), true));
+		s.setVariable("round", new Var(new TFunc(f, "n"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)
 				return TUndefined.getInstance();
-			return new TNumber((double)Math.abs((double)args.get(0).get()));
+			return new TNumber((double)Math.floor(TNumber.from(args.get(0)).get()));
 		};
-		s.setVariable("abs", new Var(new TFunc().define(f), true));
+		s.setVariable("floor", new Var(new TFunc(f, "n"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)
 				return TUndefined.getInstance();
-			return new TNumber(Math.sqrt((double)args.get(0).get()));
+			return new TNumber((double)Math.ceil(TNumber.from(args.get(0)).get()));
 		};
-		s.setVariable("sqrt", new Var(new TFunc().define(f), true));
+		s.setVariable("ceil", new Var(new TFunc(f, "n"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)
 				return TUndefined.getInstance();
-			return vm.getValue((String)args.get(0).get());
+			return new TNumber((double)Math.abs(TNumber.from(args.get(0)).get()));
 		};
-		s.setVariable("valueOf", new Var(new TFunc().define(f), true));
+		s.setVariable("abs", new Var(new TFunc(f, "n"), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			return new TNumber(Math.sqrt(TNumber.from(args.get(0)).get()));
+		};
+		s.setVariable("sqrt", new Var(new TFunc(f, "n"), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() < 2)
+				return TUndefined.getInstance();
+			return new TNumber(Math.pow(TNumber.from(args.get(0)).get(),TNumber.from(args.get(1)).get()));
+		};
+		s.setVariable("pow", new Var(new TFunc(f, "n", "x"), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			return vm.getValue(TString.from(args.get(0)).get());
+		};
+		s.setVariable("valueOf", new Var(new TFunc(f, "name"), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			return new TArray(TFunc.from(args.get(0)).getParameters());
+		};
+		s.setVariable("parametersOf", new Var(new TFunc(f, "func"), true));
+		
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(args.size() == 0)
@@ -174,17 +233,60 @@ public class Common {
 				parms.add(TUndefined.getInstance());
 				parms.add(TUndefined.getInstance());
 				parms.add(a);
+				String ret = "";
+				for(int i = 0; i < a.getSize(); i++) {
+					parms.set(0, new TString(a.get().charAt(i)+""));
+					parms.set(1, new TNumber(i));
+					ret += (TString.from(vm.executeFunction((TFunc)args.get(0), parms, _this))).get();
+				}
+				return new TString(ret);
+			}
+			return _this;
+		};
+		s.setVariable("map", new Var(new TFunc(f, "func"), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() == 0)
+				return _this;
+			if(args.get(0).getType() != Types.FUNC)
+				return _this;
+			if(_this.getType() == Types.ARRAY) {
+				TArray a = TArray.from(_this);
+				ArrayList<ValueType> parms = new ArrayList<>();
+				ArrayList<ValueType> ret = new ArrayList<>();
+				parms.add(TUndefined.getInstance());
+				parms.add(TUndefined.getInstance());
+				parms.add(a);
+				for(int i = 0; i < a.getSize(); i++) {
+					parms.set(0, a.getIndex(i));
+					parms.set(1, new TNumber(i));
+					if(vm.executeFunction(TFunc.from(args.get(0)), parms, _this).bool())
+						ret.add(a.getIndex(i));
+				}
+				return new TArray(ret);
+			}
+			if(_this.getType() == Types.STRING) {
+				TString a = (TString) _this;
+				ArrayList<ValueType> parms = new ArrayList<>();
+				String ret = "";
+				parms.add(TUndefined.getInstance());
+				parms.add(TUndefined.getInstance());
+				parms.add(a);
 				ArrayList<ValueType> ns = new ArrayList<>();
 				for(int i = 0; i < a.getSize(); i++) {
 					parms.set(0, new TString(a.get().charAt(i)+""));
 					parms.set(1, new TNumber(i));
-					ns.add((vm.executeFunction((TFunc)args.get(0), parms, _this)));
+					if(vm.executeFunction(TFunc.from(args.get(0)), parms, _this).bool())
+						ret += a.get().charAt(i);
 				}
-				return new TArray(ns);
+				return new TString(ret);
 			}
 			return _this;
 		};
-		s.setVariable("map", new Var(new TFunc().define(f), true));
+		s.setVariable("filter", new Var(new TFunc(f, "func"), true));
+		
+		
+		
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY) {
@@ -196,7 +298,7 @@ public class Common {
 			}
 			return _this;
 		};
-		s.setVariable("collapse", new Var(new TFunc().define(f), true));
+		s.setVariable("collapse", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY && args.size() == 2) {
@@ -212,7 +314,7 @@ public class Common {
 			}
 			return _this;
 		};
-		s.setVariable("set", new Var(new TFunc().define(f), true));
+		s.setVariable("set", new Var(new TFunc(f, "index", "value"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY && args.size() > 0) {
@@ -221,7 +323,7 @@ public class Common {
 			}
 			return _this;
 		};
-		s.setVariable("push", new Var(new TFunc().define(f), true));
+		s.setVariable("push", new Var(new TFunc(f, "value"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY && args.size() == 1) {
@@ -234,7 +336,7 @@ public class Common {
 			}
 			return _this;
 		};
-		s.setVariable("add", new Var(new TFunc().define(f), true));
+		s.setVariable("add", new Var(new TFunc(f, "x", "value"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY) {
@@ -243,7 +345,7 @@ public class Common {
 			}
 			return _this;
 		};
-		s.setVariable("pop", new Var(new TFunc().define(f), true));
+		s.setVariable("pop", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY) {
@@ -252,7 +354,7 @@ public class Common {
 			}
 			return TUndefined.getInstance();
 		};
-		s.setVariable("dequeue", new Var(new TFunc().define(f), true));
+		s.setVariable("dequeue", new Var(new TFunc(f), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY && args.size() == 1) {
@@ -261,7 +363,7 @@ public class Common {
 			}
 			return TUndefined.getInstance();
 		};
-		s.setVariable("removeAt", new Var(new TFunc().define(f), true));
+		s.setVariable("removeAt", new Var(new TFunc(f, "index"), true));
 		
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			if(_this.getType() == Types.ARRAY && args.size() == 1) {
@@ -272,6 +374,6 @@ public class Common {
 			}
 			return _this;
 		};
-		s.setVariable("remove", new Var(new TFunc().define(f), true));
+		s.setVariable("remove", new Var(new TFunc(f, "value"), true));
 	}
 }

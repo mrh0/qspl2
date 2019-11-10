@@ -4,16 +4,14 @@ import com.mrh.qspl.val.ValueType;
 
 public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 
-	final double value;
+	double value;//final
 	
 	public TNumber(double v) {
 		value = v;
-		//System.out.println("TN:"+v);
 	}
 	
 	public TNumber(TNumber v) {
 		value = v.get();
-		//System.out.println("TN:"+v.get());
 	}
 	
 	public TNumber(ValueType v) {
@@ -161,5 +159,22 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	@Override
 	public int compareTo(ValueType o) {
 		return compare(o);
+	}
+	
+	public static TNumber from(ValueType v) {
+		if(v instanceof TNumber)
+			return (TNumber)v;
+		System.err.println(v + " is not a number.");
+		return null;
+	}
+	
+	public TNumber incriment(double v) {
+		value += v;
+		return this;
+	}
+	
+	public TNumber decriment(double v) {
+		value -= v;
+		return this;
 	}
 }

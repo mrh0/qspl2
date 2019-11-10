@@ -30,15 +30,23 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 			return new TString(s+v.get());
 		if(v instanceof TString) 
 			return new TString(s+v.get());
-		return TUndefined.getInstance();
+		return new TString(s+v.toString());
 	}
 
 	@Override
 	public ValueType sub(ValueType v) {
 		if(v instanceof TNumber) 
-			return new TString(s.replace((String)v.get(), ""));
+			return new TString(s.replaceAll((String)v.get(), ""));
 		if(v instanceof TString) 
-			return new TString(s.replace((String)v.get(), ""));
+			return new TString(s.replaceAll((String)v.get(), ""));
+		if(v instanceof TArray) {
+			String r = s;
+			TArray a = (TArray) v;
+			for(ValueType k : a.getAll()) {
+				r = r.replaceAll((String)k.toString(), "");
+			}
+			return new TString(r);
+		}
 		return TUndefined.getInstance();
 	}
 
@@ -123,7 +131,7 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 
 	@Override
 	public ValueType accessor(ValueType[] v) {
-		if(v.length == 1)
+		if(v.length == 0)
 			return new TNumber(getSize());
 		if(v.length == 1)
 			return new TString(s.charAt((int)Math.round((double)v[0].get()))+"");
@@ -153,7 +161,13 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 
 	@Override
 	public int compareTo(ValueType o) {
-		// TODO Auto-generated method stub
-		return 0;
+		return compare(o);
+	}
+	
+	public static TString from(ValueType v) {
+		if(v instanceof TString)
+			return (TString)v;
+		System.err.println(v + " is not a string.");
+		return null;
 	}
 }

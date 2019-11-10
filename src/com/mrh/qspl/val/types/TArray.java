@@ -22,6 +22,12 @@ public class TArray implements ValueType, Comparable<ValueType>{
 			values.add(k);
 	}
 	
+	public TArray(String[] v) {
+		values = new ArrayList<ValueType>();
+		for(String k : v)
+			values.add(new TString(k));
+	}
+	
 	public TArray(List<ValueType> v) {
 		values = new ArrayList<ValueType>();
 		for(ValueType k : v)
@@ -138,7 +144,7 @@ public class TArray implements ValueType, Comparable<ValueType>{
 
 	@Override
 	public ValueType duplicate() {
-		return null;
+		return new TArray(values);
 	}
 
 	@Override
@@ -223,5 +229,12 @@ public class TArray implements ValueType, Comparable<ValueType>{
 		a.getAll().add(v2);
 		System.out.println("new array" + a.getAll());
 		return a;
+	}
+	
+	public static TArray from(ValueType v) {
+		if(v instanceof TArray)
+			return (TArray)v;
+		System.err.println(v + " is not an array.");
+		return null;
 	}
 }

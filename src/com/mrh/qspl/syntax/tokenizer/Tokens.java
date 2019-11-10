@@ -11,7 +11,11 @@ public class Tokens {
 		none			//nothing
 	}
 	
-	public static String[] keywords = {"out", "exit", "else", "break", "prev", "continue", "as", "in", "func", "new"};
+	public static String[] keywords = {"out", "exit", "else", "break", "prev", "continue", "as", "in", "func", "new", "§"};
+	
+	public static boolean isNewSymbol(String s) {
+		return s.equals("new") || s.equals("§");
+	}
 	
 	public static boolean isKeyword(String s) {
 		for(String x : keywords)

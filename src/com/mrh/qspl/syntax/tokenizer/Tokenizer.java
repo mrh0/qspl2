@@ -138,6 +138,12 @@ public class Tokenizer {
 				next(c, TokenType.operator);
 				continue;
 			}
+			if(c == '§') {
+				end();
+				next(c, TokenType.identifier);
+				end();
+				continue;
+			}
 			if(Tokens.canBeLiteral(c)) {
 				if(cur == TokenType.identifier) {
 					next(c, TokenType.identifier);
