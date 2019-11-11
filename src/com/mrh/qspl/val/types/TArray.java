@@ -60,15 +60,33 @@ public class TArray implements ValueType, Comparable<ValueType>{
 
 	@Override
 	public ValueType multi(ValueType v) {
-		for(int i = 0; i < getSize(); i++) {
-			values.set(i, values.get(i).multi(v));
+		/*if(v.getType() == Types.NUMBER) {
+			for(int i = 0; i < getSize(); i++) {
+				values.set(i, values.get(i).multi(v));
+			}
+			return this;
+		}*/
+		if(v.getType() == Types.NUMBER) {
+			TArray a = new TArray();
+			for(int i = 0; i < v.intValue(); i++) {
+				a.add(this);
+			}
+			return a;
 		}
-		return this;
+		if(v.getType() == Types.STRING) {
+			String s = "";
+			String j = TString.from(v).get();
+			for(int i = 0; i < getSize(); i++) {
+				s += values.get(i).toString() + (i+1 < getSize()?j:"");
+			}
+			return new TString(s);
+		}
+		return TUndefined.getInstance();
 	}
 
 	@Override
 	public ValueType div(ValueType v) {
-		int index  = (int)Math.round((double)v.get());
+		int index  = v.intValue();
 		if(index < getSize() && index >= 0)
 			values.remove(index);
 		return this;

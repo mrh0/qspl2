@@ -5,19 +5,23 @@ import com.mrh.qspl.val.types.TUndefined;
 
 public class Var {
 	private ValueType value;
+	private String name = "";
 	private boolean constant = false;
 	
-	public Var(ValueType v) {
+	public Var(String name, ValueType v) {
 		this.value = v;
+		this.name = name;
 	}
 	
-	public Var() {
+	public Var(String name) {
+		this.name = name;
 		this.value = TUndefined.getInstance();
 	}
 	
-	public Var(ValueType v, boolean constant) {
+	public Var(String name, ValueType v, boolean constant) {
 		this.value = v;
 		this.constant = constant;
+		this.name = name;
 	}
 	
 	public void set(ValueType v) {
@@ -29,5 +33,14 @@ public class Var {
 	
 	public ValueType get() {
 		return value;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	@Override
+	public String toString() {
+		return "("+name+":"+value.toString()+")";
 	}
 }

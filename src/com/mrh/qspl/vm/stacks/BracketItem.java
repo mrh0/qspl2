@@ -26,6 +26,10 @@ public class BracketItem {
 		return this.prev;
 	}
 	
+	public char getOpener() {
+		return opener;
+	}
+	
 	@Override
 	public String toString() {
 		return "BracketItem:"+opener+":"+prev+":"+values.size();

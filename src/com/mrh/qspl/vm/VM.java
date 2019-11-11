@@ -23,7 +23,7 @@ public class VM {
 		ev = new ExpressionEvaluator(this, t);
 		scopeStack = new Stack<Scope>();
 		rootScope = createNewScope("root");
-		rootScope.setVariable("this", new Var(TUndefined.getInstance()));
+		rootScope.setVariable("this", new Var("this", TUndefined.getInstance()));
 		Common.defineCommons(rootScope);
 	}
 	
@@ -36,8 +36,13 @@ public class VM {
 		return getCurrentScope();
 	}
 	
-	public void popScope() {
-		scopeStack.pop();
+	public Scope createNewScope(String name, boolean lock) {
+		scopeStack.push(new Scope(name, lock));
+		return getCurrentScope();
+	}
+	
+	public Scope popScope() {
+		return scopeStack.pop();
 	}
 	
 	public ValueType executeFunction(TFunc func, ArrayList<ValueType> args, ValueType _this) {
@@ -53,19 +58,26 @@ public class VM {
 		return ev.vals.pop();
 	}
 	
-	protected Var getVar(String name) {
+	private Var getVar(String name, boolean checkLock) {
 		Var v;
 		ListIterator<Scope> it = scopeStack.listIterator(scopeStack.size());
 		while(it.hasPrevious()) {
 			Scope s = it.previous();
 			v = s.getVariable(name);
+			if(s.isLocked() && checkLock) {
+				System.out.println(name+" LOCKED");
+				break;
+			}
 			if(v != null) 
 				return v;
 		}
-		//System.out.println(name + " is Undefined");
-		v = new Var(TUndefined.getInstance(), name.toUpperCase().equals(name));
-		scopeStack.peek().setVariable(name, v);
+		v = new Var(name, TUndefined.getInstance(), name.toUpperCase().equals(name));
+		getCurrentScope().setVariable(name, v);
 		return v;
+	}
+	
+	protected Var getVar(String name) {
+		return getVar(name, false);
 	}
 	
 	public ValueType getValue(String name) {
@@ -73,7 +85,7 @@ public class VM {
 	}
 	
 	public void setValue(String name, ValueType v) {
-		getVar(name).set(v);
+		getVar(name, true).set(v);
 	}
 	
 	public void eval() {

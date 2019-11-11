@@ -71,8 +71,10 @@ public class Tokenizer {
 				continue;
 			}
 			
-			if(c == '\n')
+			if(c == '\n') {
 				curLine++;
+				lineIndent = 0;
+			}
 			if(Tokens.isEndOfStatement(c) && stringStack.isEmpty()) {
 				StatementEndType set = StatementEndType.END;
 				if(c == ':') {
@@ -189,6 +191,10 @@ public class Tokenizer {
 	}
 	
 	private int opValue(String s) {
+		if(s.equals("++"))
+			return 11;
+		if(s.equals("--"))
+			return 11;
 		if(s.equals("is"))
 			return 11;
 		if(s.equals("as"))
@@ -249,11 +255,11 @@ public class Tokenizer {
 		String tss = t.getToken();
 		
 		//System.out.println("IN: " + t);// + ":" + lasti);
-		if(tss.equals("[")) {
+		if(tss.equals("[") || tss.equals("{")) {
 			mc.push();
 			gmc().postfixList.add(t);
 		}
-		else if(tss.equals("]")) {
+		else if(tss.equals("]") || tss.equals("}")) {
 			finishPart();
 			gmc().postfixList.add(t);
 			ArrayList<Token> tl = mc.pop();
