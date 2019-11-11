@@ -64,10 +64,11 @@ public class VM {
 		while(it.hasPrevious()) {
 			Scope s = it.previous();
 			v = s.getVariable(name);
-			if(s.isLocked() && checkLock) {
-				System.out.println(name+" LOCKED");
+			if(s.isLocked() && checkLock)
 				break;
-			}
+			if(s.isLocked())
+				continue;
+			
 			if(v != null) 
 				return v;
 		}

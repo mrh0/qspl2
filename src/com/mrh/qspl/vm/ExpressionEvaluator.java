@@ -206,7 +206,8 @@ public class ExpressionEvaluator {
 						v = TNumber.from(v).incriment(1);
 					else if (op.equals("=")) {
 						Var k = vars.peek();
-						System.out.println("Set var: " + k + " to " + v);
+						if(Debug.enabled())
+							System.out.println("Set var: " + k + " to " + v);
 						vm.setValue(k.getName(), v); //k.set(v);
 						vals.pop();
 						v = k.get();
