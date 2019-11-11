@@ -1,5 +1,5 @@
 # qspl
-Quick Statement Programming Language v2.2
+Quick Statement Programming Language v2.4
 
 # Language
 
@@ -61,12 +61,23 @@ As type: 'as'
 ```
 Arrays:
 ```
+//Define:
 out a = new [5,3,2,1,9]; //Prints [5.0,3.0,2.0,1.0,9.0]
 out a + 4; //Prints [5.0,3.0,2.0,1.0,9.0,4.0]
 out a - 3; //Prints [5.0,2.0,1.0,9.0,4.0]
 out a / 1; //Prints [5.0,1.0,9.0,4.0]
 out a * 2; //Prints [10.0,2.0,18.0,8.0]
-out a[]; //Prints size (4)
+out a[]; //Prints first depth size (4)
+```
+Objects:
+```
+//Define:
+obj = new {}; //Creates empty
+obj = new {a=1, b=2}; //Creates object with elements {a=1, b=2}
+obj = new {a=1, b=new{a=3}, x=4}; //Creates object with elements {a=1, b={a=3}, x=4}}
+obj["a"]; //Get element 'a' (1)
+obj["a", "b"]; //Get array [1, {a=3}]
+obj[]; //Get first depth size (2);
 ```
 Flow control:
 ```
