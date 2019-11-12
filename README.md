@@ -173,7 +173,7 @@ map[func(v, i, a)], filter[func(v, i, a)],
 collapse[],
 set[i, v], set[[...], v], add[v], push[v], 
 pop[], dequeue[], remove[v], removeAt[i], keys[],
-sort[], find[[...]] [WIP]
+sort[], find[[...]], keys[], values[] [WIP]
 ```
 Miscellaneous:
 ```
