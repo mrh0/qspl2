@@ -1,5 +1,5 @@
 # qspl
-Quick Statement Programming Language v2.4
+Quick Statement Programming Language v2.4.1
 
 # Language
 
@@ -24,9 +24,7 @@ out "Hello World"[1]; //Prints 'e'
 out "Hello World"[0,4]; //Prints 'Hello'
 
 text = "Hi my name is MrH.";
-out j/" "; //Prints [Hi,my,name,is,MrH.]
-out j[]; //Prints size (5)
-out j[2]; //Prints 'name'
+j/" "; //Returns array : [Hi,my,name,is,MrH.]
 
 CONSTANTVALUE = 5; //Constant when variable name is all capital letters
 ```
@@ -34,7 +32,7 @@ Functions:
 ```
 //Define:
 x = func arg1 arg2:
-  exit "Hello"+arg1;
+  exit "Hello"+arg1; //Return value.
 
 //Call:
 x[" World!"]; //returns "Hello World!"
@@ -52,9 +50,9 @@ out array map[prev]; //Prints [2,3,4,5]
 ``` 
 Operators:
 ```
-Math: '+ - * / %'
+Math: '+ - * / % ++ --'
 Boolean: '&& || ! == < > <= >='
-Binary: '& | ^'
+Binary: '& | ^ ~'
 Contains: '?'
 Is type: 'is'
 As type: 'as'
@@ -62,22 +60,39 @@ As type: 'as'
 Arrays:
 ```
 //Define:
-out a = new [5,3,2,1,9]; //Prints [5.0,3.0,2.0,1.0,9.0]
-out a + 4; //Prints [5.0,3.0,2.0,1.0,9.0,4.0]
-out a - 3; //Prints [5.0,2.0,1.0,9.0,4.0]
-out a / 1; //Prints [5.0,1.0,9.0,4.0]
-out a * 2; //Prints [10.0,2.0,18.0,8.0]
-out a[]; //Prints first depth size (4)
+a = new []; //Creates empty array.
+a = new [5,3,new[6,4],1]; //Creates array : [5.0,3.0,[6.0,4.0],1.0]
+a = new [5,3,2,1]; //Creates array : [5.0,3.0,2.0,1.0]
+
+//Operate:
+a + 4; //Adds element 4 : [5.0,3.0,2.0,1.0,4.0]
+a - 3; //Removes element 3 : [5.0,2.0,1.0,4.0]
+a / 1; //Removes element at index 1 : [5.0,1.0,4.0]
+a * 2; //Doubles the array : [5.0,1.0,4.0,5.0,1.0,4.0]
+a * "|"; //Joins elements in array with "|" : "5.0|1.0|4.0|5.0|1.0|4.0"
+a[]; //Get first depth size : 6
+a[0] //Get first element : 5.0
+a[1,3] //Get array of elements 1 to 3 : [1.0,4.0,5.0]
+
+//Fuctions:
+a clear[]; //Clears array : []
+a add["World"]; //Adds element "World" to the end of the array : ["Hello"]
+a add[0, "Hello"] //Adds element "Hello" to array before index 0 : ["Hello", "World]"
+a remove["Hello"] //Removes element "Hello" : ["World"]
+a removeAt[0] //Removes element at index 0 : []
+a collapse[] //Returns collapsed string : "HelloWorld"
 ```
 Objects:
 ```
 //Define:
-obj = new {}; //Creates empty
+obj = new {}; //Creates empty object.
 obj = new {a=1, b=2}; //Creates object with elements {a=1, b=2}
 obj = new {a=1, b=new{a=3}, x=4}; //Creates object with elements {a=1, b={a=3}, x=4}}
-obj["a"]; //Get element 'a' (1)
-obj["a", "b"]; //Get array [1, {a=3}]
-obj[]; //Get first depth size (2);
+
+//Operate:
+obj["a"]; //Get element 'a' : 1
+obj["a", "b"]; //Get array : [1, {a=3}]
+obj[]; //Get first depth size : 2;
 ```
 Flow control:
 ```
@@ -117,9 +132,7 @@ prev:
 //Loops can also use keywords:
 continue; //Go to loop start.
 break; //Stop loop.
-
 ```
-
 Predefined:
 ```
 //constants:
@@ -131,7 +144,7 @@ UNDEFINED, UNDEF, null //All same.
 
 //functions: ([n]umber, [b]oolean)
 print[string], println[string], read[type]
-min[...], max[...], clamp[n, lower, upper], 
+min[...], max[...], clamp[n, lower, upper]
 random[lower, upper], 
 round[n], sqrt[n], abs[n], pow[n, x], floor[n], ceil[n],
 sin[n], cos[n], tan[n], asin[n], acos[n], atan[n],
@@ -142,9 +155,9 @@ if[b], condition[b, t, f]
 
 //chain functions: ([v]alue, [i]ndex, [a]rray)
 map[func(v, i, a)], filter[func(v, i, a)],
-collapse[], //On Arrays, returns String
+collapse[],
 set[i, v], set[[...], v], add[v], push[v], 
-pop[], dequeue[], remove[v], removeAt[i],
+pop[], dequeue[], remove[v], removeAt[i], keys[]
 ```
 Miscellaneous:
 ```
