@@ -70,6 +70,8 @@ a - 3; //Removes element 3 : [5.0,2.0,1.0,4.0]
 a / 1; //Removes element at index 1 : [5.0,1.0,4.0]
 a * 2; //Doubles the array : [5.0,1.0,4.0,5.0,1.0,4.0]
 a * "|"; //Joins elements in array with "|" : "5.0|1.0|4.0|5.0|1.0|4.0"
+a ? 4 //Array contains 4 : true
+a ? 9 //Array contains 9 : false
 a[]; //Get first depth size : 6
 a[0] //Get first element : 5.0
 a[1,3] //Get array of elements 1 to 3 : [1.0,4.0,5.0]
@@ -94,6 +96,8 @@ obj["a"]; //Get element 'a' : 1
 obj["a", "b"]; //Get array : [1, {a=3}]
 obj[]; //Get first depth size : 2;
 obj + new{y=7}; //Join objects : {a=1, b=new{a=3}, x=4, y=7}
+obj ? 1 //Object contains  1 : true
+obj keys[] ? "a" //Object has key 'a' : true
 
 //Functions:
 obj add["g", "text"]; //Adds element to object : {a=1, b=new{a=3}, x=4, y=7, g="text"}
