@@ -99,6 +99,8 @@ obj + new{y=7}; //Join objects : {a=1, b=new{a=3}, x=4, y=7}
 obj add["g", "text"]; //Adds element to object : {a=1, b=new{a=3}, x=4, y=7, g="text"}
 obj set["a", 5] //Set element value : {a=5, b=new{a=3}, x=4, y=7, g="text"}
 obj remove["x"] //Removes element at key 'x' : {a=5, b=new{a=3}, y=7, g="text"}
+obj json[] //Get json string : "{a:5, b=:{a:3}, y:7, g:'text'}" [WIP]
+obj = json[string] //Object from json [WIP]
 ```
 Flow control:
 ```
