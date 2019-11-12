@@ -6,12 +6,15 @@ Quick Statement Programming Language v2.4.1
 Variables & Values:
 ```
 x = 5; //x = 5
-
 x = x-1; //x = 4
-
+x++; //x = 5
+x--; //x = 4
 c = (((x*4)/2)+2) //c = 10
 
-a = new ["hi", 5]; //a = array("hi", 5)
+j = 5 + 6; //j = 11
+j = j + 5; //j = 16
+
+a = new ["hi", 5]; //a = array containing ["hi", 5]
 a[0]; //returns "hi"
 a[1]; //returns 5
 
