@@ -2,10 +2,8 @@ package com.mrh.qspl.val.types;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import com.mrh.qspl.val.ValueType;
 import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.Scope;
@@ -220,8 +218,10 @@ public class TObject implements ValueType{
 				o.put(key, new TObject().fromJSON((JSONObject)i));
 			else if(i instanceof JSONArray)
 				o.put(key, new TArray().fromJSON((JSONArray)i));
-			else if(i instanceof Long)
-				o.put(key, new TNumber((long)i));
+			else if(i instanceof Double)
+				o.put(key, new TNumber((double)i));
+			else if(i instanceof Integer)
+				o.put(key, new TNumber(new Double((int)i)));
 			else
 				o.put(key, new TString(i.toString()));
 		}

@@ -151,6 +151,10 @@ public class Tokenizer {
 				continue;
 			}
 			if(Tokens.canBeLiteral(c)) {
+				if(cur == TokenType.identifier && w.equals(".")) {
+					next(c, TokenType.literal);
+					continue;
+				}
 				if(cur == TokenType.identifier) {
 					next(c, TokenType.identifier);
 					continue;

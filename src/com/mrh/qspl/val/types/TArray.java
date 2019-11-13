@@ -288,8 +288,10 @@ public class TArray implements ValueType{
 				o.put(new TObject().fromJSON((JSONObject)i));
 			else if(i instanceof JSONArray)
 				o.put(new TArray().fromJSON((JSONArray)i));
-			else if(i instanceof Long)
-				o.put(new TNumber((long)i));
+			else if(i instanceof Double)
+				o.put(new TNumber((double)i));
+			else if(i instanceof Integer)
+				o.put(new TNumber(new Double((int)i)));
 			else
 				o.put(new TString(i.toString()));
 		}

@@ -112,7 +112,7 @@ public class Common {
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			String r = "";
 			for(int i = 0; i < args.size(); i++) {
-				r+=args.get(i).toString();
+				r+=args.get(i).get();
 				if(i+1 < args.size())
 					r+=", ";
 			}
@@ -124,7 +124,7 @@ public class Common {
 		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
 			String r = "";
 			for(int i = 0; i < args.size(); i++) {
-				r+=args.get(i).toString();
+				r+=args.get(i).get();
 				if(i+1 < args.size())
 					r+=", ";
 			}

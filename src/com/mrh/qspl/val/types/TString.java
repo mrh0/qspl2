@@ -21,7 +21,7 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	
 	@Override
 	public String toString() {
-		return get();//"'"+get()+"'";
+		return "'"+get()+"'";
 	}
 
 	@Override
