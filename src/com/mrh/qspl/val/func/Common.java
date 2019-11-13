@@ -1,7 +1,11 @@
 package com.mrh.qspl.val.func;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.mrh.qspl.val.ValueType;
 import com.mrh.qspl.val.types.TArray;
@@ -427,6 +431,35 @@ public class Common {
 			return TUndefined.getInstance();
 		};
 		s.setVariable("values", new Var("values", new TFunc(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY) {
+				Collections.sort(TArray.from(_this).getAll());
+				return _this;
+			}
+			return TUndefined.getInstance();
+		};
+		s.setVariable("sort", new Var("sort", new TFunc(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.ARRAY)
+				return new TString(TArray.from(_this).toJSON().toString());
+			if(_this.getType() == Types.OBJECT)
+				return new TString(TObject.from(_this).toJSON().toString());
+			return TUndefined.getInstance();
+		};
+		s.setVariable("toJSON", new Var("toJSON", new TFunc(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			if(_this.getType() == Types.ARRAY)
+				return TArray.from(_this).fromJSON(new JSONArray(TString.from(args.get(0)).get()));
+			if(_this.getType() == Types.OBJECT)
+				return TObject.from(_this).fromJSON(new JSONObject(TString.from(args.get(0)).get()));
+			return TUndefined.getInstance();
+		};
+		s.setVariable("fromJSON", new Var("fromJSON", new TFunc(f), true));
 		
 		return s;
 	}

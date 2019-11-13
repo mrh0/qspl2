@@ -162,4 +162,9 @@ public class TFunc implements ValueType{
 		System.err.println(v + " is not a function.");
 		return null;
 	}
+
+	@Override
+	public int compareTo(Object o) {
+		return 0;
+	}
 }

@@ -3,9 +3,12 @@ package com.mrh.qspl.val.types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.mrh.qspl.val.ValueType;
 
-public class TArray implements ValueType, Comparable<ValueType>{
+public class TArray implements ValueType{
 	private ArrayList<ValueType> values;
 	
 	public TArray() {
@@ -235,11 +238,6 @@ public class TArray implements ValueType, Comparable<ValueType>{
 	public int intValue() {
 		return -1;
 	}
-
-	@Override
-	public int compareTo(ValueType o) {
-		return 0;
-	}
 	
 	public static TArray merge(ValueType v1, ValueType v2) {
 		TArray a = new TArray();
@@ -254,5 +252,47 @@ public class TArray implements ValueType, Comparable<ValueType>{
 			return (TArray)v;
 		System.err.println(v + " is not an array.");
 		return null;
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		return 0;
+	}
+	
+	public void put(ValueType v) {
+		values.add(v);
+	}
+	
+	public JSONArray toJSON() {
+		JSONArray o = new JSONArray();
+		for(int i = 0; i < values.size(); i++) {
+			ValueType vt = values.get(i);
+			if(vt.getType() == Types.OBJECT)
+				o.put(i, TObject.from(vt).toJSON());
+			else if(vt.getType() == Types.ARRAY)
+				o.put(i, TArray.from(vt).toJSON());
+			else if(vt.getType() == Types.NUMBER)
+				o.put(i, TNumber.from(vt).get());
+			else if(vt.getType() == Types.STRING)
+				o.put(i, TString.from(vt).get());
+			else
+				o.put(i, vt.toString());
+		}
+		return o;
+	}
+	
+	public TArray fromJSON(JSONArray j) {
+		TArray o = this;
+		for(Object i : j.toList()) {
+			if(i instanceof JSONObject)
+				o.put(new TObject().fromJSON((JSONObject)i));
+			else if(i instanceof JSONArray)
+				o.put(new TArray().fromJSON((JSONArray)i));
+			else if(i instanceof Long)
+				o.put(new TNumber((long)i));
+			else
+				o.put(new TString(i.toString()));
+		}
+		return o;
 	}
 }

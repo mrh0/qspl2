@@ -3,6 +3,9 @@ package com.mrh.qspl.val.types;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.mrh.qspl.val.ValueType;
 import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.Scope;
@@ -180,5 +183,48 @@ public class TObject implements ValueType{
 	@Override
 	public String toString() {
 		return map.toString();
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return 0;
+	}
+	
+	public void put(String key, ValueType v) {
+		map.put(key, v);
+	}
+	
+	public JSONObject toJSON() {
+		JSONObject o = new JSONObject();
+		for(String key : map.keySet()) {
+			ValueType vt = map.get(key);
+			if(vt.getType() == Types.OBJECT)
+				o.put(key, TObject.from(vt).toJSON());
+			else if(vt.getType() == Types.ARRAY)
+				o.put(key, TArray.from(vt).toJSON());
+			else if(vt.getType() == Types.NUMBER)
+				o.put(key, TNumber.from(vt).get());
+			else if(vt.getType() == Types.STRING)
+				o.put(key, TString.from(vt).get());
+			else
+				o.put(key, vt.toString());
+		}
+		return o;
+	}
+	
+	public TObject fromJSON(JSONObject j) {
+		TObject o = this;
+		for(String key : j.keySet()) {
+			Object i = j.get(key);
+			if(i instanceof JSONObject)
+				o.put(key, new TObject().fromJSON((JSONObject)i));
+			else if(i instanceof JSONArray)
+				o.put(key, new TArray().fromJSON((JSONArray)i));
+			else if(i instanceof Long)
+				o.put(key, new TNumber((long)i));
+			else
+				o.put(key, new TString(i.toString()));
+		}
+		return o;
 	}
 }

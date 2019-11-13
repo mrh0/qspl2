@@ -129,4 +129,9 @@ public class TUndefined implements ValueType<Object>{
 	public int intValue() {
 		return -1;
 	}
+
+	@Override
+	public int compareTo(ValueType o) {
+		return 0;
+	}
 }
