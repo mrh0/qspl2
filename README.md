@@ -5,6 +5,7 @@ Quick Statement Programming Language v2.4.2
 
 Variables & Values:
 ```
+//Variables:
 x = 5; //x = 5
 x = x-1; //x = 4
 x++; //x = 5
@@ -14,6 +15,9 @@ c = (((x*4)/2)+2) //c = 10
 j = 5 + 6; //j = 11
 j = j + 5; //j = 16
 
+CONSTANTVALUE = 5; //Constant when variable name is all capital letters
+
+//Accessor:
 a = new ["hi", 5]; //a = array containing ["hi", 5]
 a[0]; //returns "hi"
 a[1]; //returns 5
@@ -26,10 +30,11 @@ out k[0,1]; //Prints [[5,4,3], [4]]
 out "Hello World"[1]; //Prints 'e'
 out "Hello World"[0,4]; //Prints 'Hello'
 
-text = "Hi my name is MrH.";
-j/" "; //Returns array : [Hi,my,name,is,MrH.]
-
-CONSTANTVALUE = 5; //Constant when variable name is all capital letters
+//Strings:
+text = "Hi my name is";
+j = j + "MrH."; //Joins strings : "Hi my name is MrH."
+j = j - "."; //Removes string from string : "Hi my name is MrH"
+j/" "; //Splits string to array : ['Hi','my','name','is','MrH']
 ```
 Functions:
 ```
@@ -55,10 +60,10 @@ Operators:
 ```
 Math: '+ - * / % ++ --'
 Boolean: '&& || ! == < > <= >='
-Binary: '& | ^ ~'
+Bitwise: '& | ^ ~'
 Contains: '?'
-Is type: 'is'
-As type: 'as'
+Is type: 'is' //Example: 56 as STRING : false (0)
+As type: 'as' //Example: 56 as STRING : "56"
 ```
 Arrays:
 ```
@@ -86,6 +91,11 @@ a add[0, "Hello"] //Adds element "Hello" to array before index 0 : ["Hello", "Wo
 a remove["Hello"] //Removes element "Hello" : ["World"]
 a removeAt[0] //Removes element at index 0 : []
 a collapse[] //Returns collapsed string : "HelloWorld"
+
+a = new [3,2,4,6];
+a sort[] //Sorts array : [2,3,4,6]
+a toJSON[] //Get json string : "[2,3,4,6]"
+a = new [] fromJSON["[4,5,[2,4,'text']]"] //Object from json : [4,5,[2,4,"text"]]
 ```
 Objects:
 ```
@@ -107,8 +117,8 @@ obj keys[] ? "a" //Object has key 'a' : true
 obj add["g", "text"]; //Adds element to object : {a=1, b=new{a=3}, x=4, y=7, g="text"}
 obj set["a", 5] //Set element value : {a=5, b=new{a=3}, x=4, y=7, g="text"}
 obj remove["x"] //Removes element at key 'x' : {a=5, b=new{a=3}, y=7, g="text"}
-obj json[] //Get json string : "{a:5, b=:{a:3}, y:7, g:'text'}" [WIP]
-obj = json[string] //Object from json [WIP]
+obj toJSON[] //Get json string : "{'a':5, 'b'={'a':3}, 'y':7, 'g':'text'}"
+obj = new {} fromJSON["{'x':5}"] //Object from json : {x=5}
 ```
 Flow control:
 ```
@@ -169,12 +179,13 @@ parametersOf[func], //Get parameter names of function.
 stop[], sleep[millis],
 if[b], condition[b, t, f]
 
-//chain functions: ([v]alue, [i]ndex, [a]rray)
+//chain functions: ([v]alue, [i]ndex, [a]rray, [s]tring)
 map[func(v, i, a)], filter[func(v, i, a)],
 collapse[],
 set[i, v], set[[...], v], add[v], push[v], 
 pop[], dequeue[], remove[v], removeAt[i], keys[],
-sort[], find[[...]], keys[], values[] [WIP]
+sort[], find[[...]], keys[], values[],
+fromJSON[s], toJSON[]
 ```
 Miscellaneous:
 ```
