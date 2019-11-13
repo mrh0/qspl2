@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.Scope;
 
 public class TObject implements ValueType{
 	
 	private Map<String, ValueType> map;
+	private static Map<String, ValueType> prototype = new HashMap<String, ValueType>();
 	
 	public TObject() {
 		map = new HashMap<>();
@@ -86,13 +88,23 @@ public class TObject implements ValueType{
 	public ValueType[] childObjects(ValueType v) {
 		return map.values().toArray(new ValueType[0]);
 	}
+	
+	public static Map<String, ValueType> getPrototype(){
+		return prototype;
+	}
+	
+	public static void addPrototype(Var v){
+		prototype.put(v.getName(), v.get());
+	}
 
 	@Override
 	public ValueType accessor(ValueType[] v) {
 		if(v.length == 0)
 			return new TNumber(map.size());
-		if(v.length == 1)
-			return map.getOrDefault(TString.from(v[0]).get(), TUndefined.getInstance());
+		if(v.length == 1) {
+			String key = TString.from(v[0]).get();
+			return map.getOrDefault(key, getPrototype().getOrDefault(key, TUndefined.getInstance()));
+		}
 		TObject o = new TObject();
 		for(ValueType vv : v) {
 			String k = TString.from(vv).get();
@@ -108,12 +120,12 @@ public class TObject implements ValueType{
 
 	@Override
 	public int getSize() {
-		return 0;
+		return map.size();
 	}
 
 	@Override
 	public ValueType toType(int type) {
-		return TUndefined.getInstance();
+		return TUndefined.getInstance();//convert into json if string
 	}
 
 	@Override
@@ -155,6 +167,10 @@ public class TObject implements ValueType{
 	
 	public String[] getKeys() {
 		return map.keySet().toArray(new String[0]);
+	}
+	
+	public ValueType[] getValues() {
+		return map.values().toArray(new ValueType[0]);
 	}
 	
 	public Map<String, ValueType> getMap() {

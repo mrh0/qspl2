@@ -119,7 +119,7 @@ public class ExpressionEvaluator {
 				Scope oScope = vm.popScope();
 				if(!brackets.isEmpty()) {
 					BracketItem bi = brackets.pop();
-					if(!prev.getToken().equals("}")) 
+					if(!prev.getToken().equals("{"))
 						bi.add(vals.pop());
 					vals.push(new TObject(oScope.getAllValues()));
 					
@@ -143,6 +143,7 @@ public class ExpressionEvaluator {
 								System.out.println("EXEC:" + _this + " par:" + bi.getParameters() + " ret:" + vals.peek());
 						}
 						else {
+							vals.push(prevp); //Used as this value if function needs it. Will increase stack (KEEP IN MIND)
 							ValueType vt = prevp.accessor(bi.getParameters().toArray(new ValueType[0]));
 							vals.push(vt);
 						}
@@ -189,11 +190,11 @@ public class ExpressionEvaluator {
 					else if (op.equals("||")) 
 						v = new TNumber(v.bool() || vals.pop().bool()?1:0);
 					else if (op.equals("&"))
-						v = new TNumber(v.intValue() & vals.pop().intValue());
+						v = new TNumber(vals.pop().intValue() & v.intValue());
 					else if (op.equals("|"))
-						v = new TNumber(v.intValue() | vals.pop().intValue());
+						v = new TNumber(vals.pop().intValue() | v.intValue());
 					else if (op.equals("^")) 
-						v = new TNumber(v.intValue() ^ vals.pop().intValue());
+						v = new TNumber(vals.pop().intValue() ^ v.intValue());
 					else if (op.equals("?")) //Contains
 						v = new TNumber(vals.pop().contains(v)?1:0);
 					else if (op.equals("is")) //is type
@@ -204,6 +205,8 @@ public class ExpressionEvaluator {
 						v = TNumber.from(v).decriment(1);
 					else if (op.equals("++"))
 						v = TNumber.from(v).incriment(1);
+					/*else if (op.equals("."))
+						v = vals.pop().accessor(TString.from(v));*/
 					else if (op.equals("=")) {
 						Var k = vars.peek();
 						if(Debug.enabled())

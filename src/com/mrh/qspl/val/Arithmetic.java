@@ -28,6 +28,10 @@ public interface Arithmetic {
 	public ValueType[] childObjects(ValueType v);
 	
 	public ValueType accessor(ValueType[] v);
+	public default ValueType accessor(ValueType v) {
+		ValueType[] k = {v};
+		return accessor(k);
+	}
 	
 	public int getType();
 	

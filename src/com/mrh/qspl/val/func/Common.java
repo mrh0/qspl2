@@ -16,7 +16,21 @@ import com.mrh.qspl.vm.Scope;
 import com.mrh.qspl.vm.VM;
 
 public class Common {
-	public static void defineCommons(Scope s) {
+	public static Scope defaultScope = null;
+	
+	public static void initPrototypes() {
+		if(defaultScope != null)
+			return;
+		defaultScope = defineCommons(new Scope("default"));
+		
+		TObject.addPrototype(defaultScope.getVariable("set"));
+	}
+	
+	public static TFunc getFunc(String s) {
+		return (TFunc) defaultScope.getVariable(s).get();
+	}
+	
+	public static Scope defineCommons(Scope s) {
 		s.setVariable("true", new Var("true", new TNumber(1), true));
 		s.setVariable("false", new Var("false", new TNumber(0), true));
 		s.setVariable("UNDEFINED", new Var("UNDEFINED", TUndefined.getInstance(), true));
@@ -404,5 +418,16 @@ public class Common {
 			return TUndefined.getInstance();
 		};
 		s.setVariable("keys", new Var("keys", new TFunc(f), true));
+		
+		f = (ArrayList<ValueType> args, VM vm, ValueType _this) -> {
+			if(_this.getType() == Types.OBJECT) 
+				return new TArray(TObject.from(_this).getValues());
+			if(_this.getType() == Types.ARRAY) 
+				return _this;
+			return TUndefined.getInstance();
+		};
+		s.setVariable("values", new Var("values", new TFunc(f), true));
+		
+		return s;
 	}
 }

@@ -13,6 +13,7 @@ public class Tokenizer {
 	TokenType cur = TokenType.none;
 	TokenType last = TokenType.none;
 	TokenType lasti = TokenType.none;
+	Token prevToken = null;
 	
 	Stack<Character> bracketStack;
 	Stack<Character> stringStack;
@@ -111,7 +112,10 @@ public class Tokenizer {
 				next(c, TokenType.string);
 				continue;
 			}
-			
+			if(c == '.' && (cur != TokenType.literal)) {
+				end();
+				next(TokenType.identifier);
+			}
 			if(Tokens.isSeperator(c)) {
 				if(Tokens.isWhitespace(c)) {
 					if(Tokens.isIndent(c) && isPreStatement()) {
@@ -191,6 +195,9 @@ public class Tokenizer {
 	}
 	
 	private int opValue(String s) {
+		/*if(s.equals("."))
+			return 12;*/
+		
 		if(s.equals("++"))
 			return 11;
 		if(s.equals("--"))
@@ -307,12 +314,25 @@ public class Tokenizer {
 			if(Tokens.isKeyword(w))
 				cur = TokenType.keyword;
 		
-		//last = cur;
-		//cur = TokenType.none;
-		
 		if(w.length() > 0 || cur == TokenType.string) {
-			Token t = new Token(w, cur);
-			gotNewToken(t);//ts.add(t);
+			Token t = null;
+			if(w.charAt(0) == '.' && cur == TokenType.identifier && w.length() > 1) {
+				if(Tokens.canBeLiteral(w.charAt(1))) {
+					t = new Token(w, cur);
+					gotNewToken(t);
+				}
+				else {
+					gotNewToken(new Token("[", TokenType.seperator));
+					t = new Token(w.substring(1), TokenType.string);
+					gotNewToken(t);
+					gotNewToken(new Token("]", TokenType.seperator));
+				}
+			}
+			else {
+				t = new Token(w, cur);
+				gotNewToken(t);
+			}
+			
 			w = "";
 			
 			if(cur != TokenType.none)

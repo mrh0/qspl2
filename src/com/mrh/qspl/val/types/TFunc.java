@@ -38,7 +38,13 @@ public class TFunc implements ValueType{
 	
 	@Override
 	public String toString() {
-		return "internal:func()";
+		String r = "";
+		for(int i = 0; i < paramaterList.length; i++) {
+			r += paramaterList[i];
+			if(i+1 < paramaterList.length)
+				r += ",";
+		}
+		return "internal:func("+r+")";
 	}
 	
 	@Override

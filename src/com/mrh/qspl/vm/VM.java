@@ -20,6 +20,7 @@ public class VM {
 	ExpressionEvaluator ev;
 	
 	public VM(Tokenizer t) {
+		Common.initPrototypes();
 		ev = new ExpressionEvaluator(this, t);
 		scopeStack = new Stack<Scope>();
 		rootScope = createNewScope("root");
