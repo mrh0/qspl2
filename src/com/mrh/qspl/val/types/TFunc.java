@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.func.IFunc;
+import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.Scope;
 import com.mrh.qspl.vm.VM;
 
@@ -140,7 +141,7 @@ public class TFunc implements Value{
 	public Value accessor(Value[] v) {
 		if(v.length == 0)
 			return TUndefined.getInstance();
-		return prototype.getOrDefault(TString.from(v[0]), TUndefined.getInstance());
+		return getPrototype().getOrDefault(TString.from(v[0]), TUndefined.getInstance());
 	}
 
 	@Override
@@ -172,5 +173,13 @@ public class TFunc implements Value{
 	@Override
 	public int compareTo(Object o) {
 		return 0;
+	}
+	
+	public static Map<String, Value> getPrototype(){
+		return prototype;
+	}
+	
+	public static void addPrototype(Var v){
+		prototype.put(v.getName(), v.get());
 	}
 }

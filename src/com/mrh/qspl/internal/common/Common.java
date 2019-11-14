@@ -462,6 +462,42 @@ public class Common {
 		};
 		s.setVariable("fromJSON", new Var("fromJSON", new TFunc(f), true));
 		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			TFunc func = TFunc.from(args.get(0));
+			if(args.size() == 0) {
+				if(_this.getType() != Types.FUNC)
+					return TUndefined.getInstance();
+				return func.execute(new ArrayList<Value>(), vm, _this);
+			}
+			if(args.size() == 1) {
+				if(args.get(0).getType() == Types.ARRAY)
+					return func.execute(TArray.from(args.get(0)).getAll(), vm, _this);
+				return func.execute(new ArrayList<Value>(), vm, args.get(0));
+			}
+			if(args.size() == 2)
+				return func.execute(TArray.from(args.get(0)).getAll(), vm, args.get(1));
+			return TUndefined.getInstance();
+		};
+		s.setVariable("call", new Var("call", new TFunc(f, "args", "this"), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			TFunc func = TFunc.from(args.get(0));
+			if(args.size() == 0) {
+				if(_this.getType() != Types.FUNC)
+					return TUndefined.getInstance();
+				return func.execute(new ArrayList<Value>(), vm, _this);
+			}
+			if(args.size() == 1) {
+				if(args.get(0).getType() == Types.ARRAY)
+					return func.execute(TArray.from(args.get(0)).getAll(), vm, _this);
+				return func.execute(new ArrayList<Value>(), vm, args.get(0));
+			}
+			if(args.size() == 2)
+				return func.execute(TArray.from(args.get(0)).getAll(), vm, args.get(1));
+			return TUndefined.getInstance();
+		};
+		s.setVariable("callAsync", new Var("callAsync", new TFunc(f), true));
+		
 		return s;
 	}
 }

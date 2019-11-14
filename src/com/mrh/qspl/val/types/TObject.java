@@ -89,14 +89,6 @@ public class TObject implements Value{
 	public Value[] childObjects(Value v) {
 		return map.values().toArray(new Value[0]);
 	}
-	
-	public static Map<String, Value> getPrototype(){
-		return prototype;
-	}
-	
-	public static void addPrototype(Var v){
-		prototype.put(v.getName(), v.get());
-	}
 
 	@Override
 	public Value accessor(Value[] v) {
@@ -226,5 +218,13 @@ public class TObject implements Value{
 				o.put(key, new TString(i.toString()));
 		}
 		return o;
+	}
+	
+	public static Map<String, Value> getPrototype(){
+		return prototype;
+	}
+	
+	public static void addPrototype(Var v){
+		prototype.put(v.getName(), v.get());
 	}
 }

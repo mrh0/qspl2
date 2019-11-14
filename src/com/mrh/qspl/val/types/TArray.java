@@ -1,15 +1,19 @@
 package com.mrh.qspl.val.types;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.mrh.qspl.val.Value;
+import com.mrh.qspl.var.Var;
 
 public class TArray implements Value{
 	private ArrayList<Value> values;
+	private static Map<String, Value> prototype = new HashMap<String, Value>();
 	
 	public TArray() {
 		values = new ArrayList<Value>();
@@ -296,5 +300,13 @@ public class TArray implements Value{
 				o.put(new TString(i.toString()));
 		}
 		return o;
+	}
+	
+	public static Map<String, Value> getPrototype(){
+		return prototype;
+	}
+	
+	public static void addPrototype(Var v){
+		prototype.put(v.getName(), v.get());
 	}
 }
