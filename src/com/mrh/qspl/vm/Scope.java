@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.mrh.qspl.val.ValueType;
-import com.mrh.qspl.val.func.Common;
+import com.mrh.qspl.internal.common.Common;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.var.Var;
 
 public class Scope {
@@ -46,9 +46,9 @@ public class Scope {
 		return variables;
 	}
 	
-	protected Map<String, ValueType> getAllValues(){
+	protected Map<String, Value> getAllValues(){
 		Set<String> c = variables.keySet();
-		Map<String, ValueType> map = new HashMap<>();
+		Map<String, Value> map = new HashMap<>();
 		for(String s : c) {
 			map.put(s, this.getVariable(s).get());
 		}

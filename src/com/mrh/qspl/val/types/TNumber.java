@@ -1,8 +1,8 @@
 package com.mrh.qspl.val.types;
 
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 
-public class TNumber implements ValueType<Double>, Comparable<ValueType>{
+public class TNumber implements Value<Double>, Comparable<Value>{
 
 	double value;//final
 	
@@ -14,7 +14,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 		value = v.get();
 	}
 	
-	public TNumber(ValueType v) {
+	public TNumber(Value v) {
 		value = (double) v.get();
 	}
 	
@@ -29,7 +29,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 	
 	@Override
-	public ValueType add(ValueType v) {
+	public Value add(Value v) {
 		if(v instanceof TNumber) 
 			return new TNumber(value + (double)v.get());
 		if(v instanceof TString) 
@@ -38,7 +38,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType sub(ValueType v) {
+	public Value sub(Value v) {
 		if(v instanceof TNumber) 
 			return new TNumber(value - (double)v.get());
 		if(v instanceof TString)
@@ -47,7 +47,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType multi(ValueType v) {
+	public Value multi(Value v) {
 		if(v instanceof TNumber) 
 			return new TNumber(value * (double)v.get());
 		if(v instanceof TString)
@@ -56,7 +56,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType div(ValueType v) {
+	public Value div(Value v) {
 		if(v instanceof TNumber) 
 			return new TNumber(value / (double)v.get());
 		if(v instanceof TString)
@@ -65,7 +65,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType mod(ValueType v) {
+	public Value mod(Value v) {
 		if(v instanceof TNumber) 
 			return new TNumber(value % (double)v.get());
 		if(v instanceof TString)
@@ -74,7 +74,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType pow(ValueType v) {
+	public Value pow(Value v) {
 		if(v instanceof TNumber) 
 			return new TNumber(Math.pow(value, (double)v.get()));
 		if(v instanceof TString)
@@ -83,7 +83,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType root() {
+	public Value root() {
 		return new TNumber(Math.sqrt(value));
 	}
 
@@ -93,33 +93,33 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public boolean equals(ValueType v) {
+	public boolean equals(Value v) {
 		return v.get().equals(value);
 	}
 	
 	@Override
-	public int compare(ValueType v) {
+	public int compare(Value v) {
 		return (((Double)value).compareTo((Double)v.get()));
 	}
 
 	@Override
-	public ValueType duplicate() {
+	public Value duplicate() {
 		return new TNumber(value);
 	}
 
 	@Override
-	public boolean contains(ValueType v) {
+	public boolean contains(Value v) {
 		return false;
 	}
 
 	@Override
-	public ValueType childObject(ValueType v) {
+	public Value childObject(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType[] childObjects(ValueType v) {
-		return new ValueType[0];
+	public Value[] childObjects(Value v) {
+		return new Value[0];
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType accessor(ValueType[] v) {
+	public Value accessor(Value[] v) {
 		return TUndefined.getInstance();
 	}
 
@@ -143,7 +143,7 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 	
 	@Override
-	public ValueType toType(int type) {
+	public Value toType(int type) {
 		if(type == Types.NUMBER)
 			return this;
 		if(type == Types.STRING)
@@ -157,11 +157,11 @@ public class TNumber implements ValueType<Double>, Comparable<ValueType>{
 	}
 
 	@Override
-	public int compareTo(ValueType o) {
+	public int compareTo(Value o) {
 		return compare(o);
 	}
 	
-	public static TNumber from(ValueType v) {
+	public static TNumber from(Value v) {
 		if(v instanceof TNumber)
 			return (TNumber)v;
 		System.err.println(v + " is not a number.");

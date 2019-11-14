@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import com.mrh.qspl.syntax.tokenizer.Token;
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 
 public class BracketStack {
 	

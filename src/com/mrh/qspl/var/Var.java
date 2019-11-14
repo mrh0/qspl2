@@ -1,14 +1,14 @@
 package com.mrh.qspl.var;
 
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TUndefined;
 
 public class Var {
-	private ValueType value;
+	private Value value;
 	private String name = "";
 	private boolean constant = false;
 	
-	public Var(String name, ValueType v) {
+	public Var(String name, Value v) {
 		this.value = v;
 		this.name = name;
 	}
@@ -18,20 +18,20 @@ public class Var {
 		this.value = TUndefined.getInstance();
 	}
 	
-	public Var(String name, ValueType v, boolean constant) {
+	public Var(String name, Value v, boolean constant) {
 		this.value = v;
 		this.constant = constant;
 		this.name = name;
 	}
 	
-	public void set(ValueType v) {
+	public void set(Value v) {
 		if(!constant || this.value instanceof TUndefined)
 			this.value = v;
 		else
 			System.err.println("Tried to set constant value");
 	}
 	
-	public ValueType get() {
+	public Value get() {
 		return value;
 	}
 	

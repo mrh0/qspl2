@@ -12,7 +12,7 @@ import com.mrh.qspl.syntax.tokenizer.Token;
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
 import com.mrh.qspl.syntax.tokenizer.Tokens;
 import com.mrh.qspl.syntax.tokenizer.Tokens.TokenType;
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TArray;
 import com.mrh.qspl.val.types.TFunc;
 import com.mrh.qspl.val.types.TNumber;
@@ -68,7 +68,7 @@ public class ExpressionEvaluator {
 		vars.pop();
 	}
 	
-	private boolean evalStatement(Statement statement, boolean oneliner, ValueType previousResult) {
+	private boolean evalStatement(Statement statement, boolean oneliner, Value previousResult) {
 		ops = new Stack<String>();
 		vals = new ValStack(this);
 		vars = new Stack<Var>();
@@ -103,11 +103,11 @@ public class ExpressionEvaluator {
 				}
 			}
 			if(s.equals("[")) {
-				ValueType vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop());
+				Value vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop());
 				brackets.push(new BracketItem('[', vt));
 			}
 			else if(s.equals("{")) {
-				ValueType vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop());
+				Value vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop());
 				brackets.push(new BracketItem('{', vt) );
 				vm.createNewScope("object", true);
 			}
@@ -134,17 +134,17 @@ public class ExpressionEvaluator {
 						vals.push(new TArray(bi.getParameters()));
 					}
 					else {
-						ValueType prevp = bi.getPrev();
+						Value prevp = bi.getPrev();
 						if(prevp.getType() == Types.FUNC) {
-							ValueType _this = vals.isEmpty()?TUndefined.getInstance():vals.pop();
-							ValueType vt = ((TFunc) prevp).execute(bi.getParameters(), vm, _this);
+							Value _this = vals.isEmpty()?TUndefined.getInstance():vals.pop();
+							Value vt = ((TFunc) prevp).execute(bi.getParameters(), vm, _this);
 							vals.push(vt);
 							if(Debug.enabled())
 								System.out.println("EXEC:" + _this + " par:" + bi.getParameters() + " ret:" + vals.peek());
 						}
 						else {
 							vals.push(prevp); //Used as this value if function needs it. Will increase stack (KEEP IN MIND)
-							ValueType vt = prevp.accessor(bi.getParameters().toArray(new ValueType[0]));
+							Value vt = prevp.accessor(bi.getParameters().toArray(new Value[0]));
 							vals.push(vt);
 						}
 					}
@@ -154,7 +154,7 @@ public class ExpressionEvaluator {
 				ops.push(s);
 				if(!ops.isEmpty()) {
 					String op = ops.pop();
-					ValueType v = vals.pop();
+					Value v = vals.pop();
 					/*if(!ops.isEmpty())
 						System.out.println("OP: "+vals.peek().get()+" "+s+" "+v);
 					else
@@ -277,7 +277,7 @@ public class ExpressionEvaluator {
 	protected void walkThrough(Block b) {
 		
 		Iterator iter = null;
-		ValueType previousResult = TUndefined.getInstance();
+		Value previousResult = TUndefined.getInstance();
 		ArrayList<Statement> a = b.getAll();
 		for(int i = 0; i < a.size(); i++) {
 			Statement s = a.get(i);
@@ -291,7 +291,7 @@ public class ExpressionEvaluator {
 			}
 			if(iter != null) {
 				while(iter.hasNext() && !breakCalled) {
-					vm.setValue(s.getTokens()[0].getToken(), (ValueType)iter.next());
+					vm.setValue(s.getTokens()[0].getToken(), (Value)iter.next());
 					walkThrough(s.getNext());
 				}
 				breakCalled = false;

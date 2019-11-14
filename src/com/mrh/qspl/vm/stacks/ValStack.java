@@ -3,18 +3,18 @@ package com.mrh.qspl.vm.stacks;
 import java.util.Stack;
 
 import com.mrh.qspl.debug.Debug;
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.ExpressionEvaluator;
 
 public class ValStack{
 	private class ValVarItem{
-		public ValVarItem(ValueType val, Var var) {
+		public ValVarItem(Value val, Var var) {
 			this.val = val;
 			this.var = var;
 		}
-		public ValueType val;
+		public Value val;
 		public Var var;
 	}
 	private Stack<ValVarItem> vals;
@@ -24,13 +24,13 @@ public class ValStack{
 		this.ee = ee;
 	}
 	
-	public void push(ValueType item) {
+	public void push(Value item) {
 		if(Debug.enabled())
 			System.out.println("PUSH:  " + item);
 		this.vals.push(new ValVarItem(item, null));
 	}
 	
-	public void push(ValueType item, Var var) {
+	public void push(Value item, Var var) {
 		if(Debug.enabled())
 			System.out.println("PUSH: VAR " + item);
 		this.vals.push(new ValVarItem(item, var));
@@ -44,7 +44,7 @@ public class ValStack{
 		return this.vals.size();
 	}
 	
-	public ValueType pop() {
+	public Value pop() {
 		if(isEmpty()) {
 			if(Debug.enabled())
 				System.out.println("POP: Empty UNDEF");
@@ -58,7 +58,7 @@ public class ValStack{
 		return this.vals.pop().val;
 	}
 	
-	public ValueType peek() {
+	public Value peek() {
 		if(isEmpty())
 			return null;
 		return vals.peek().val;

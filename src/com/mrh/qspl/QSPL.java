@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.mrh.qspl.debug.Debug;
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TFunc;
 import com.mrh.qspl.vm.ExpressionEvaluator;
 import com.mrh.qspl.vm.VM;
@@ -34,7 +34,7 @@ public class QSPL {
 		return tokens.toString();
 	}
 	
-	public ValueType executeFunction(TFunc func, ArrayList<ValueType> args, ValueType _this) {
+	public Value executeFunction(TFunc func, ArrayList<Value> args, Value _this) {
 		return vm.executeFunction(func, args, _this);
 	}
 	
@@ -43,11 +43,11 @@ public class QSPL {
 		return this;
 	}
 	
-	public void setGlobalVariable(String name, ValueType value) {
+	public void setGlobalVariable(String name, Value value) {
 		vm.setValue(name, value);
 	}
 	
-	public ValueType getGlobalVariable(String name) {
+	public Value getGlobalVariable(String name) {
 		return vm.getValue(name);
 	}
 	

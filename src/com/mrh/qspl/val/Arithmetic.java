@@ -1,35 +1,35 @@
 package com.mrh.qspl.val;
 
 public interface Arithmetic {
-	public ValueType add(ValueType v);
+	public Value add(Value v);
 	
-	public ValueType sub(ValueType v);
+	public Value sub(Value v);
 	
-	public ValueType multi(ValueType v);
+	public Value multi(Value v);
 	
-	public ValueType div(ValueType v);
+	public Value div(Value v);
 	
-	public ValueType mod(ValueType v);
+	public Value mod(Value v);
 	
-	public ValueType pow(ValueType v);
+	public Value pow(Value v);
 	
-	public ValueType root();
+	public Value root();
 	
 	public boolean bool();
 	
-	public boolean equals(ValueType v);
+	public boolean equals(Value v);
 	
-	public int compare(ValueType v);
+	public int compare(Value v);
 	
-	public boolean contains(ValueType v);
+	public boolean contains(Value v);
 	
-	public ValueType childObject(ValueType v);
+	public Value childObject(Value v);
 	
-	public ValueType[] childObjects(ValueType v);
+	public Value[] childObjects(Value v);
 	
-	public ValueType accessor(ValueType[] v);
-	public default ValueType accessor(ValueType v) {
-		ValueType[] k = {v};
+	public Value accessor(Value[] v);
+	public default Value accessor(Value v) {
+		Value[] k = {v};
 		return accessor(k);
 	}
 	
@@ -37,5 +37,5 @@ public interface Arithmetic {
 	
 	public int getSize();
 	
-	public ValueType toType(int type);
+	public Value toType(int type);
 }

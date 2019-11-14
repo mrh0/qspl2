@@ -2,9 +2,9 @@ package com.mrh.qspl.val.func;
 
 import java.util.ArrayList;
 
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.vm.VM;
 
 public interface IFunc {
-	public ValueType execute(ArrayList<ValueType> args, VM vm, ValueType pThis);
+	public Value execute(ArrayList<Value> args, VM vm, Value pThis);
 }

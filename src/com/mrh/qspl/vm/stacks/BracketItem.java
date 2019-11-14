@@ -1,28 +1,28 @@
 package com.mrh.qspl.vm.stacks;
 
 import java.util.ArrayList;
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 
 public class BracketItem {
-	private ValueType prev;
+	private Value prev;
 	private char opener;
-	private ArrayList<ValueType> values;
+	private ArrayList<Value> values;
 	
-	public BracketItem(char opener, ValueType prev) {
+	public BracketItem(char opener, Value prev) {
 		this.prev = prev;
 		this.opener = opener;
-		this.values = new ArrayList<ValueType>();
+		this.values = new ArrayList<Value>();
 	}
 	
-	public ArrayList<ValueType> getParameters() {
+	public ArrayList<Value> getParameters() {
 		return this.values;
 	}
 	
-	public void add(ValueType v) {
+	public void add(Value v) {
 		values.add(v);
 	}
 	
-	public ValueType getPrev() {
+	public Value getPrev() {
 		return this.prev;
 	}
 	

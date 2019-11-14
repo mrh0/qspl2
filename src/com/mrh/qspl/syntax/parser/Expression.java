@@ -4,12 +4,12 @@ import java.util.Stack;
 
 import com.mrh.qspl.syntax.tokenizer.Token;
 import com.mrh.qspl.syntax.tokenizer.Tokens;
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TNumber;
 
 public class Expression {
 	
-	private Stack<ValueType> valueStack;
+	private Stack<Value> valueStack;
 	private Stack<String> opStack;
 	
 	public Expression() {
@@ -36,8 +36,8 @@ public class Expression {
 			}
 			if(t.getToken().charAt(0) == ')') {
 				String op = opStack.pop();
-				ValueType right = valueStack.pop();
-				ValueType left = valueStack.pop();
+				Value right = valueStack.pop();
+				Value left = valueStack.pop();
 				while(op.charAt(0) != '('){
 					
 					op = opStack.pop();
@@ -51,7 +51,7 @@ public class Expression {
 		}
 	}
 	
-	public ValueType calc(String op, ValueType left, ValueType right) {
+	public Value calc(String op, Value left, Value right) {
 		if(op.equals("+")) {
 			if(left instanceof TNumber && right instanceof TNumber)
 				return new TNumber((double)left.get() + (double)right.get());

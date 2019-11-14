@@ -4,55 +4,55 @@ import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.Scope;
 
-public class TObject implements ValueType{
+public class TObject implements Value{
 	
-	private Map<String, ValueType> map;
-	private static Map<String, ValueType> prototype = new HashMap<String, ValueType>();
+	private Map<String, Value> map;
+	private static Map<String, Value> prototype = new HashMap<String, Value>();
 	
 	public TObject() {
 		map = new HashMap<>();
 	}
 	
-	public TObject(Map<String, ValueType> m) {
+	public TObject(Map<String, Value> m) {
 		map = m;
 	}
 
 	@Override
-	public ValueType add(ValueType v) {
+	public Value add(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType sub(ValueType v) {
+	public Value sub(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType multi(ValueType v) {
+	public Value multi(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType div(ValueType v) {
+	public Value div(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType mod(ValueType v) {
+	public Value mod(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType pow(ValueType v) {
+	public Value pow(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType root() {
+	public Value root() {
 		return TUndefined.getInstance();
 	}
 
@@ -62,18 +62,18 @@ public class TObject implements ValueType{
 	}
 
 	@Override
-	public boolean equals(ValueType v) {
+	public boolean equals(Value v) {
 		return false;
 	}
 
 	@Override
-	public int compare(ValueType v) {
+	public int compare(Value v) {
 		return 0;
 	}
 
 	@Override
-	public boolean contains(ValueType v) {
-		for(ValueType vv : map.values()) {
+	public boolean contains(Value v) {
+		for(Value vv : map.values()) {
 			if(v.equals(vv))
 				return true;
 		}
@@ -81,16 +81,16 @@ public class TObject implements ValueType{
 	}
 
 	@Override
-	public ValueType childObject(ValueType v) {
+	public Value childObject(Value v) {
 		return map.getOrDefault(TString.from(v).get(), TUndefined.getInstance());
 	}
 
 	@Override
-	public ValueType[] childObjects(ValueType v) {
-		return map.values().toArray(new ValueType[0]);
+	public Value[] childObjects(Value v) {
+		return map.values().toArray(new Value[0]);
 	}
 	
-	public static Map<String, ValueType> getPrototype(){
+	public static Map<String, Value> getPrototype(){
 		return prototype;
 	}
 	
@@ -99,7 +99,7 @@ public class TObject implements ValueType{
 	}
 
 	@Override
-	public ValueType accessor(ValueType[] v) {
+	public Value accessor(Value[] v) {
 		if(v.length == 0)
 			return new TNumber(map.size());
 		if(v.length == 1) {
@@ -107,7 +107,7 @@ public class TObject implements ValueType{
 			return map.getOrDefault(key, getPrototype().getOrDefault(key, TUndefined.getInstance()));
 		}
 		TObject o = new TObject();
-		for(ValueType vv : v) {
+		for(Value vv : v) {
 			String k = TString.from(vv).get();
 			o.set(k, map.getOrDefault(k, TUndefined.getInstance()));
 		}
@@ -125,7 +125,7 @@ public class TObject implements ValueType{
 	}
 
 	@Override
-	public ValueType toType(int type) {
+	public Value toType(int type) {
 		return TUndefined.getInstance();//convert into json if string
 	}
 
@@ -135,7 +135,7 @@ public class TObject implements ValueType{
 	}
 
 	@Override
-	public ValueType duplicate() {
+	public Value duplicate() {
 		return TUndefined.getInstance();
 	}
 
@@ -149,19 +149,19 @@ public class TObject implements ValueType{
 		return 0;
 	}
 
-	public static TObject from(ValueType v) {
+	public static TObject from(Value v) {
 		if(v instanceof TObject)
 			return (TObject)v;
 		System.err.println(v + " is not an object.");
 		return null;
 	}
 	
-	public TObject set(String key, ValueType v) {
+	public TObject set(String key, Value v) {
 		map.put(key, v);
 		return this;
 	}
 	
-	public ValueType get(String key) {
+	public Value get(String key) {
 		map.getOrDefault(key, TUndefined.getInstance());
 		return this;
 	}
@@ -170,11 +170,11 @@ public class TObject implements ValueType{
 		return map.keySet().toArray(new String[0]);
 	}
 	
-	public ValueType[] getValues() {
-		return map.values().toArray(new ValueType[0]);
+	public Value[] getValues() {
+		return map.values().toArray(new Value[0]);
 	}
 	
-	public Map<String, ValueType> getMap() {
+	public Map<String, Value> getMap() {
 		return map;
 	}
 	
@@ -188,14 +188,14 @@ public class TObject implements ValueType{
 		return 0;
 	}
 	
-	public void put(String key, ValueType v) {
+	public void put(String key, Value v) {
 		map.put(key, v);
 	}
 	
 	public JSONObject toJSON() {
 		JSONObject o = new JSONObject();
 		for(String key : map.keySet()) {
-			ValueType vt = map.get(key);
+			Value vt = map.get(key);
 			if(vt.getType() == Types.OBJECT)
 				o.put(key, TObject.from(vt).toJSON());
 			else if(vt.getType() == Types.ARRAY)

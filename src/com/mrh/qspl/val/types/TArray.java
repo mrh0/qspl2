@@ -6,46 +6,46 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 
-public class TArray implements ValueType{
-	private ArrayList<ValueType> values;
+public class TArray implements Value{
+	private ArrayList<Value> values;
 	
 	public TArray() {
-		values = new ArrayList<ValueType>();
+		values = new ArrayList<Value>();
 	}
 	
-	public TArray(ArrayList<ValueType> v) {
+	public TArray(ArrayList<Value> v) {
 		values = v;
 	}
 	
-	public TArray(ValueType[] v) {
-		values = new ArrayList<ValueType>();
-		for(ValueType k : v)
+	public TArray(Value[] v) {
+		values = new ArrayList<Value>();
+		for(Value k : v)
 			values.add(k);
 	}
 	
 	public TArray(String[] v) {
-		values = new ArrayList<ValueType>();
+		values = new ArrayList<Value>();
 		for(String k : v)
 			values.add(new TString(k));
 	}
 	
-	public TArray(List<ValueType> v) {
-		values = new ArrayList<ValueType>();
-		for(ValueType k : v)
+	public TArray(List<Value> v) {
+		values = new ArrayList<Value>();
+		for(Value k : v)
 			values.add(k);
 	}
 	
-	public ValueType find(ValueType v) {
-		for(ValueType k : values)
+	public Value find(Value v) {
+		for(Value k : values)
 			if(k.equals(v))
 				return k;
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType add(ValueType v) {
+	public Value add(Value v) {
 		if(v.getType() == Types.ARRAY)
 			values.addAll(((TArray)v).getAll());
 		else
@@ -54,15 +54,15 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public ValueType sub(ValueType v) {
-		ValueType vt = find(v);
+	public Value sub(Value v) {
+		Value vt = find(v);
 		if(!vt.isUndefined())
 			values.remove(vt);
 		return this;
 	}
 
 	@Override
-	public ValueType multi(ValueType v) {
+	public Value multi(Value v) {
 		/*if(v.getType() == Types.NUMBER) {
 			for(int i = 0; i < getSize(); i++) {
 				values.set(i, values.get(i).multi(v));
@@ -88,7 +88,7 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public ValueType div(ValueType v) {
+	public Value div(Value v) {
 		int index  = v.intValue();
 		if(index < getSize() && index >= 0)
 			values.remove(index);
@@ -96,17 +96,17 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public ValueType mod(ValueType v) {
+	public Value mod(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType pow(ValueType v) {
+	public Value pow(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType root() {
+	public Value root() {
 		return TUndefined.getInstance();
 	}
 
@@ -116,7 +116,7 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public boolean equals(ValueType v) {
+	public boolean equals(Value v) {
 		if(!(v instanceof TArray))
 			return false;
 		if(getSize() != v.getSize())
@@ -130,12 +130,12 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public int compare(ValueType v) {
+	public int compare(Value v) {
 		return 0;
 	}
 
 	@Override
-	public boolean contains(ValueType v) {
+	public boolean contains(Value v) {
 		for(int i = 0; i < getSize(); i++) {
 			if(v.equals(getIndex(i)))
 				return true;
@@ -144,12 +144,12 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public ValueType childObject(ValueType v) {
+	public Value childObject(Value v) {
 		return null;
 	}
 
 	@Override
-	public ValueType[] childObjects(ValueType v) {
+	public Value[] childObjects(Value v) {
 		return null;
 	}
 
@@ -164,7 +164,7 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public ValueType duplicate() {
+	public Value duplicate() {
 		return new TArray(values);
 	}
 
@@ -174,7 +174,7 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public ValueType accessor(ValueType[] v) {
+	public Value accessor(Value[] v) {
 		if(v.length == 0)
 			return new TNumber(getSize());
 		if(v.length == 1)
@@ -201,22 +201,22 @@ public class TArray implements ValueType{
 		return values.size();
 	}
 	
-	public ValueType getIndex(int i) {
+	public Value getIndex(int i) {
 		return values.get(i);
 	}
 	
-	public ValueType setIndex(int i, ValueType v) {
+	public Value setIndex(int i, Value v) {
 		values.set(i, v);
 		return this;
 	}
 	
-	public ArrayList<ValueType> getAll(){
+	public ArrayList<Value> getAll(){
 		return values;
 	}
 	
 	public double sum() {
 		double d = 0;
-		for(ValueType vt : values) {
+		for(Value vt : values) {
 			if(vt.getType() == Types.ARRAY)
 				d += ((TArray)vt).sum();
 			if(vt.getType() == Types.NUMBER)
@@ -226,7 +226,7 @@ public class TArray implements ValueType{
 	}
 
 	@Override
-	public ValueType toType(int type) {
+	public Value toType(int type) {
 		if(type == Types.ARRAY)
 			return this;
 		if(type == Types.STRING)
@@ -239,7 +239,7 @@ public class TArray implements ValueType{
 		return -1;
 	}
 	
-	public static TArray merge(ValueType v1, ValueType v2) {
+	public static TArray merge(Value v1, Value v2) {
 		TArray a = new TArray();
 		a.add(v1);
 		a.getAll().add(v2);
@@ -247,7 +247,7 @@ public class TArray implements ValueType{
 		return a;
 	}
 	
-	public static TArray from(ValueType v) {
+	public static TArray from(Value v) {
 		if(v instanceof TArray)
 			return (TArray)v;
 		System.err.println(v + " is not an array.");
@@ -259,14 +259,14 @@ public class TArray implements ValueType{
 		return 0;
 	}
 	
-	public void put(ValueType v) {
+	public void put(Value v) {
 		values.add(v);
 	}
 	
 	public JSONArray toJSON() {
 		JSONArray o = new JSONArray();
 		for(int i = 0; i < values.size(); i++) {
-			ValueType vt = values.get(i);
+			Value vt = values.get(i);
 			if(vt.getType() == Types.OBJECT)
 				o.put(i, TObject.from(vt).toJSON());
 			else if(vt.getType() == Types.ARRAY)

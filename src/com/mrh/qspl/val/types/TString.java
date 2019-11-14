@@ -1,8 +1,8 @@
 package com.mrh.qspl.val.types;
 
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 
-public class TString implements ValueType<String>, Comparable<ValueType>{
+public class TString implements Value<String>, Comparable<Value>{
 
 	final String s;
 	
@@ -25,7 +25,7 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType add(ValueType v) {
+	public Value add(Value v) {
 		if(v instanceof TNumber) 
 			return new TString(s+v.get());
 		if(v instanceof TString) 
@@ -34,7 +34,7 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType sub(ValueType v) {
+	public Value sub(Value v) {
 		if(v instanceof TNumber) 
 			return new TString(s.replaceAll((String)v.get(), ""));
 		if(v instanceof TString) 
@@ -42,7 +42,7 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 		if(v instanceof TArray) {
 			String r = s;
 			TArray a = (TArray) v;
-			for(ValueType k : a.getAll()) {
+			for(Value k : a.getAll()) {
 				r = r.replaceAll((String)k.toString(), "");
 			}
 			return new TString(r);
@@ -51,15 +51,15 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType multi(ValueType v) {
+	public Value multi(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType div(ValueType v) {
+	public Value div(Value v) {
 		if(v instanceof TString) {
 			String[] k = s.split((String)v.get());
-			ValueType[] j = new ValueType[k.length];
+			Value[] j = new Value[k.length];
 			for(int i = 0; i < k.length; i++)
 				j[i] = new TString(k[i]);
 			return new TArray(j);
@@ -68,17 +68,17 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType mod(ValueType v) {
+	public Value mod(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType pow(ValueType v) {
+	public Value pow(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType root() {
+	public Value root() {
 		return TUndefined.getInstance();
 	}
 	
@@ -88,35 +88,35 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	}
 
 	@Override
-	public boolean equals(ValueType v) {
+	public boolean equals(Value v) {
 		return v.get().equals(s);
 	}
 
 	@Override
-	public int compare(ValueType v) {
+	public int compare(Value v) {
 		return ((String)v.get()).compareTo(s);
 	}
 
 	@Override
-	public ValueType duplicate() {
+	public Value duplicate() {
 		return new TString(s);
 	}
 
 	@Override
-	public boolean contains(ValueType v) {
+	public boolean contains(Value v) {
 		if(v instanceof TString)
 			return s.indexOf((String)v.get())!=-1;
 		return false;
 	}
 
 	@Override
-	public ValueType childObject(ValueType v) {
+	public Value childObject(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType[] childObjects(ValueType v) {
-		return new ValueType[0];
+	public Value[] childObjects(Value v) {
+		return new Value[0];
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	}
 
 	@Override
-	public ValueType accessor(ValueType[] v) {
+	public Value accessor(Value[] v) {
 		if(v.length == 0)
 			return new TNumber(getSize());
 		if(v.length == 1)
@@ -146,7 +146,7 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	}
 	
 	@Override
-	public ValueType toType(int type) {
+	public Value toType(int type) {
 		if(type == Types.STRING)
 			return this;
 		if(type == Types.NUMBER)
@@ -160,11 +160,11 @@ public class TString implements ValueType<String>, Comparable<ValueType>{
 	}
 
 	@Override
-	public int compareTo(ValueType o) {
+	public int compareTo(Value o) {
 		return compare(o);
 	}
 	
-	public static TString from(ValueType v) {
+	public static TString from(Value v) {
 		if(v instanceof TString)
 			return (TString)v;
 		System.err.println(v + " is not a string.");

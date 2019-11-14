@@ -1,8 +1,8 @@
 package com.mrh.qspl.val.types;
 
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 
-public class TUndefined implements ValueType<Object>{
+public class TUndefined implements Value<Object>{
 	
 	private static TUndefined instance = null;
 	
@@ -22,37 +22,37 @@ public class TUndefined implements ValueType<Object>{
 	}
 
 	@Override
-	public ValueType add(ValueType v) {
+	public Value add(Value v) {
 		return v;
 	}
 
 	@Override
-	public ValueType sub(ValueType v) {
+	public Value sub(Value v) {
 		return v;
 	}
 
 	@Override
-	public ValueType multi(ValueType v) {
+	public Value multi(Value v) {
 		return new TNumber(0);
 	}
 
 	@Override
-	public ValueType div(ValueType v) {
+	public Value div(Value v) {
 		return new TNumber(0);
 	}
 
 	@Override
-	public ValueType mod(ValueType v) {
+	public Value mod(Value v) {
 		return new TNumber(0);
 	}
 
 	@Override
-	public ValueType pow(ValueType v) {
+	public Value pow(Value v) {
 		return new TNumber(0);
 	}
 
 	@Override
-	public ValueType root() {
+	public Value root() {
 		return getInstance();
 	}
 
@@ -62,12 +62,12 @@ public class TUndefined implements ValueType<Object>{
 	}
 
 	@Override
-	public boolean equals(ValueType v) {
+	public boolean equals(Value v) {
 		return false;
 	}
 
 	@Override
-	public int compare(ValueType v) {
+	public int compare(Value v) {
 		return 0;
 	}
 
@@ -77,23 +77,23 @@ public class TUndefined implements ValueType<Object>{
 	}
 
 	@Override
-	public ValueType duplicate() {
+	public Value duplicate() {
 		return getInstance();
 	}
 
 	@Override
-	public boolean contains(ValueType v) {
+	public boolean contains(Value v) {
 		return false;
 	}
 
 	@Override
-	public ValueType childObject(ValueType v) {
+	public Value childObject(Value v) {
 		return getInstance();
 	}
 
 	@Override
-	public ValueType[] childObjects(ValueType v) {
-		return new ValueType[0];
+	public Value[] childObjects(Value v) {
+		return new Value[0];
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class TUndefined implements ValueType<Object>{
 	}
 
 	@Override
-	public ValueType accessor(ValueType[] v) {
+	public Value accessor(Value[] v) {
 		return getInstance();
 	}
 
@@ -117,7 +117,7 @@ public class TUndefined implements ValueType<Object>{
 	}
 	
 	@Override
-	public ValueType toType(int type) {
+	public Value toType(int type) {
 		if(type == Types.UNDEFINED)
 			return this;
 		if(type == Types.STRING)
@@ -131,7 +131,7 @@ public class TUndefined implements ValueType<Object>{
 	}
 
 	@Override
-	public int compareTo(ValueType o) {
+	public int compareTo(Value o) {
 		return 0;
 	}
 }

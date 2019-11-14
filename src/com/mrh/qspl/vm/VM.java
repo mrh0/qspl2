@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Stack;
 
+import com.mrh.qspl.internal.common.Common;
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
-import com.mrh.qspl.val.ValueType;
-import com.mrh.qspl.val.func.Common;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TFunc;
 import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.val.types.TUserFunc;
@@ -46,9 +46,9 @@ public class VM {
 		return scopeStack.pop();
 	}
 	
-	public ValueType executeFunction(TFunc func, ArrayList<ValueType> args, ValueType _this) {
+	public Value executeFunction(TFunc func, ArrayList<Value> args, Value _this) {
 		this.createNewScope("func:"+func);
-		ValueType rv = ((TFunc) func).execute(args, this, _this);
+		Value rv = ((TFunc) func).execute(args, this, _this);
 		if(rv != null)
 			ev.vals.push(rv);
 		else {
@@ -82,11 +82,11 @@ public class VM {
 		return getVar(name, false);
 	}
 	
-	public ValueType getValue(String name) {
+	public Value getValue(String name) {
 		return getVar(name).get();
 	}
 	
-	public void setValue(String name, ValueType v) {
+	public void setValue(String name, Value v) {
 		getVar(name, true).set(v);
 	}
 	

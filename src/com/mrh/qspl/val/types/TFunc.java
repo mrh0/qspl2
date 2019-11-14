@@ -1,13 +1,17 @@
 package com.mrh.qspl.val.types;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.mrh.qspl.val.ValueType;
+import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.func.IFunc;
 import com.mrh.qspl.vm.Scope;
 import com.mrh.qspl.vm.VM;
 
-public class TFunc implements ValueType{
+public class TFunc implements Value{
+	
+	private static Map<String, Value> prototype = new HashMap<String, Value>();
 	
 	protected String[] paramaterList = {};
 	
@@ -30,7 +34,7 @@ public class TFunc implements ValueType{
 		paramaterList = p;
 	}
 	
-	public ValueType execute(ArrayList<ValueType> args, VM vm, ValueType pThis) {
+	public Value execute(ArrayList<Value> args, VM vm, Value pThis) {
 		if(internal != null)
 			return internal.execute(args, vm, pThis);
 		return TUndefined.getInstance();
@@ -48,37 +52,37 @@ public class TFunc implements ValueType{
 	}
 	
 	@Override
-	public ValueType add(ValueType v) {
+	public Value add(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType sub(ValueType v) {
+	public Value sub(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType multi(ValueType v) {
+	public Value multi(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType div(ValueType v) {
+	public Value div(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType mod(ValueType v) {
+	public Value mod(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType pow(ValueType v) {
+	public Value pow(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType root() {
+	public Value root() {
 		return TUndefined.getInstance();
 	}
 
@@ -88,12 +92,12 @@ public class TFunc implements ValueType{
 	}
 
 	@Override
-	public boolean equals(ValueType v) {
+	public boolean equals(Value v) {
 		return this == v;
 	}
 
 	@Override
-	public int compare(ValueType v) {
+	public int compare(Value v) {
 		return 0;
 	}
 
@@ -103,23 +107,23 @@ public class TFunc implements ValueType{
 	}
 
 	@Override
-	public ValueType duplicate() {
+	public Value duplicate() {
 		return new TFunc();
 	}
 
 	@Override
-	public boolean contains(ValueType v) {
+	public boolean contains(Value v) {
 		return false;
 	}
 
 	@Override
-	public ValueType childObject(ValueType v) {
+	public Value childObject(Value v) {
 		return TUndefined.getInstance();
 	}
 
 	@Override
-	public ValueType[] childObjects(ValueType v) {
-		return new ValueType[0];
+	public Value[] childObjects(Value v) {
+		return new Value[0];
 	}
 
 	@Override
@@ -133,8 +137,10 @@ public class TFunc implements ValueType{
 	}
 
 	@Override
-	public ValueType accessor(ValueType[] v) {
-		return null;
+	public Value accessor(Value[] v) {
+		if(v.length == 0)
+			return TUndefined.getInstance();
+		return prototype.getOrDefault(TString.from(v[0]), TUndefined.getInstance());
 	}
 
 	@Override
@@ -143,7 +149,7 @@ public class TFunc implements ValueType{
 	}
 	
 	@Override
-	public ValueType toType(int type) {
+	public Value toType(int type) {
 		if(type == Types.FUNC)
 			return this;
 		if(type == Types.STRING)
@@ -156,7 +162,7 @@ public class TFunc implements ValueType{
 		return -1;
 	}
 	
-	public static TFunc from(ValueType v) {
+	public static TFunc from(Value v) {
 		if(v instanceof TFunc)
 			return (TFunc)v;
 		System.err.println(v + " is not a function.");
