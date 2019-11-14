@@ -1,5 +1,5 @@
 # qspl
-Quick Statement Programming Language v2.4.4
+Quick Statement Programming Language v2.4.6
 
 # Language
 
@@ -185,7 +185,8 @@ collapse[],
 set[i, v], set[[...], v], add[v], push[v], 
 pop[], dequeue[], remove[v], removeAt[i], keys[],
 sort[], find[[...]], keys[], values[],
-fromJSON[s], toJSON[]
+fromJSON[s], toJSON[],
+call[args, this], callAsync[args, this, callback]
 ```
 Miscellaneous:
 ```
