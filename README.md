@@ -114,9 +114,9 @@ obj ? 1 //Object contains  1 : true
 obj keys[] ? "a" //Object has key 'a' : true
 
 //Functions:
-obj add["g", "text"]; //Adds element to object : {a=1, b=new{a=3}, x=4, y=7, g="text"}
+obj add["g", "text"]; //Adds element to object : {a=1, b={a=3}, x=4, y=7, g="text"}
 obj set["a", 5] //Set element value : {a=5, b=new{a=3}, x=4, y=7, g="text"}
-obj remove["x"] //Removes element at key 'x' : {a=5, b=new{a=3}, y=7, g="text"}
+obj remove["x"] //Removes element at key 'x' : {a=5, b={a=3}, y=7, g="text"}
 obj toJSON[] //Get json string : "{'a':5, 'b'={'a':3}, 'y':7, 'g':'text'}"
 obj = new {} fromJSON["{'x':5}"] //Object from json : {x=5}
 ```
@@ -133,7 +133,7 @@ x::
 ; //Add ';' if the line after an indented line is last line of the program.
 
 //Foreach v in g:
-g = §[1,2,3,4];
+g = new [1,2,3,4];
 v in g[2]::
 	out v;
 ;
