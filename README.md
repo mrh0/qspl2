@@ -139,9 +139,9 @@ v in g[2]::
 ;
   
 j = 5;
-out prev; //prints result of previous statement (5)
+out prev; //Prints result of previous statement (5)
 j = false;
-out else; //prints not result of previous statement (1)
+out else; //Prints not result of previous statement (1)
 
 //Prints "Bye":
 -3:
