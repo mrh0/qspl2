@@ -179,14 +179,14 @@ parametersOf[func], //Get parameter names of function.
 stop[], sleep[millis],
 if[b], condition[b, t, f]
 
-//chain functions: ([v]alue, [i]ndex, [a]rray, [s]tring)
+//chain functions: ([v]alue, [i]ndex, [a]rray, [s]tring, [err]or)
 map[func(v, i, a)], filter[func(v, i, a)],
 collapse[],
 set[i, v], set[[...], v], add[v], push[v], 
 pop[], dequeue[], remove[v], removeAt[i], keys[],
 sort[], find[[...]], keys[], values[],
 fromJSON[s], toJSON[],
-call[args, this], callAsync[args, this, callback]
+call[args, this], callAsync[args, this, callback(result, err)]
 ```
 Miscellaneous:
 ```
