@@ -57,6 +57,11 @@ public class Tokenizer {
 		for(int i = 0; i < s.length(); i++) {
 			c = s.charAt(i);
 			String cs = ((""+c)+(i+1<s.length()?s.charAt(i+1):' '));
+			
+			if(c == '\n') {
+				curLine++;
+			}
+			
 			if(Tokens.isOpenComment(cs))
 				inComment = true;
 			if(Tokens.isLineComment(cs))
@@ -73,7 +78,6 @@ public class Tokenizer {
 			}
 			
 			if(c == '\n') {
-				curLine++;
 				lineIndent = 0;
 			}
 			if(Tokens.isEndOfStatement(c) && stringStack.isEmpty()) {
@@ -115,6 +119,13 @@ public class Tokenizer {
 			if(c == '.' && (cur != TokenType.literal)) {
 				end();
 				next(TokenType.identifier);
+				continue;
+			}
+			if(c == '#') {
+				end();
+				next(c, TokenType.keyword);
+				end();
+				continue;
 			}
 			if(Tokens.isSeperator(c)) {
 				if(Tokens.isWhitespace(c)) {
@@ -320,7 +331,7 @@ public class Tokenizer {
 		
 		if(w.length() > 0 || cur == TokenType.string) {
 			Token t = null;
-			if(w.charAt(0) == '.' && cur == TokenType.identifier && w.length() > 1) {
+			if(w.length() > 1 && w.charAt(0) == '.' && cur == TokenType.identifier) {
 				if(Tokens.canBeLiteral(w.charAt(1))) {
 					t = new Token(w, cur);
 					gotNewToken(t);

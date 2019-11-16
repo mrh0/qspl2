@@ -29,12 +29,16 @@ public class TUserFunc extends TFunc{
 	
 	@Override
 	public Value execute(ArrayList<Value> args, VM vm, Value pThis) {
+		vm.createNewScope(this.toString());
 		Scope scope = vm.getCurrentScope();
 		scope.setVariable("this", new Var("this", pThis, true));
 		for(int i = 0; i < paramaterList.length; i++) {
 			scope.setVariable(paramaterList[i], new Var(paramaterList[i], (i < args.size())?args.get(i):TUndefined.getInstance(), false));
 		}
-		return null;
+		Value r = vm.evalBlock(ref);
+		vm.popScope();
+		//System.out.println("UFUNC_RET: " + r);
+		return r;
 	}
 	
 	public Block getRefBlock() {

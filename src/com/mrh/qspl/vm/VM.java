@@ -6,6 +6,7 @@ import java.util.ListIterator;
 import java.util.Stack;
 
 import com.mrh.qspl.internal.common.Common;
+import com.mrh.qspl.syntax.parser.Block;
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TFunc;
@@ -17,7 +18,7 @@ public class VM {
 	protected Stack<Scope> scopeStack;
 	protected Scope rootScope;
 	
-	ExpressionEvaluator ev;
+	private ExpressionEvaluator ev;
 	
 	public VM(Tokenizer t) {
 		Common.initPrototypes();
@@ -26,6 +27,13 @@ public class VM {
 		rootScope = createNewScope("root");
 		rootScope.setVariable("this", new Var("this", TUndefined.getInstance()));
 		Common.defineCommons(rootScope);
+	}
+	
+	public Value evalBlock(Block b) {
+		ev.exitCalledStack.push(null);
+		Value r = ev.walkThrough(b);
+		ev.exitCalledStack.pop();
+		return r;//ev.vals.peek();
 	}
 	
 	public Scope getCurrentScope() {
@@ -49,14 +57,14 @@ public class VM {
 	public Value executeFunction(TFunc func, ArrayList<Value> args, Value _this) {
 		this.createNewScope("func:"+func);
 		Value rv = ((TFunc) func).execute(args, this, _this);
-		if(rv != null)
+		/*if(rv != null)
 			ev.vals.push(rv);
 		else {
 			ev.walkThrough(((TUserFunc) func).getRefBlock());
 			ev.exitCalled = false;
-		}
+		}*/
 		this.popScope();
-		return ev.vals.pop();
+		return rv;//ev.vals.pop();
 	}
 	
 	private Var getVar(String name, boolean checkLock) {

@@ -19,6 +19,10 @@ public class Statement {
 		this.line = line;
 	}
 	
+	public int getLine() {
+		return this.line;
+	}
+	
 	public Token[] getTokens() {
 		return tokens;
 	}

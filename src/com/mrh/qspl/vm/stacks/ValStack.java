@@ -32,7 +32,7 @@ public class ValStack{
 	
 	public void push(Value item, Var var) {
 		if(Debug.enabled())
-			System.out.println("PUSH: VAR " + item);
+			System.out.println("PUSH: VAR " + var);
 		this.vals.push(new ValVarItem(item, var));
 	}
 	
@@ -44,17 +44,17 @@ public class ValStack{
 		return this.vals.size();
 	}
 	
-	public Value pop() {
+	public Value pop(Stack<Var> vars) {
 		if(isEmpty()) {
 			if(Debug.enabled())
 				System.out.println("POP: Empty UNDEF");
 			return TUndefined.getInstance();
 		}
 		if(this.vals.peek().var != null) {
-			ee.popVar();
+			vars.pop();
 		}
 		if(Debug.enabled())
-			System.out.println("POP: " + this.vals.peek().val);
+			System.out.println("POP: " + this.vals.peek().val + (this.vals.peek().var!=null?" VAR: " + this.vals.peek().var:""));
 		return this.vals.pop().val;
 	}
 	

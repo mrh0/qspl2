@@ -7,11 +7,13 @@ public class BracketItem {
 	private Value prev;
 	private char opener;
 	private ArrayList<Value> values;
+	private boolean subOp = false;
 	
-	public BracketItem(char opener, Value prev) {
+	public BracketItem(char opener, Value prev, boolean subOp) {
 		this.prev = prev;
 		this.opener = opener;
 		this.values = new ArrayList<Value>();
+		this.subOp = subOp;
 	}
 	
 	public ArrayList<Value> getParameters() {
@@ -28,6 +30,10 @@ public class BracketItem {
 	
 	public char getOpener() {
 		return opener;
+	}
+	
+	public boolean isSubOp() {
+		return subOp;
 	}
 	
 	@Override

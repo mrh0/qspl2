@@ -41,6 +41,6 @@ public class Var {
 	
 	@Override
 	public String toString() {
-		return "("+name+":"+value.toString()+")";
+		return "("+name+":"+value+")";
 	}
 }

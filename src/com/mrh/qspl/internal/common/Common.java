@@ -378,6 +378,8 @@ public class Common {
 		f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			if(_this.getType() == Types.ARRAY) {
 				TArray a = (TArray) _this;
+				if(a.getSize() == 0)
+					System.err.println("Err: pop: empty array");
 				return a.getAll().remove(a.getSize()-1);
 			}
 			return _this;
@@ -387,6 +389,19 @@ public class Common {
 		f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			if(_this.getType() == Types.ARRAY) {
 				TArray a = (TArray) _this;
+				if(a.getSize() == 0)
+					System.err.println("Err: peek: empty array");
+				return a.getAll().get(a.getSize()-1);
+			}
+			return _this;
+		};
+		s.setVariable("peek", new Var("peek", new TFunc(f), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			if(_this.getType() == Types.ARRAY) {
+				TArray a = (TArray) _this;
+				if(a.getSize() == 0)
+					System.err.println("Err: dequeue: empty array");
 				return a.getAll().remove(0);
 			}
 			return TUndefined.getInstance();

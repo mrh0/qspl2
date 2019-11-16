@@ -139,9 +139,9 @@ public class TFunc implements Value{
 
 	@Override
 	public Value accessor(Value[] v) {
-		if(v.length == 0)
-			return TUndefined.getInstance();
-		return getPrototype().getOrDefault(TString.from(v[0]), TUndefined.getInstance());
+		//if(v.length == 0)
+		return TUndefined.getInstance();
+		//return getPrototype().getOrDefault(TString.from(v[0]), TUndefined.getInstance());
 	}
 
 	@Override

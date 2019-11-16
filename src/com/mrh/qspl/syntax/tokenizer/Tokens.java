@@ -11,7 +11,7 @@ public class Tokens {
 		none			//nothing
 	}
 	
-	public static String[] keywords = {"out", "exit", "else", "break", "prev", "continue", "as", "in", "func", "new", "§", "async"};
+	public static String[] keywords = {"out", "exit", "else", "break", "prev", "continue", "as", "in", "func", "new", "§", "async", "#"};
 	
 	public static boolean isNewSymbol(String s) {
 		return s.equals("new") || s.equals("§");
@@ -26,8 +26,6 @@ public class Tokens {
 	
 	public static boolean canBeLiteral(char c) {
 		if(c == '-')
-			return true;
-		if(c == '#')
 			return true;
 		if(c == '.')
 			return true;

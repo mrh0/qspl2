@@ -32,63 +32,73 @@ import com.mrh.qspl.vm.stacks.ValStack;
  */
 
 public class ExpressionEvaluator {
-	private Stack<String> ops;
-	protected ValStack vals;
-	private Stack<Var> vars;
-	private Stack<TokenType> types;
-	private BracketStack brackets;
+	
 	private VM vm;
 	private Tokenizer tokens;
 	private boolean breakCalled;
 	private boolean continueCalled;
 	private boolean inCalled;
-	protected boolean exitCalled;
+	protected Stack<Boolean> exitCalledStack;
 	
 	public ExpressionEvaluator(VM vm, Tokenizer tokens) {
 		this.vm = vm;
 		this.tokens = tokens;
 		breakCalled  = false;
-		exitCalled = false;
+		exitCalledStack = new Stack<Boolean>();
 		inCalled = false;
 		continueCalled = false;
 	}
 	
 	public void eval() {
+		exitCalledStack.push(null);
 		walkThrough(this.tokens.getRootBlock());
-		if(!Debug.noResult) {
+		exitCalledStack.pop();
+		/*if(!Debug.noResult) {
 			if(vals != null && !vals.isEmpty() && vals.peek() != null) {
 				System.out.println("[RESULT:"+vals.size()+"]: "+vals.pop().get());
 			}
 			else
 				System.err.println("Finished with empty stack.");
-		}
+		}*/
 	}
 	
-	public void popVar() {
+	/*public void popVar() {
 		vars.pop();
-	}
+	}*/
 	
-	private boolean evalStatement(Statement statement, boolean oneliner, Value previousResult) {
+	private StatementResult evalStatement(Statement statement, boolean oneliner, Value previousResult) {
+		Stack<String> ops;
+		ValStack vals;
+		Stack<Var> vars;
+		Stack<TokenType> types;
+		BracketStack brackets;
 		ops = new Stack<String>();
 		vals = new ValStack(this);
 		vars = new Stack<Var>();
 		types = new Stack<TokenType>();
 		brackets = new BracketStack();
 		Token prev = null;
+		Token beforeprev = null;
+		
+		boolean thisCalledExit = false;
 		
 		boolean outCalled = false;
 		boolean funcDefine = false;
 		boolean onceFunc = false;
 		
 		ArrayList<String> funcArgNames = new ArrayList<String>();
+		if(Debug.enabled())
+			System.out.println("ln:"+statement.getLine());
+		
+		try {
 		
 		//vals.push(new TNumber(0));
 		for(Token token : statement.getTokens()) {
 			String s = token.getToken();
 			TokenType t = token.getType();
 			
-			if(Debug.enabled())
-				System.out.println("T: " + s);
+			//if(Debug.enabled())
+				//System.out.println("T: " + s);
 			
 			if(funcDefine) {
 				if(t == TokenType.identifier) {
@@ -103,24 +113,24 @@ public class ExpressionEvaluator {
 				}
 			}
 			if(s.equals("[")) {
-				Value vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop());
-				brackets.push(new BracketItem('[', vt));
+				Value vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop(vars));
+				brackets.push(new BracketItem('[', vt, beforeprev!= null && beforeprev.getToken().equals("#")));
 			}
 			else if(s.equals("{")) {
-				Value vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop());
-				brackets.push(new BracketItem('{', vt) );
+				Value vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop(vars));
+				brackets.push(new BracketItem('{', vt, beforeprev!= null && prev.getToken().equals("#")) );
 				vm.createNewScope("object", true);
 			}
 			else if(s.equals(",")) {
 				if(!brackets.isEmpty())
-					brackets.peek().add(vals.pop());
+					brackets.peek().add(vals.pop(vars));
 			}
 			else if(s.equals("}")) {
 				Scope oScope = vm.popScope();
 				if(!brackets.isEmpty()) {
 					BracketItem bi = brackets.pop();
 					if(!prev.getToken().equals("{"))
-						bi.add(vals.pop());
+						bi.add(vals.pop(vars));
 					vals.push(new TObject(oScope.getAllValues()));
 					
 				}
@@ -129,21 +139,24 @@ public class ExpressionEvaluator {
 				if(!brackets.isEmpty()) {
 					BracketItem bi = brackets.pop();
 					if(!prev.getToken().equals("[")) 
-						bi.add(vals.pop());
+						bi.add(vals.pop(vars));
 					if(bi.getPrev() == null) {
 						vals.push(new TArray(bi.getParameters()));
 					}
 					else {
 						Value prevp = bi.getPrev();
 						if(prevp.getType() == Types.FUNC) {
-							Value _this = vals.isEmpty()?TUndefined.getInstance():vals.pop();
+							Value _this = bi.isSubOp()?vals.pop(vars):TUndefined.getInstance();
 							Value vt = ((TFunc) prevp).execute(bi.getParameters(), vm, _this);
 							vals.push(vt);
+							if(vt == null && Debug.enabled())
+								System.out.println("RESULT NULL");//vals.push(vt);
+							//System.out.println(prevp.toString()+ ":" + vals.peek() + " subop: " + bi.isSubOp());
 							if(Debug.enabled())
-								System.out.println("EXEC:" + _this + " par:" + bi.getParameters() + " ret:" + vals.peek());
+								System.out.println("EXEC:" + prevp.toString() + ":" + _this + " par:" + bi.getParameters() + " ret:" + vals.peek()+" sub: " + bi.isSubOp());
 						}
 						else {
-							vals.push(prevp); //Used as this value if function needs it. Will increase stack (KEEP IN MIND)
+							//vals.push(prevp); //Used as this value if function needs it. Will increase stack (KEEP IN MIND)
 							Value vt = prevp.accessor(bi.getParameters().toArray(new Value[0]));
 							vals.push(vt);
 						}
@@ -154,53 +167,53 @@ public class ExpressionEvaluator {
 				ops.push(s);
 				if(!ops.isEmpty()) {
 					String op = ops.pop();
-					Value v = vals.pop();
+					Value v = vals.pop(vars);
 					/*if(!ops.isEmpty())
 						System.out.println("OP: "+vals.peek().get()+" "+s+" "+v);
 					else
 						System.out.println("OP: "+s+" "+v);*/
 					if (op.equals("+")) {
-						v = vals.pop().add(v);
+						v = vals.pop(vars).add(v);
 					}
 					else if (op.equals("-")) {
-						v = vals.pop().sub(v);
+						v = vals.pop(vars).sub(v);
 					}
 					else if (op.equals("*")) 
-						v = vals.pop().multi(v);
+						v = vals.pop(vars).multi(v);
 					else if (op.equals("/")) 
-						v = vals.pop().div(v);
+						v = vals.pop(vars).div(v);
 					else if (op.equals("%")) 
-						v = vals.pop().mod(v);
+						v = vals.pop(vars).mod(v);
 					else if (op.equals("==")) 
-						v = new TNumber(vals.pop().equals(v)?1:0);
+						v = new TNumber(vals.pop(vars).equals(v)?1:0);
 					else if (op.equals("!=")) 
-						v = new TNumber(vals.pop().equals(v)?0:1);
+						v = new TNumber(vals.pop(vars).equals(v)?0:1);
 					else if (op.equals("<"))
-						v = new TNumber(vals.pop().compare(v)==-1?1:0);
+						v = new TNumber(vals.pop(vars).compare(v)==-1?1:0);
 					else if (op.equals(">")) 
-						v = new TNumber(vals.pop().compare(v)==1?1:0);
+						v = new TNumber(vals.pop(vars).compare(v)==1?1:0);
 					else if (op.equals("<=")) 
-						v = new TNumber(vals.pop().compare(v)<=0?1:0);
+						v = new TNumber(vals.pop(vars).compare(v)<=0?1:0);
 					else if (op.equals(">=")) 
-						v = new TNumber(vals.pop().compare(v)>=0?1:0);
+						v = new TNumber(vals.pop(vars).compare(v)>=0?1:0);
 					else if (op.equals("!")) 
 						v = new TNumber(v.bool()?0:1);
 					else if (op.equals("&&")) 
-						v = new TNumber(v.bool() && vals.pop().bool()?1:0);
+						v = new TNumber(v.bool() && vals.pop(vars).bool()?1:0);
 					else if (op.equals("||")) 
-						v = new TNumber(v.bool() || vals.pop().bool()?1:0);
+						v = new TNumber(v.bool() || vals.pop(vars).bool()?1:0);
 					else if (op.equals("&"))
-						v = new TNumber(vals.pop().intValue() & v.intValue());
+						v = new TNumber(vals.pop(vars).intValue() & v.intValue());
 					else if (op.equals("|"))
-						v = new TNumber(vals.pop().intValue() | v.intValue());
+						v = new TNumber(vals.pop(vars).intValue() | v.intValue());
 					else if (op.equals("^")) 
-						v = new TNumber(vals.pop().intValue() ^ v.intValue());
+						v = new TNumber(vals.pop(vars).intValue() ^ v.intValue());
 					else if (op.equals("?")) //Contains
-						v = new TNumber(vals.pop().contains(v)?1:0);
+						v = new TNumber(vals.pop(vars).contains(v)?1:0);
 					else if (op.equals("is")) //is type
-						v = new TNumber((v.getType() == vals.pop().getType())?1:0);
+						v = new TNumber((v.getType() == vals.pop(vars).getType())?1:0);
 					else if (op.equals("as")) //as type
-						v = vals.pop().toType(v.getType());
+						v = vals.pop(vars).toType(v.getType());
 					else if (op.equals("--"))
 						v = TNumber.from(v).decriment(1);
 					else if (op.equals("++"))
@@ -212,7 +225,7 @@ public class ExpressionEvaluator {
 						if(Debug.enabled())
 							System.out.println("Set var: " + k + " to " + v);
 						vm.setValue(k.getName(), v); //k.set(v);
-						vals.pop();
+						vals.pop(vars);
 						v = k.get();
 					}
 					vals.push(v);
@@ -231,7 +244,8 @@ public class ExpressionEvaluator {
 					onceFunc = true;
 				}
 				else if(s.equals("exit")) {
-					exitCalled = true;
+					exitCalledStack.push(true);
+					thisCalledExit = true;
 				}
 				else if(s.equals("prev")) {
 					vals.push(previousResult);
@@ -241,11 +255,11 @@ public class ExpressionEvaluator {
 				}
 				else if(s.equals("break")) {
 					breakCalled = true;
-					return false;
+					return new StatementResult(false, vals, vars, null);
 				}
 				else if(s.equals("continue")) {
 					continueCalled = true;
-					return false;
+					return new StatementResult(false, vals, vars, null);
 				}
 				else if(s.equals("in")) {
 					inCalled = true;
@@ -261,55 +275,72 @@ public class ExpressionEvaluator {
 			else
 				System.err.println("Unexpected token: '" + s + "'");
 			types.push(t);
+			beforeprev = prev;
 			prev = token;
 		}
 		if(outCalled) {
 			if(!vals.isEmpty())
-				System.out.println("[OUT]: "+vals.peek());
+				System.out.println("[OUT:"+statement.getLine()+"]: "+vals.peek());
 		}
-		return statement.getEndType() != StatementEndType.END && !vals.isEmpty() && vals.peek().bool() && !onceFunc; //sub statement
+		}
+		catch(Exception e) {
+			System.err.println("Exception at line: " + statement.getLine());
+			e.printStackTrace();
+		}
+		boolean pass = statement.getEndType() != StatementEndType.END && !vals.isEmpty() && vals.peek().bool() && !onceFunc;//do sub statement?
+		return new StatementResult(pass, vals, vars, thisCalledExit?vals.peek():null);
 	}
 	
-	private boolean isFirst() {
+	/*private boolean isFirst() {
 		return vals.isEmpty() && vars.isEmpty() && ops.isEmpty();
-	}
+	}*/
 
-	protected void walkThrough(Block b) {
-		
+	protected Value walkThrough(Block b) {
+		Value retv = null;
 		Iterator iter = null;
+		StatementResult sr = new StatementResult(false, null, null, TUndefined.getInstance());
 		Value previousResult = TUndefined.getInstance();
 		ArrayList<Statement> a = b.getAll();
 		for(int i = 0; i < a.size(); i++) {
 			Statement s = a.get(i);
-			boolean ss = false;
-			ss = evalStatement(s, false, previousResult);
-			previousResult = vals.peek();
+			sr= evalStatement(s, false, previousResult);
+			if(sr.ret != null)
+				retv = sr.ret;
+			previousResult = sr.vals.peek();
 			boolean didIter = false;
 			if(inCalled && iter == null) {
 				inCalled = false;
-				iter = TArray.from(vals.pop()).getAll().iterator();
+				iter = TArray.from(sr.vals.pop(sr.vars)).getAll().iterator();
 			}
 			if(iter != null) {
 				while(iter.hasNext() && !breakCalled) {
 					vm.setValue(s.getTokens()[0].getToken(), (Value)iter.next());
-					walkThrough(s.getNext());
+					Value y = walkThrough(s.getNext());
+					if(y != null)
+						retv = y;
 				}
 				breakCalled = false;
 				iter = null;
 				didIter = true;
 			}
-			else if(ss && s.hasNext())
-				walkThrough(s.getNext());
+			else if(sr.pass && s.hasNext()) {
+				Value y = walkThrough(s.getNext());
+				if(y != null)
+					retv = y;
+			}
 			
-			if(s.getEndType() == StatementEndType.WHILE && ss && !exitCalled && !didIter) {
+			if(Debug.enabled() && exitCalledStack.peek() != null)
+				System.out.println("EXIT CALLED: " + sr.vals.peek());
+			if(s.getEndType() == StatementEndType.WHILE && sr.pass && !(exitCalledStack.peek() != null) && !didIter) {
 				if(!breakCalled)
 					i--;
 				breakCalled = false;
 			}
-			if(continueCalled || breakCalled || exitCalled) {
+			if(continueCalled || breakCalled || exitCalledStack.peek() != null) {
 				continueCalled = false;
-				return;
+				return retv;
 			}
 		}
+		return retv;
 	}
 }
