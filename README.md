@@ -49,12 +49,12 @@ x[" World!"]; //returns "Hello World!"
 double = func:
   exit this*2;
 x = 5;
-out x double[] double[]; //Prints 20
+out x#double[]#double[]; //Prints 20
 
 array = new [1,2,3,4];
 func o i a:
   exit (o+1);
-out array map[prev]; //Prints [2,3,4,5]
+out array#map[prev]; //Prints [2,3,4,5]
 ``` 
 Operators:
 ```
@@ -85,16 +85,16 @@ a[0] //Get first element : 5.0
 a[1,3] //Get array of elements 1 to 3 : [1.0,4.0,5.0]
 
 //Fuctions:
-a clear[]; //Clears array : []
-a add["World"]; //Adds element "World" to the end of the array : ["Hello"]
-a add[0, "Hello"] //Adds element "Hello" to array before index 0 : ["Hello", "World]"
-a remove["Hello"] //Removes element "Hello" : ["World"]
-a removeAt[0] //Removes element at index 0 : []
-a collapse[] //Returns collapsed string : "HelloWorld"
+a#clear[]; //Clears array : []
+a#add["World"]; //Adds element "World" to the end of the array : ["Hello"]
+a#add[0, "Hello"] //Adds element "Hello" to array before index 0 : ["Hello", "World]"
+a#remove["Hello"] //Removes element "Hello" : ["World"]
+a#removeAt[0] //Removes element at index 0 : []
+a#collapse[] //Returns collapsed string : "HelloWorld"
 
 a = new [3,2,4,6];
-a sort[] //Sorts array : [2,3,4,6]
-a toJSON[] //Get json string : "[2,3,4,6]"
+a#sort[] //Sorts array : [2,3,4,6]
+a#toJSON[] //Get json string : "[2,3,4,6]"
 a = new [] fromJSON["[4,5,[2,4,'text']]"] //Object from json : [4,5,[2,4,"text"]]
 ```
 Objects:
@@ -111,13 +111,13 @@ obj.a; //Get element 'a' : 1
 obj[]; //Get first depth size : 2;
 obj + new{y=7}; //Join objects : {a=1, b=new{a=3}, x=4, y=7}
 obj ? 1 //Object contains  1 : true
-obj keys[] ? "a" //Object has key 'a' : true
+obj#keys[] ? "a" //Object has key 'a' : true
 
 //Functions:
-obj add["g", "text"]; //Adds element to object : {a=1, b={a=3}, x=4, y=7, g="text"}
-obj set["a", 5] //Set element value : {a=5, b=new{a=3}, x=4, y=7, g="text"}
-obj remove["x"] //Removes element at key 'x' : {a=5, b={a=3}, y=7, g="text"}
-obj toJSON[] //Get json string : "{'a':5, 'b'={'a':3}, 'y':7, 'g':'text'}"
+obj#add["g", "text"]; //Adds element to object : {a=1, b={a=3}, x=4, y=7, g="text"}
+obj#set["a", 5] //Set element value : {a=5, b=new{a=3}, x=4, y=7, g="text"}
+obj#remove["x"] //Removes element at key 'x' : {a=5, b={a=3}, y=7, g="text"}
+obj#toJSON[] //Get json string : "{'a':5, 'b'={'a':3}, 'y':7, 'g':'text'}"
 obj = new {} fromJSON["{'x':5}"] //Object from json : {x=5}
 ```
 Flow control:
