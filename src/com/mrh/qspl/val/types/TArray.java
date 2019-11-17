@@ -182,9 +182,9 @@ public class TArray implements Value{
 		if(v.length == 0)
 			return new TNumber(getSize());
 		if(v.length == 1)
-			return values.get((int)Math.round((double)v[0].get()));
+			return values.get(v[0].intValue());
 		if(v.length == 2) {
-			return new TArray(values.subList((int)Math.round((double)v[0].get()), (int)Math.round((double)v[1].get()+1)));
+			return new TArray(values.subList(v[0].intValue(), v[1].intValue()));
 		}
 		return TUndefined.getInstance();
 	}

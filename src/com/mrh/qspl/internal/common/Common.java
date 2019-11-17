@@ -389,8 +389,9 @@ public class Common {
 		f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			if(_this.getType() == Types.ARRAY) {
 				TArray a = (TArray) _this;
-				if(a.getSize() == 0)
-					System.err.println("Err: peek: empty array");
+				if(a.getSize() == 0) {
+					System.err.println("Err: peek: empty array: " + a);
+				}
 				return a.getAll().get(a.getSize()-1);
 			}
 			return _this;
