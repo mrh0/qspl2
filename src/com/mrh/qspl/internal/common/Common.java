@@ -519,25 +519,21 @@ public class Common {
 			//URL, type, data
 			String url = "";
 			String type = "";
-			String data = "";
 			if(args.size() == 0)
 				return TUndefined.getInstance();
 			if(args.size() == 1) {
 				url = TString.from(args.get(0)).get();
 				type = "application/json";
-				data = "";
 			}
 			if(args.size() == 2) {
 				url = TString.from(args.get(0)).get();
 				type = TString.from(args.get(1)).get();
-				data = "";
 			}
 			if(args.size() == 3) {
 				url = TString.from(args.get(0)).get();
 				type = TString.from(args.get(1)).get();
-				data = TString.from(args.get(2)).get();
 			}
-			TObject out = Http.executeRequest(url, data, type, "GET");
+			TObject out = Http.executeRequest(url, "", type, "GET");
 			return out;
 		};
 		s.setVariable("httpGet", new Var("httpGet", new TFunc(f), true));
