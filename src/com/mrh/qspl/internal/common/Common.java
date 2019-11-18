@@ -7,6 +7,7 @@ import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.mrh.qspl.io.network.Http;
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.func.IFunc;
 import com.mrh.qspl.val.types.TArray;
@@ -513,6 +514,60 @@ public class Common {
 			return TUndefined.getInstance();
 		};
 		s.setVariable("callAsync", new Var("callAsync", new TFunc(f), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			//URL, type, data
+			String url = "";
+			String type = "";
+			String data = "";
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			if(args.size() == 1) {
+				url = TString.from(args.get(0)).get();
+				type = "application/json";
+				data = "";
+			}
+			if(args.size() == 2) {
+				url = TString.from(args.get(0)).get();
+				type = TString.from(args.get(1)).get();
+				data = "";
+			}
+			if(args.size() == 3) {
+				url = TString.from(args.get(0)).get();
+				type = TString.from(args.get(1)).get();
+				data = TString.from(args.get(2)).get();
+			}
+			TObject out = Http.executeRequest(url, data, type, "GET");
+			return out;
+		};
+		s.setVariable("httpGet", new Var("httpGet", new TFunc(f), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			//URL, type, data
+			String url = "";
+			String type = "";
+			String data = "";
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			if(args.size() == 1) {
+				url = TString.from(args.get(0)).get();
+				type = "application/json";
+				data = "";
+			}
+			if(args.size() == 2) {
+				url = TString.from(args.get(0)).get();
+				type = TString.from(args.get(2)).get();
+				data = "";
+			}
+			if(args.size() == 3) {
+				url = TString.from(args.get(0)).get();
+				type = TString.from(args.get(2)).get();
+				data = TString.from(args.get(1)).get();
+			}
+			TObject out = Http.executeRequest(url, data, type, "POST");
+			return out;
+		};
+		s.setVariable("httpPost", new Var("httpPost", new TFunc(f), true));
 		
 		return s;
 	}

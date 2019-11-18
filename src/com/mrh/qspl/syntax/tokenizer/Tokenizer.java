@@ -62,38 +62,27 @@ public class Tokenizer {
 				curLine++;
 			}
 			
-			if(Tokens.isOpenComment(cs))
-				inComment = true;
-			if(Tokens.isLineComment(cs))
-				inLineComment = true;
-			if(c =='\n' && inLineComment)
-				inLineComment = false;
-			if(Tokens.isCloseComment(cs)) {
-				i++;
-				inComment = false;
-				continue;
-			}
-			if(inComment || inLineComment) {
-				continue;
+			if(stringStack.isEmpty()) {
+				if(Tokens.isOpenComment(cs))
+					inComment = true;
+				if(Tokens.isLineComment(cs))
+					inLineComment = true;
+				if(c =='\n' && inLineComment)
+					inLineComment = false;
+				if(Tokens.isCloseComment(cs)) {
+					i++;
+					inComment = false;
+					continue;
+				}
+				if(inComment || inLineComment) {
+					continue;
+				}
 			}
 			
 			if(c == '\n') {
 				lineIndent = 0;
 			}
-			if(Tokens.isEndOfStatement(c) && stringStack.isEmpty()) {
-				StatementEndType set = StatementEndType.END;
-				if(c == ':') {
-					set = StatementEndType.IF;
-					if(i+1 < s.length())
-						if(s.charAt(i+1) == ':') {
-							i++;
-							set = StatementEndType.WHILE;
-						}
-				}
-				end();
-				endStatement(set);
-				continue;
-			}
+			
 			
 			if(Tokens.isString(c)) {
 				if(stringStack.isEmpty()) {
@@ -125,6 +114,20 @@ public class Tokenizer {
 				end();
 				next(c, TokenType.keyword);
 				end();
+				continue;
+			}
+			if(Tokens.isEndOfStatement(c) && stringStack.isEmpty()) {
+				StatementEndType set = StatementEndType.END;
+				if(c == ':') {
+					set = StatementEndType.IF;
+					if(i+1 < s.length())
+						if(s.charAt(i+1) == ':') {
+							i++;
+							set = StatementEndType.WHILE;
+						}
+				}
+				end();
+				endStatement(set);
 				continue;
 			}
 			if(Tokens.isSeperator(c)) {
