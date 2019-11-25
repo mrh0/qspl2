@@ -18,7 +18,6 @@ public class Http {
 	public static TObject executeRequest(String targetURL, String urlParameters, String type, String protocol) {
 		HttpURLConnection con = null;
 		int status = -1;
-		System.out.println(targetURL + ";" + urlParameters + ";" + type + ";" + protocol);
 		try {
 			//Create connection
 			URL url = new URL(targetURL);
@@ -62,8 +61,6 @@ public class Http {
 			result.set("status", new TNumber(status));
 			result.set("successful", new TNumber(didError?0:1));
 			result.set("error", new TNumber(0));
-			
-			System.out.println(con.getRequestMethod());
 			
 			rd.close();
 			if (con != null)

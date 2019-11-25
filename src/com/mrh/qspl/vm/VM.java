@@ -13,27 +13,36 @@ import com.mrh.qspl.val.types.TFunc;
 import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.val.types.TUserFunc;
 import com.mrh.qspl.var.Var;
+import com.mrh.qspl.vm.queues.ExecutionQueue;
+import com.mrh.qspl.vm.queues.QueueEntry;
 
 public class VM {
 	protected Stack<Scope> scopeStack;
 	protected Scope rootScope;
 	
 	private ExpressionEvaluator ev;
+	private ExecutionQueue eq;
 	
 	public VM(Tokenizer t) {
 		Common.initPrototypes();
 		ev = new ExpressionEvaluator(this, t);
+		eq = new ExecutionQueue();
 		scopeStack = new Stack<Scope>();
 		rootScope = createNewScope("root");
 		rootScope.setVariable("this", new Var("this", TUndefined.getInstance()));
 		Common.defineCommons(rootScope);
 	}
 	
+	public void queueExecution(QueueEntry qi) {
+		eq.enqueue(qi);
+	}
+	
 	public Value evalBlock(Block b) {
 		ev.exitCalledStack.push(null);
 		Value r = ev.walkThrough(b);
 		ev.exitCalledStack.pop();
-		return r;//ev.vals.peek();
+		eq.queueLoop(this); // New!
+		return r;
 	}
 	
 	public Scope getCurrentScope() {
@@ -57,14 +66,8 @@ public class VM {
 	public Value executeFunction(TFunc func, ArrayList<Value> args, Value _this) {
 		this.createNewScope("func:"+func);
 		Value rv = ((TFunc) func).execute(args, this, _this);
-		/*if(rv != null)
-			ev.vals.push(rv);
-		else {
-			ev.walkThrough(((TUserFunc) func).getRefBlock());
-			ev.exitCalled = false;
-		}*/
 		this.popScope();
-		return rv;//ev.vals.pop();
+		return rv;
 	}
 	
 	private Var getVar(String name, boolean checkLock) {

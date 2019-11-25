@@ -50,21 +50,8 @@ public class ExpressionEvaluator {
 	}
 	
 	public void eval() {
-		exitCalledStack.push(null);
-		walkThrough(this.tokens.getRootBlock());
-		exitCalledStack.pop();
-		/*if(!Debug.noResult) {
-			if(vals != null && !vals.isEmpty() && vals.peek() != null) {
-				System.out.println("[RESULT:"+vals.size()+"]: "+vals.pop().get());
-			}
-			else
-				System.err.println("Finished with empty stack.");
-		}*/
+		this.vm.evalBlock(this.tokens.getRootBlock());
 	}
-	
-	/*public void popVar() {
-		vars.pop();
-	}*/
 	
 	private StatementResult evalStatement(Statement statement, boolean oneliner, Value previousResult) {
 		Stack<String> ops;
@@ -91,14 +78,9 @@ public class ExpressionEvaluator {
 			System.out.println("ln:"+statement.getLine());
 		
 		try {
-		
-		//vals.push(new TNumber(0));
 		for(Token token : statement.getTokens()) {
 			String s = token.getToken();
 			TokenType t = token.getType();
-			
-			//if(Debug.enabled())
-				//System.out.println("T: " + s);
 			
 			if(funcDefine) {
 				if(t == TokenType.identifier) {
@@ -150,8 +132,7 @@ public class ExpressionEvaluator {
 							Value vt = ((TFunc) prevp).execute(bi.getParameters(), vm, _this);
 							vals.push(vt);
 							if(vt == null && Debug.enabled())
-								System.out.println("RESULT NULL");//vals.push(vt);
-							//System.out.println(prevp.toString()+ ":" + vals.peek() + " subop: " + bi.isSubOp());
+								System.out.println("RESULT NULL");
 							if(Debug.enabled())
 								System.out.println("EXEC:" + prevp.toString() + ":" + _this + " par:" + bi.getParameters() + " ret:" + vals.peek()+" sub: " + bi.isSubOp());
 						}
@@ -290,10 +271,6 @@ public class ExpressionEvaluator {
 		boolean pass = statement.getEndType() != StatementEndType.END && !vals.isEmpty() && vals.peek().bool() && !onceFunc;//do sub statement?
 		return new StatementResult(pass, vals, vars, thisCalledExit?vals.peek():null);
 	}
-	
-	/*private boolean isFirst() {
-		return vals.isEmpty() && vars.isEmpty() && ops.isEmpty();
-	}*/
 
 	protected Value walkThrough(Block b) {
 		Value retv = null;

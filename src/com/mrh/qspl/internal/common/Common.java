@@ -7,6 +7,7 @@ import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.mrh.qspl.io.files.FileIO;
 import com.mrh.qspl.io.network.Http;
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.func.IFunc;
@@ -20,6 +21,7 @@ import com.mrh.qspl.val.types.Types;
 import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.Scope;
 import com.mrh.qspl.vm.VM;
+import com.mrh.qspl.vm.queues.TimeoutEntry;
 
 public class Common {
 	public static Scope defaultScope = null;
@@ -51,6 +53,8 @@ public class Common {
 		s.setVariable("PI", new Var("PI", new TNumber(Math.PI), true));
 		s.setVariable("INF", new Var("INF", new TNumber(Double.POSITIVE_INFINITY), true));
 		s.setVariable("NEGINF", new Var("NEGINF", new TNumber(Double.NEGATIVE_INFINITY), true));
+		
+		s.setVariable("ROOT_PATH", new Var("ROOT_PATH", new TString(FileIO.getPath()), true));
 		
 		IFunc f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			if(args.size() == 0)
@@ -477,7 +481,22 @@ public class Common {
 				return TObject.from(_this).fromJSON(new JSONObject(TString.from(args.get(0)).get()));
 			return TUndefined.getInstance();
 		};
-		s.setVariable("fromJSON", new Var("fromJSON", new TFunc(f), true));
+		s.setVariable("fromJSON", new Var("fromJSON", new TFunc(f, "json"), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			long l = 0;
+			ArrayList<Value> a = new ArrayList<Value>();
+			if(args.size() >= 1)
+				l  = (new Double(TNumber.from(args.get(0)).get()).longValue() * 1000000L);
+			if(args.size() == 2)
+				a = TArray.from(args.get(1)).getAll();
+			if(_this.getType() == Types.FUNC) {
+				
+				vm.queueExecution(new TimeoutEntry(TFunc.from(_this), System.nanoTime() + l, a));
+			}
+			return TUndefined.getInstance();
+		};
+		s.setVariable("timeout", new Var("timeout", new TFunc(f, "time"), true));
 		
 		f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			TFunc func = TFunc.from(args.get(0));
@@ -536,7 +555,7 @@ public class Common {
 			TObject out = Http.executeRequest(url, "", type, "GET");
 			return out;
 		};
-		s.setVariable("httpGet", new Var("httpGet", new TFunc(f), true));
+		s.setVariable("httpGet", new Var("httpGet", new TFunc(f, "url", "type"), true));
 		
 		f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			//URL, type, data
@@ -563,7 +582,14 @@ public class Common {
 			TObject out = Http.executeRequest(url, data, type, "POST");
 			return out;
 		};
-		s.setVariable("httpPost", new Var("httpPost", new TFunc(f), true));
+		s.setVariable("httpPost", new Var("httpPost", new TFunc(f, "url", "type", "data"), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			return FileIO.readFile(TString.from(args.get(0)).get());
+		};
+		s.setVariable("readFile", new Var("readFile", new TFunc(f, "path"), true));
 		
 		return s;
 	}

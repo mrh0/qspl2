@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import com.mrh.qspl.debug.Debug;
+import com.mrh.qspl.io.files.FileIO;
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
 import com.mrh.qspl.val.types.TFunc;
 import com.mrh.qspl.vm.ExpressionEvaluator;
@@ -45,29 +46,14 @@ public class Main {
 				System.out.println("Run: [path, (keys..)]. Keys:(-debug, -no-result, -no-output, -output-code)");
 				return;
 			}
-			code = readFromFile(args[0]);
+			code = FileIO.readFromFile(args[0]);
 		}
 		else
-			code = readFromFile("C:\\MRHLang\\debug.qs");
+			code = FileIO.readFromFile("C:\\MRHLang\\debug.qs");
 		if(!Debug.noResult)
 			System.out.println("[PROGRAM OUTPUT]:");
 		if(outputCode)
 			System.out.println(code);
 		new QSPL().insertCode(code).execute();
-	}
-	
-	public static String readFromFile(String path) {
-		String r = "";
-		try {
-			FileReader fr = new FileReader(path);
-			BufferedReader br = new BufferedReader(fr);
-			while(br.ready())
-				r += br.readLine()+"\n";
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return r;
 	}
 }
