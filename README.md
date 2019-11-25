@@ -1,5 +1,5 @@
 # qspl
-Quick Statement Programming Language v2.5.1
+Quick Statement Programming Language v2.6.0
 
 # Language
 
@@ -189,6 +189,7 @@ pop[], dequeue[], remove[v], removeAt[i], keys[],
 sort[], find[[...]], keys[], values[],
 fromJSON[s], toJSON[],
 call[args, this], callAsync[args, this, callback(result, err)]
+timeout[milis, args]
 ```
 Miscellaneous:
 ```
