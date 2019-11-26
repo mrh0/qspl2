@@ -196,16 +196,36 @@ public class ExpressionEvaluator {
 					else if (op.equals("as")) //as type
 						v = vals.pop(vars).toType(v.getType());
 					else if (op.equals("--"))
-						v = TNumber.from(v).decriment(1);
+						v = TNumber.from(v).increment(1);
 					else if (op.equals("++"))
-						v = TNumber.from(v).incriment(1);
-					/*else if (op.equals("."))
-						v = vals.pop().accessor(TString.from(v));*/
+						v = TNumber.from(v).decrement(1);
 					else if (op.equals("=")) {
 						Var k = vars.peek();
-						if(Debug.enabled())
-							System.out.println("Set var: " + k + " to " + v);
-						vm.setValue(k.getName(), v); //k.set(v);
+						vm.setValue(k.getName(), v);
+						vals.pop(vars);
+						v = k.get();
+					}
+					else if (op.equals("+=")) {
+						Var k = vars.peek();
+						vm.setValue(k.getName(), vm.getValue(k.getName()).add(v));
+						vals.pop(vars);
+						v = k.get();
+					}
+					else if (op.equals("-=")) {
+						Var k = vars.peek();
+						vm.setValue(k.getName(), vm.getValue(k.getName()).sub(v));
+						vals.pop(vars);
+						v = k.get();
+					}
+					else if (op.equals("*=")) {
+						Var k = vars.peek();
+						vm.setValue(k.getName(), vm.getValue(k.getName()).multi(v));
+						vals.pop(vars);
+						v = k.get();
+					}
+					else if (op.equals("/=")) {
+						Var k = vars.peek();
+						vm.setValue(k.getName(), vm.getValue(k.getName()).div(v));
 						vals.pop(vars);
 						v = k.get();
 					}

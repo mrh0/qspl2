@@ -14,7 +14,7 @@ import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.val.types.TUserFunc;
 import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.queues.ExecutionQueue;
-import com.mrh.qspl.vm.queues.QueueEntry;
+import com.mrh.qspl.vm.queues.IQueueEntry;
 
 public class VM {
 	protected Stack<Scope> scopeStack;
@@ -33,15 +33,23 @@ public class VM {
 		Common.defineCommons(rootScope);
 	}
 	
-	public void queueExecution(QueueEntry qi) {
-		eq.enqueue(qi);
+	public int queueExecution(IQueueEntry qi) {
+		return eq.enqueue(qi);
+	}
+	
+	public boolean cancelExecution(int id) {
+		return eq.dequeue(id);
+	}
+	
+	public void cancelAllExecution() {
+		eq.cancelAll();
 	}
 	
 	public Value evalBlock(Block b) {
 		ev.exitCalledStack.push(null);
 		Value r = ev.walkThrough(b);
 		ev.exitCalledStack.pop();
-		eq.queueLoop(this); // New!
+		//eq.queueLoop(this);
 		return r;
 	}
 	
@@ -103,5 +111,6 @@ public class VM {
 	
 	public void eval() {
 		ev.eval();
+		eq.queueLoop(this); // New!
 	}
 }

@@ -168,12 +168,12 @@ public class TNumber implements Value<Double>, Comparable<Value>{
 		return null;
 	}
 	
-	public TNumber incriment(double v) {
+	public TNumber increment(double v) {
 		value += v;
 		return this;
 	}
 	
-	public TNumber decriment(double v) {
+	public TNumber decrement(double v) {
 		value -= v;
 		return this;
 	}

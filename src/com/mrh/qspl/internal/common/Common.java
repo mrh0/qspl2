@@ -21,6 +21,9 @@ import com.mrh.qspl.val.types.Types;
 import com.mrh.qspl.var.Var;
 import com.mrh.qspl.vm.Scope;
 import com.mrh.qspl.vm.VM;
+import com.mrh.qspl.vm.queues.AwaitThreadEntry;
+import com.mrh.qspl.vm.queues.IThreadFunc;
+import com.mrh.qspl.vm.queues.IntervalEntry;
 import com.mrh.qspl.vm.queues.TimeoutEntry;
 
 public class Common {
@@ -490,13 +493,37 @@ public class Common {
 				l  = (new Double(TNumber.from(args.get(0)).get()).longValue() * 1000000L);
 			if(args.size() == 2)
 				a = TArray.from(args.get(1)).getAll();
-			if(_this.getType() == Types.FUNC) {
-				
-				vm.queueExecution(new TimeoutEntry(TFunc.from(_this), System.nanoTime() + l, a));
-			}
+			if(_this.getType() == Types.FUNC)
+				return new TNumber(vm.queueExecution(new TimeoutEntry(TFunc.from(_this), System.nanoTime() + l, a)));
 			return TUndefined.getInstance();
 		};
 		s.setVariable("timeout", new Var("timeout", new TFunc(f, "time"), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			long l = 0;
+			ArrayList<Value> a = new ArrayList<Value>();
+			if(args.size() >= 1)
+				l  = (new Double(TNumber.from(args.get(0)).get()).longValue() * 1000000L);
+			if(args.size() == 2)
+				a = TArray.from(args.get(1)).getAll();
+			if(_this.getType() == Types.FUNC)
+				return new TNumber(vm.queueExecution(new IntervalEntry(TFunc.from(_this), l, a)));
+			return TUndefined.getInstance();
+		};
+		s.setVariable("interval", new Var("interval", new TFunc(f, "time"), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			return new TNumber(vm.cancelExecution(TNumber.from(args.get(0)).intValue())?1:0);
+		};
+		s.setVariable("cancelExecution", new Var("cancelExecution", new TFunc(f, "id"), true));
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			vm.cancelAllExecution();
+			return TUndefined.getInstance();
+		};
+		s.setVariable("cancelAllExecution", new Var("cancelAllExecution", new TFunc(f), true));
 		
 		f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			TFunc func = TFunc.from(args.get(0));
@@ -557,6 +584,36 @@ public class Common {
 		};
 		s.setVariable("httpGet", new Var("httpGet", new TFunc(f, "url", "type"), true));
 		
+		IThreadFunc httpGetAsyncFunc = (ArrayList<Value> args) -> {
+			//URL, type, data
+			String url = "";
+			String type = "";
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			if(args.size() == 1) {
+				url = TString.from(args.get(0)).get();
+				type = "application/json";
+			}
+			if(args.size() == 2) {
+				url = TString.from(args.get(0)).get();
+				type = TString.from(args.get(1)).get();
+			}
+			if(args.size() == 3) {
+				url = TString.from(args.get(0)).get();
+				type = TString.from(args.get(1)).get();
+			}
+			return Http.executeRequest(url, "", type, "GET");
+		};
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			if(_this.getType() != Types.FUNC)
+				return TUndefined.getInstance();
+			return new TNumber(
+					vm.queueExecution(
+							new AwaitThreadEntry(TFunc.from(_this), httpGetAsyncFunc, args)));
+		};
+		s.setVariable("httpGetAsync", new Var("httpGetAsync", new TFunc(f, "url", "type"), true));
+		
 		f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			//URL, type, data
 			String url = "";
@@ -579,10 +636,43 @@ public class Common {
 				type = TString.from(args.get(2)).get();
 				data = TString.from(args.get(1)).get();
 			}
-			TObject out = Http.executeRequest(url, data, type, "POST");
-			return out;
+			return Http.executeRequest(url, data, type, "POST");
 		};
 		s.setVariable("httpPost", new Var("httpPost", new TFunc(f, "url", "type", "data"), true));
+		
+		IThreadFunc httpPostAsyncFunc = (ArrayList<Value> args) -> {
+			//URL, type, data
+			String url = "";
+			String type = "";
+			String data = "";
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			if(args.size() == 1) {
+				url = TString.from(args.get(0)).get();
+				type = "application/json";
+				data = "";
+			}
+			if(args.size() == 2) {
+				url = TString.from(args.get(0)).get();
+				type = TString.from(args.get(2)).get();
+				data = "";
+			}
+			if(args.size() == 3) {
+				url = TString.from(args.get(0)).get();
+				type = TString.from(args.get(2)).get();
+				data = TString.from(args.get(1)).get();
+			}
+			return Http.executeRequest(url, data, type, "POST");
+		};
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			if(_this.getType() != Types.FUNC)
+				return TUndefined.getInstance();
+			return new TNumber(
+					vm.queueExecution(
+							new AwaitThreadEntry(TFunc.from(_this), httpPostAsyncFunc, args)));
+		};
+		s.setVariable("httpPostAsync", new Var("httpPostAsync", new TFunc(f, "url", "type", "data"), true));
 		
 		f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			if(args.size() == 0)

@@ -8,8 +8,8 @@ import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.vm.VM;
 
 public class TimeoutEntry extends CallbackEntry{
-	private TFunc f;
-	private long when;
+	protected TFunc f;
+	protected long when;
 	private ArrayList<Value> args;
 	
 	public TimeoutEntry(TFunc f, long when, ArrayList<Value> args) {

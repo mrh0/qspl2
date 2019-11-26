@@ -23,13 +23,13 @@ public class TArray implements Value{
 		values = v;
 	}
 	
-	public TArray(Value[] v) {
+	public TArray(Value...v) {
 		values = new ArrayList<Value>();
 		for(Value k : v)
 			values.add(k);
 	}
 	
-	public TArray(String[] v) {
+	public TArray(String...v) {
 		values = new ArrayList<Value>();
 		for(String k : v)
 			values.add(new TString(k));
