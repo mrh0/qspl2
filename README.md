@@ -59,6 +59,7 @@ out array#map[prev]; //Prints [2,3,4,5]
 Operators:
 ```
 Math: '+ - * / % ++ --'
+Assigning: '= += -= *= /='
 Boolean: '&& || ! == < > <= >='
 Bitwise: '& | ^ ~'
 Contains: '?'
