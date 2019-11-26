@@ -189,7 +189,7 @@ pop[], dequeue[], remove[v], removeAt[i], keys[],
 sort[], find[[...]], keys[], values[],
 fromJSON[s], toJSON[],
 call[args, this], callAsync[args, this, callback(result, err)]
-timeout[milis, args]
+timeout[milis, args], interval[milis, args], cancelExecution[id], cancelAllExecution[]
 ```
 Miscellaneous:
 ```
