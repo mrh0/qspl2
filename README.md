@@ -182,14 +182,21 @@ stop[], sleep[millis],
 if[b], condition[b, t, f]
 
 //chain functions: ([v]alue, [i]ndex, [a]rray, [s]tring, [err]or)
-map[func(v, i, a)], filter[func(v, i, a)],
+String#:
 collapse[],
+Array#:
+map[func(v, i, a)], filter[func(v, i, a)],
 set[i, v], set[[...], v], add[v], push[v], 
 pop[], dequeue[], remove[v], removeAt[i], keys[],
-sort[], find[[...]], keys[], values[],
+sort[], find[[...]],
+Object#:
+keys[], values[],
+Obj#/Arr#:
 fromJSON[s], toJSON[],
+Func#:
 call[args, this], callAsync[args, this, callback(result, err)]
-timeout[milis, args], interval[milis, args], cancelExecution[id], cancelAllExecution[]
+timeout[milis, args], interval[milis, args], cancelExecution[id], cancelAllExecution[],
+httpGetAsync[url, type], httpPostAsync[url, type, data]
 ```
 Miscellaneous:
 ```
