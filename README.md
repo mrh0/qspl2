@@ -31,7 +31,7 @@ out "Hello World"[1]; //Prints 'e'
 out "Hello World"[0,4]; //Prints 'Hello'
 
 //Strings:
-text = "Hi my name is";
+text = "Hi my name is ";
 j = j + "MrH."; //Joins strings : "Hi my name is MrH."
 j = j - "."; //Removes string from string : "Hi my name is MrH"
 j/" "; //Splits string to array : ['Hi','my','name','is','MrH']
