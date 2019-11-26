@@ -62,7 +62,7 @@ Math: '+ - * / % ++ --'
 Boolean: '&& || ! == < > <= >='
 Bitwise: '& | ^ ~'
 Contains: '?'
-Is type: 'is' //Example: 56 as STRING : false (0)
+Is type: 'is' //Example: 56 is STRING : false (0)
 As type: 'as' //Example: 56 as STRING : "56"
 ```
 Arrays:
