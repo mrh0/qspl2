@@ -6,6 +6,7 @@ import java.util.ListIterator;
 import java.util.Stack;
 
 import com.mrh.qspl.internal.common.Common;
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.syntax.parser.Block;
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
 import com.mrh.qspl.val.Value;

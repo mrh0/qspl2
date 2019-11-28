@@ -118,6 +118,10 @@ public class TObject implements Value{
 
 	@Override
 	public Value toType(int type) {
+		if(type == Types.OBJECT)
+			return this;
+		if(type == Types.STRING)
+			return new TString(this.toString());
 		return TUndefined.getInstance();//convert into json if string
 	}
 

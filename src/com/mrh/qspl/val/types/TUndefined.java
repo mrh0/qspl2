@@ -122,6 +122,12 @@ public class TUndefined implements Value<Object>{
 			return this;
 		if(type == Types.STRING)
 			return new TString(this.toString());
+		if(type == Types.ARRAY)
+			return new TArray();
+		if(type == Types.OBJECT)
+			return new TObject();
+		if(type == Types.NUMBER)
+			return new TNumber(0);
 		return TUndefined.getInstance();
 	}
 

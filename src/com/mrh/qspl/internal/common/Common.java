@@ -49,9 +49,11 @@ public class Common {
 		s.setVariable("null", new Var("null", TUndefined.getInstance(), true));
 		
 		s.setVariable("NUMBER", new Var("NUMBER", new TNumber(0), true));
+		s.setVariable("FUNC", new Var("FUNC", new TFunc(), true));
 		s.setVariable("FUNCTION", new Var("FUNCTION", new TFunc(), true));
 		s.setVariable("STRING", new Var("STRING", new TString(""), true));
 		s.setVariable("ARRAY", new Var("ARRAY", new TArray(), true));
+		s.setVariable("OBJECT", new Var("OBJECT", new TObject(), true));
 		
 		s.setVariable("PI", new Var("PI", new TNumber(Math.PI), true));
 		s.setVariable("INF", new Var("INF", new TNumber(Double.POSITIVE_INFINITY), true));
@@ -680,6 +682,21 @@ public class Common {
 			return FileIO.readFile(TString.from(args.get(0)).get());
 		};
 		s.setVariable("readFile", new Var("readFile", new TFunc(f, "path"), true));
+		
+		IThreadFunc readFileAsyncFunc = (ArrayList<Value> args) -> {
+			if(args.size() == 0)
+				return TUndefined.getInstance();
+			return FileIO.readFile(TString.from(args.get(0)).get());
+		};
+		
+		f = (ArrayList<Value> args, VM vm, Value _this) -> {
+			if(_this.getType() != Types.FUNC)
+				return TUndefined.getInstance();
+			return new TNumber(
+					vm.queueExecution(
+							new AwaitThreadEntry(TFunc.from(_this), readFileAsyncFunc, args)));
+		};
+		s.setVariable("readFileAsync", new Var("readFileAsync", new TFunc(f, "path"), true));
 		
 		return s;
 	}

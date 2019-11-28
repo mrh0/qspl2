@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import com.mrh.qspl.debug.Debug;
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.syntax.parser.Block;
 import com.mrh.qspl.syntax.parser.Statement;
 import com.mrh.qspl.syntax.parser.StatementEndType;
@@ -77,6 +78,7 @@ public class ExpressionEvaluator {
 		if(Debug.enabled())
 			System.out.println("ln:"+statement.getLine());
 		
+		Console.g.setCurrentLine(statement.getLine());
 		try {
 		for(Token token : statement.getTokens()) {
 			String s = token.getToken();
@@ -196,9 +198,9 @@ public class ExpressionEvaluator {
 					else if (op.equals("as")) //as type
 						v = vals.pop(vars).toType(v.getType());
 					else if (op.equals("--"))
-						v = TNumber.from(v).increment(1);
-					else if (op.equals("++"))
 						v = TNumber.from(v).decrement(1);
+					else if (op.equals("++"))
+						v = TNumber.from(v).increment(1);
 					else if (op.equals("=")) {
 						Var k = vars.peek();
 						vm.setValue(k.getName(), v);
@@ -274,19 +276,19 @@ public class ExpressionEvaluator {
 				vals.push(k.get(), k);
 			}
 			else
-				System.err.println("Unexpected token: '" + s + "'");
+				Console.g.err("Unexpected token: '" + s + "'");
 			types.push(t);
 			beforeprev = prev;
 			prev = token;
 		}
 		if(outCalled) {
 			if(!vals.isEmpty())
-				System.out.println("[OUT:"+statement.getLine()+"]: "+vals.peek());
+				Console.g.log(vals.peek());
 		}
 		}
 		catch(Exception e) {
-			System.err.println("Exception at line: " + statement.getLine());
-			e.printStackTrace();
+			Console.g.err(e.getMessage());
+			e.printStackTrace(); //Debug Info
 		}
 		boolean pass = statement.getEndType() != StatementEndType.END && !vals.isEmpty() && vals.peek().bool() && !onceFunc;//do sub statement?
 		return new StatementResult(pass, vals, vars, thisCalledExit?vals.peek():null);

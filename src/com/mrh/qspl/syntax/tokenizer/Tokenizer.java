@@ -3,6 +3,7 @@ package com.mrh.qspl.syntax.tokenizer;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.syntax.parser.Block;
 import com.mrh.qspl.syntax.parser.Statement;
 import com.mrh.qspl.syntax.parser.StatementEndType;
@@ -61,7 +62,7 @@ public class Tokenizer {
 			if(c == '\n') {
 				curLine++;
 			}
-			
+			Console.g.setCurrentLine(curLine);
 			if(stringStack.isEmpty()) {
 				if(Tokens.isOpenComment(cs))
 					inComment = true;
@@ -105,11 +106,11 @@ public class Tokenizer {
 				next(c, TokenType.string);
 				continue;
 			}
-			if(c == '.' && (cur != TokenType.literal)) {
+			/*if(c == '.' && (w.length() == 0 || cur != TokenType.literal)) {
 				end();
 				next(TokenType.identifier);
 				continue;
-			}
+			}*/
 			if(c == '#') {
 				end();
 				next(c, TokenType.keyword);
@@ -144,7 +145,7 @@ public class Tokenizer {
 						bracketStack.push(c);
 					else{
 						if(bracketStack.isEmpty() || Tokens.getOpenBracket(c) != bracketStack.pop())
-							System.err.println("Unbalanced Brackets"); //replace
+							Console.g.err("Unbalanced Brackets"); //replace
 					}
 				}
 				end();
@@ -213,9 +214,6 @@ public class Tokenizer {
 	}
 	
 	private int opValue(String s) {
-		/*if(s.equals("."))
-			return 12;*/
-		
 		if(s.equals("++"))
 			return 11;
 		if(s.equals("--"))
@@ -223,6 +221,8 @@ public class Tokenizer {
 		if(s.equals("is"))
 			return 11;
 		if(s.equals("as"))
+			return 11;
+		if(s.equals("?"))
 			return 11;
 		if(s.equals("!"))
 			return 11;
@@ -280,14 +280,17 @@ public class Tokenizer {
 			return 0;
 		if(s.equals("/="))
 			return 0;
-		return 1;
+		
+		if(s.equals(",")) //Quick fix
+			return 0;
+		Console.g.err("Unidentified Operator: '" + s + "'");
+		return 0;
 	}
 	
 	private void gotNewToken(Token t) {
 		TokenType tt = t.getType();
 		String tss = t.getToken();
 		
-		//System.out.println("IN: " + t);// + ":" + lasti);
 		if(tss.equals("[") || tss.equals("{")) {
 			mc.push();
 			gmc().postfixList.add(t);
@@ -300,10 +303,8 @@ public class Tokenizer {
 		}
 		else if(tss.equals(",")) {
 			finishPart();
-			//gmc().postfixList.add(t);
 			ArrayList<Token> tl = mc.pop();
 			gmc().postfixList.addAll(tl);
-			//toggle
 			mc.push();
 			gmc().postfixList.add(t);
 		}
@@ -315,8 +316,7 @@ public class Tokenizer {
 		}
 		else if(tss.equals(")")) {
 			Token top = gmc().opStack.pop();
-			//System.out.println(gmc().opStack);
-			while(!top.getToken().equals("(")) {// && !top.getToken().equals("[")
+			while(!top.getToken().equals("(")) {
 				gmc().postfixList.add(top);
 				top = gmc().opStack.pop();
 			}
@@ -339,10 +339,12 @@ public class Tokenizer {
 		if(cur == TokenType.identifier)
 			if(Tokens.isKeyword(w))
 				cur = TokenType.keyword;
+		if(cur == TokenType.operator)
+			opValue(w);
 		
 		if(w.length() > 0 || cur == TokenType.string) {
 			Token t = null;
-			if(w.length() > 1 && w.charAt(0) == '.' && cur == TokenType.identifier) {
+			/*if(w.length() > 1 && w.charAt(0) == '.' && cur == TokenType.identifier) {
 				if(Tokens.canBeLiteral(w.charAt(1))) {
 					t = new Token(w, cur);
 					gotNewToken(t);
@@ -357,7 +359,10 @@ public class Tokenizer {
 			else {
 				t = new Token(w, cur);
 				gotNewToken(t);
-			}
+			}*/
+			
+			t = new Token(w, cur);
+			gotNewToken(t);
 			
 			w = "";
 			
@@ -459,7 +464,7 @@ public class Tokenizer {
 		}
 		
 		if(blockStack.isEmpty()) 
-			System.err.println("Block stack empty!");
+			Console.g.err("Block stack empty!");
 		blockStack.peek().add(s);
 		for(int i = 0; i < lineIndent; i++)
 			ind+="\t";

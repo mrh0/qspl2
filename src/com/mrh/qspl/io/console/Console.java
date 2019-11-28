@@ -3,16 +3,26 @@ package com.mrh.qspl.io.console;
 import java.io.PrintStream;
 
 public class Console {
+	public static Console g;
+	
+	private int currentLine = 0;
+	
 	public static final PrintStream defaultLogStream = System.out;
 	public static final PrintStream defaultErrStream = System.err;
 	private PrintStream logStream;
 	private PrintStream errStream;
 	
-	private String logPrefix = "[OUT]: ";
+	private String getLogPrefix() {
+		return "[OUT:"+currentLine+"]: ";
+	}
+	
 	private String logSurfix = "";
 	private String logSeperator = ",";
 	
-	private String errPrefix = "[ERR]: ";
+	private String getErrPrefix() {
+		return "[ERR:"+currentLine+"]: ";
+	}
+	
 	private String errSurfix = "";
 	private String errSeperator = ",";
 	
@@ -29,10 +39,11 @@ public class Console {
 	public Console() {
 		this.logStream = defaultLogStream;
 		this.errStream = defaultErrStream;
+		g = this;
 	}
 	
-	public void log(String...s) {
-		this.logStream.print(logPrefix);
+	public void log(Object...s) {
+		this.logStream.print(getLogPrefix());
 		for(int i = 0; i < s.length; i++) {
 			this.logStream.print(s[i]);
 			if(i+1 < s.length)
@@ -41,13 +52,17 @@ public class Console {
 		this.logStream.println(logSurfix);
 	}
 	
-	public void err(String...s) {
-		this.errStream.print(errPrefix);
+	public void err(Object...s) {
+		this.errStream.print(getErrPrefix());
 		for(int i = 0; i < s.length; i++) {
 			this.errStream.print(s[i]);
 			if(i+1 < s.length)
 				this.errStream.print(errSeperator);
 		}
 		this.errStream.println(errSurfix);
+	}
+	
+	public void setCurrentLine(int i) {
+		currentLine = i;
 	}
 }

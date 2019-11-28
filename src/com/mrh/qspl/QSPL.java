@@ -3,6 +3,7 @@ package com.mrh.qspl;
 import java.util.ArrayList;
 
 import com.mrh.qspl.debug.Debug;
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TFunc;
@@ -17,8 +18,10 @@ import com.mrh.qspl.vm.VM;
 public class QSPL {
 	private Tokenizer tokens;
 	private VM vm;
+	private Console console;
 	
 	public QSPL() {
+		console = new Console();
 		tokens = new Tokenizer();
 		vm = new VM(tokens);
 	}
