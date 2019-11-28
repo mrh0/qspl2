@@ -108,7 +108,7 @@ obj = new {a=1, b=new{a=3}, x=4}; //Creates object with elements : {a=1, b={a=3}
 //Operate:
 obj["a"]; //Get element 'a' : 1
 obj["a", "b"]; //Get array : [1, {a=3}]
-obj.a; //Get element 'a' : 1
+obj.a; //Get element 'a' : 1 (Currently not working)
 obj[]; //Get first depth size : 2;
 obj + new{y=7}; //Join objects : {a=1, b=new{a=3}, x=4, y=7}
 obj ? 1 //Object contains  1 : true
