@@ -1,5 +1,6 @@
 package com.mrh.qspl.vm;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import com.mrh.qspl.var.Var;
 public class Scope {
 	private String name = "unknown scope";
 	private Map<String, Var> variables;
+	private ArrayList<String> keyOrder = null;
 	private boolean depthLock = false;
 	
 	public Scope(String name) {
@@ -23,6 +25,8 @@ public class Scope {
 		this.depthLock = true;
 		this.name = name;
 		this.variables = new HashMap<String, Var>();
+		if(this.depthLock)
+			keyOrder = new ArrayList<String>();
 	}
 	
 	public boolean isLocked() {
@@ -34,6 +38,9 @@ public class Scope {
 	}
 	
 	public Var setVariable(String name, Var v) {
+		if(this.keyOrder != null)
+			if(!this.keyOrder.contains(name))
+				this.keyOrder.add(name);
 		return variables.put(name, v);
 	}
 	
@@ -53,5 +60,9 @@ public class Scope {
 			map.put(s, this.getVariable(s).get());
 		}
 		return map;
+	}
+	
+	public String[] getKeyOrder() {
+		return keyOrder.toArray(new String[0]);
 	}
 }

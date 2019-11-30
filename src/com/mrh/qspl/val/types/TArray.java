@@ -184,7 +184,13 @@ public class TArray implements Value{
 		if(v.length == 1)
 			return values.get(v[0].intValue());
 		if(v.length == 2) {
-			return new TArray(values.subList(v[0].intValue(), v[1].intValue()));
+			int a1 = v[0].intValue();
+			int a2 = v[1].intValue();
+			if(a2 > a1)
+				return TUndefined.getInstance();
+			if(a2 < 0)
+				return new TArray(values.subList(a1, values.size()+a2));
+			return new TArray(values.subList(a1, a2));
 		}
 		return TUndefined.getInstance();
 	}

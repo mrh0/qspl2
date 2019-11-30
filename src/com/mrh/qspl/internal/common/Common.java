@@ -698,6 +698,14 @@ public class Common {
 		};
 		s.setVariable("readFileAsync", new Var("readFileAsync", new TFunc(f, "path"), true));
 		
+		/*
+			To Add:
+			union...
+			isDisjoint
+			isDistinct
+		*/
+		
+		
 		return s;
 	}
 }

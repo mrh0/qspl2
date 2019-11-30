@@ -131,8 +131,17 @@ public class Tokenizer {
 							i++;
 							set = StatementEndType.WHILE;
 						}
+					
+					
 				}
 				end();
+				if(isFuncDef) {
+					gotNewToken(new Token("}", TokenType.seperator));
+					gotNewToken(new Token("func", TokenType.keyword));
+					if(set == StatementEndType.WHILE)
+						Console.g.err("Invalid end '::' to function definition.");
+				}
+				isFuncDef = false;
 				endStatement(set);
 				continue;
 			}
@@ -285,6 +294,8 @@ public class Tokenizer {
 			return 0;
 		if(s.equals("/="))
 			return 0;
+		if(s.equals("%="))
+			return 0;
 		
 		if(s.equals(",")) //Quick fix
 			return 0;
@@ -338,6 +349,7 @@ public class Tokenizer {
 	}
 	
 	boolean lastWasPeriod = false;
+	boolean isFuncDef = false;
 	private Token end() {
 		//check if w is keyword
 		cur = Tokens.tokenSwapType(w, cur);
@@ -345,11 +357,20 @@ public class Tokenizer {
 		if(cur == TokenType.identifier)
 			if(Tokens.isKeyword(w))
 				cur = TokenType.keyword;
+		
 		if(cur == TokenType.operator)
 			opValue(w);
 		
 		if(w.length() > 0 || cur == TokenType.string) {
 			Token t = null;
+			
+			if(cur == TokenType.keyword) {
+				if(w.equals("func")) {
+					isFuncDef = true;
+					gotNewToken(new Token("new", TokenType.keyword));
+					gotNewToken(new Token("{", TokenType.seperator));
+				}
+			}
 			
 			if(lastWasPeriod) {
 				lastWasPeriod = false;
@@ -363,8 +384,10 @@ public class Tokenizer {
 				if(w.equals("."))
 					lastWasPeriod = true;
 				else {
-					t = new Token(w, cur);
-					gotNewToken(t);
+					if(!w.equals("func")) {
+						t = new Token(w, cur);
+						gotNewToken(t);
+					}
 				}
 			}
 			

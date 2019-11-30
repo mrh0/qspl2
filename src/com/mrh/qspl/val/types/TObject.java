@@ -12,6 +12,7 @@ public class TObject implements Value{
 	
 	private Map<String, Value> map;
 	private static Map<String, Value> prototype = new HashMap<String, Value>();
+	private String[] argOrder = null;
 	
 	public TObject() {
 		map = new HashMap<>();
@@ -20,14 +21,33 @@ public class TObject implements Value{
 	public TObject(Map<String, Value> m) {
 		map = m;
 	}
+	
+	public TObject(Map<String, Value> m, String[] keys) {
+		map = m;
+		argOrder = keys;
+	}
+	
+	public String[] getSpecialOrder() {
+		return argOrder;
+	}
 
 	@Override
 	public Value add(Value v) {
-		return TUndefined.getInstance();
+		if(v.getType() == Types.OBJECT) {
+			TObject o = TObject.from(v);
+			for(String key : o.getKeys()) {
+				this.set(key, o.get(key));
+			}
+		}
+		return this;
 	}
 
 	@Override
 	public Value sub(Value v) {
+		if(v.getType() == Types.STRING) {
+			TString s = TString.from(v);
+			this.map.remove(s);
+		}
 		return TUndefined.getInstance();
 	}
 
@@ -158,11 +178,13 @@ public class TObject implements Value{
 	}
 	
 	public Value get(String key) {
-		map.getOrDefault(key, TUndefined.getInstance());
-		return this;
+		return map.getOrDefault(key, TUndefined.getInstance());
+		//return this;
 	}
 	
 	public String[] getKeys() {
+		if(argOrder != null)
+			return argOrder;
 		return map.keySet().toArray(new String[0]);
 	}
 	

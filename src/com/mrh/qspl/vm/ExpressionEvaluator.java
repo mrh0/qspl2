@@ -71,7 +71,7 @@ public class ExpressionEvaluator {
 		boolean thisCalledExit = false;
 		
 		boolean outCalled = false;
-		boolean funcDefine = false;
+		//boolean funcDefine = false;
 		boolean onceFunc = false;
 		
 		ArrayList<String> funcArgNames = new ArrayList<String>();
@@ -84,7 +84,8 @@ public class ExpressionEvaluator {
 			String s = token.getToken();
 			TokenType t = token.getType();
 			
-			if(funcDefine) {
+			/*if(funcDefine) {
+				
 				if(t == TokenType.identifier) {
 					funcArgNames.add(s);
 					continue;
@@ -95,7 +96,7 @@ public class ExpressionEvaluator {
 					funcDefine = false;
 					vals.push(new TUserFunc(statement.getNext(), funcArgNames.toArray(new String[0])));
 				}
-			}
+			}*/
 			if(s.equals("[")) {
 				Value vt = (Tokens.isNewSymbol(prev.getToken())?null:vals.pop(vars));
 				brackets.push(new BracketItem('[', vt, beforeprev!= null && beforeprev.getToken().equals("#")));
@@ -115,7 +116,7 @@ public class ExpressionEvaluator {
 					BracketItem bi = brackets.pop();
 					if(!prev.getToken().equals("{"))
 						bi.add(vals.pop(vars));
-					vals.push(new TObject(oScope.getAllValues()));
+					vals.push(new TObject(oScope.getAllValues(), oScope.getKeyOrder()));
 					
 				}
 			}
@@ -231,6 +232,12 @@ public class ExpressionEvaluator {
 						vals.pop(vars);
 						v = k.get();
 					}
+					else if (op.equals("%=")) {
+						Var k = vars.peek();
+						vm.setValue(k.getName(), vm.getValue(k.getName()).mod(v));
+						vals.pop(vars);
+						v = k.get();
+					}
 					vals.push(v);
 				}
 			}
@@ -243,7 +250,9 @@ public class ExpressionEvaluator {
 					outCalled = true;
 				}
 				else if(s.equals("func")) {
-					funcDefine = true;
+					//funcDefine = true;
+					TObject o = TObject.from(vals.pop(vars));
+					vals.push(new TUserFunc(statement.getNext(), o, o.getSpecialOrder()));//funcArgNames.toArray(new String[0]))
 					onceFunc = true;
 				}
 				else if(s.equals("exit")) {
@@ -290,6 +299,9 @@ public class ExpressionEvaluator {
 			Console.g.err(e.getMessage());
 			e.printStackTrace(); //Debug Info
 		}
+		
+		
+		
 		boolean pass = statement.getEndType() != StatementEndType.END && !vals.isEmpty() && vals.peek().bool() && !onceFunc;//do sub statement?
 		return new StatementResult(pass, vals, vars, thisCalledExit?vals.peek():null);
 	}
