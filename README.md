@@ -39,8 +39,11 @@ j/" "; //Splits string to array : ['Hi','my','name','is','MrH']
 Functions:
 ```
 //Define:
-x = func arg1 arg2:
+x1 = func arg1, arg2:
   exit "Hello"+arg1; //Return value.
+  
+x2 = func arg1=7: //Function default value
+  exit "Hello"+arg1;
 
 //Call:
 x[" World!"]; //returns "Hello World!"
@@ -52,7 +55,7 @@ x = 5;
 out x#double[]#double[]; //Prints 20
 
 array = new [1,2,3,4];
-func o i a:
+func o, i, a:
   exit (o+1);
 out array#map[prev]; //Prints [2,3,4,5]
 ``` 
