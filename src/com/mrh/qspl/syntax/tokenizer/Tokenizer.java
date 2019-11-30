@@ -106,11 +106,16 @@ public class Tokenizer {
 				next(c, TokenType.string);
 				continue;
 			}
-			/*if(c == '.' && (w.length() == 0 || cur != TokenType.literal)) {
+			if(c == '.' && (cur == TokenType.identifier || w.length() == 0)) {
 				end();
-				next(TokenType.identifier);
+				next(c, TokenType.identifier);
 				continue;
-			}*/
+			}
+			if(!Tokens.canBeLiteral(c) && w.equals(".") && Tokens.canBeStartOfIdentifier(c)) {
+				end();
+				next(c, TokenType.identifier);
+				continue;
+			}
 			if(c == '#') {
 				end();
 				next(c, TokenType.keyword);
@@ -332,6 +337,7 @@ public class Tokenizer {
 		}
 	}
 	
+	boolean lastWasPeriod = false;
 	private Token end() {
 		//check if w is keyword
 		cur = Tokens.tokenSwapType(w, cur);
@@ -344,25 +350,26 @@ public class Tokenizer {
 		
 		if(w.length() > 0 || cur == TokenType.string) {
 			Token t = null;
-			/*if(w.length() > 1 && w.charAt(0) == '.' && cur == TokenType.identifier) {
-				if(Tokens.canBeLiteral(w.charAt(1))) {
+			
+			if(lastWasPeriod) {
+				lastWasPeriod = false;
+				gotNewToken(new Token("[", TokenType.seperator));
+				t = new Token(w, TokenType.string);
+				gotNewToken(t);
+				gotNewToken(new Token("]", TokenType.seperator));
+				cur = TokenType.seperator;
+			}
+			else {
+				if(w.equals("."))
+					lastWasPeriod = true;
+				else {
 					t = new Token(w, cur);
 					gotNewToken(t);
 				}
-				else {
-					gotNewToken(new Token("[", TokenType.seperator));
-					t = new Token(w.substring(1), TokenType.string);
-					gotNewToken(t);
-					gotNewToken(new Token("]", TokenType.seperator));
-				}
 			}
-			else {
-				t = new Token(w, cur);
-				gotNewToken(t);
-			}*/
 			
-			t = new Token(w, cur);
-			gotNewToken(t);
+			//t = new Token(w, cur);
+			//gotNewToken(t);
 			
 			w = "";
 			
@@ -371,12 +378,14 @@ public class Tokenizer {
 			
 			last = cur;
 			cur = TokenType.none;
+			prevToken = t;
 			return t;
 		}
 		w = "";
 		
 		last = cur;
 		cur = TokenType.none;
+		prevToken = null;
 		return null;
 	}
 	
