@@ -1,5 +1,5 @@
 # qspl
-Quick Statement Programming Language v2.7.1
+Quick Statement Programming Language v2.8.1
 
 # Language
 
@@ -27,8 +27,9 @@ out k[1]; //Prints [4]
 out k[2][1]; //Prints 7
 out k[0,1]; //Prints [[5,4,3], [4]]
 
-out "Hello World"[1]; //Prints 'e'
+out "Hello World"[1]; //Prints 'e' to out stream.
 out "Hello World"[0,4]; //Prints 'Hello'
+error "An Error Message"; //Prints message to error stream.
 
 //Strings:
 text = "Hi my name is ";
