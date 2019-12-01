@@ -71,7 +71,8 @@ public class ExpressionEvaluator {
 		boolean thisCalledExit = false;
 		
 		boolean outCalled = false;
-		//boolean funcDefine = false;
+		boolean errorCalled = false;
+
 		boolean onceFunc = false;
 		
 		ArrayList<String> funcArgNames = new ArrayList<String>();
@@ -249,6 +250,9 @@ public class ExpressionEvaluator {
 				if(s.equals("out")) {
 					outCalled = true;
 				}
+				if(s.equals("out")) {
+					errorCalled = true;
+				}
 				else if(s.equals("func")) {
 					//funcDefine = true;
 					TObject o = TObject.from(vals.pop(vars));
@@ -293,6 +297,10 @@ public class ExpressionEvaluator {
 		if(outCalled) {
 			if(!vals.isEmpty())
 				Console.g.log(vals.peek());
+		}
+		if(errorCalled) {
+			if(!vals.isEmpty())
+				Console.g.err(vals.peek());
 		}
 		}
 		catch(Exception e) {
