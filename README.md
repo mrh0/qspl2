@@ -100,7 +100,7 @@ a#collapse[] //Returns collapsed string : "HelloWorld"
 a = new [3,2,4,6];
 a#sort[] //Sorts array : [2,3,4,6]
 a#toJSON[] //Get json string : "[2,3,4,6]"
-a = new [] fromJSON["[4,5,[2,4,'text']]"] //Object from json : [4,5,[2,4,"text"]]
+a = new []#fromJSON["[4,5,[2,4,'text']]"] //Object from json : [4,5,[2,4,"text"]]
 ```
 Objects:
 ```
@@ -140,10 +140,16 @@ x::
 exit; //Add 'exit;' if the line after an indented line is last line of the program.
 
 //Foreach v in g:
-g = new [1,2,3,4];
-v in g[2]::
-	out v;
-;
+a = new [1,2,3,4];
+v in a::
+	out v; // Prints all values
+k of a::
+	out k; // Prints all keys
+o = new {a=1, b=2, c=3};
+v in o::
+	out v; // Prints all values
+k of o::
+	out v; // Prints all keys
   
 j = 5;
 out prev; //Prints result of previous statement (5)
