@@ -74,6 +74,7 @@ Arrays:
 ```
 //Define:
 a = new []; //Creates empty array.
+a = $[]; //Creates empty array.
 a = new [5,3,new[6,4],1]; //Creates array : [5.0,3.0,[6.0,4.0],1.0]
 a = new [5,3,2,1]; //Creates array : [5.0,3.0,2.0,1.0]
 
@@ -106,6 +107,7 @@ Objects:
 ```
 //Define:
 obj = new {}; //Creates empty object.
+obj = ${}; //Creates empty object.
 obj = new {a=1, b=2}; //Creates object with elements : {a=1, b=2}
 obj = new {a=1, b=new{a=3}, x=4}; //Creates object with elements : {a=1, b={a=3}, x=4}}
 
