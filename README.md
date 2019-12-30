@@ -179,9 +179,9 @@ Predefined:
 //constants:
 true, false,
 prev, else,
-PI, INF, NEGINF
-NUMBER, STRING, ARRAY, OBJECT, FUNCTION,
-UNDEFINED, UNDEF, null //All same.
+PI, INF, INFINITY, NEGINF, NEGATIVE_INFINITY
+NUMBER, STRING, ARRAY, OBJECT, FUNCTION, CLASS,
+UNDEFINED, UNDEF, undefined, null //All same.
 
 //functions: ([n]umber, [b]oolean)
 print[string], println[string], read[type]
