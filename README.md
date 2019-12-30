@@ -125,7 +125,7 @@ obj#add["g", "text"]; //Adds element to object : {a=1, b={a=3}, x=4, y=7, g="tex
 obj#set["a", 5] //Set element value : {a=5, b=new{a=3}, x=4, y=7, g="text"}
 obj#remove["x"] //Removes element at key 'x' : {a=5, b={a=3}, y=7, g="text"}
 obj#toJSON[] //Get json string : "{'a':5, 'b'={'a':3}, 'y':7, 'g':'text'}"
-obj = new {} fromJSON["{'x':5}"] //Object from json : {x=5}
+obj = new {}#fromJSON["{'x':5}"] //Object from json : {x=5}
 ```
 Flow control:
 ```
