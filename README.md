@@ -217,6 +217,9 @@ Miscellaneous:
 /* Multi
 Line
 Comment */
+@notation text... (WIP)
+export var1; //Marks variable accessable for imports.
+import var1, func1, func2 from "path/file.qs"; //Executes file in a separate VM and imports variables marked as export from it's Scope to this Scope.
 ```
 
 # License
