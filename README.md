@@ -216,7 +216,21 @@ Import/Export:
 export var1; //Marks variable accessable for imports.
 import var1, func1, func2 from "path/file.qs"; //Executes file in a separate VM and imports variables marked as export from it's Scope to this Scope.
 import * from "path/file.qs"; //Imports all exports from file.
-import externalVar1 from "com.mrh.qspl.extension.ClassName@filepath.jar"; //Imports 'externalVar1' from a extension class in a external jar file.
+
+//Imports 'externalVar1' from a extension class in a external jar file:
+import externalVar1 from "com.mrh.qspl.extension.ClassName@filepath.jar";
+Creating a qspl java extension:
+public class Test implements com.mrh.qspl.io.extension.Extension{
+  ...
+  @Override
+  public void extend(com.mrh.qspl.io.extension.ExtensionScope ext) {
+  ext.export("extensionNumber", new TNumber(42));
+  IFunc f = (ArrayList<Value> args, VM vm, Value _this) -> {
+    return new TString("Hello " + (args.size()>0?args.get(0):"World") + "!");
+  };
+  ext.export("extensionFunction", new TFunc(f, "name"));
+  }
+}
 ```
 Miscellaneous:
 ```
