@@ -211,27 +211,11 @@ call[args, this], callAsync[args, this, callback(result, err)]
 timeout[milis, args], interval[milis, args], cancelExecution[id], cancelAllExecution[],
 httpGetAsync[url, type], httpPostAsync[url, type, data]
 ```
-Import/Export & Extensions:
+Import/Export:
 ```
 export var1; //Marks variable accessable for imports.
 import var1, func1, func2 from "path/file.qs"; //Executes file in a separate VM and imports variables marked as export from it's Scope to this Scope.
 import * from "path/file.qs"; //Imports all exports from file.
-
-//Imports 'externalVar1' from a extension class in a external jar file:
-import externalVar1 from "com.my.extension.MyExtension@filepath.jar";
-
-//Creating a qspl java extension:
-public class MyExtension implements com.mrh.qspl.io.extension.Extension{
-  ...
-  @Override
-  public void extend(com.mrh.qspl.io.extension.ExtensionScope ext) {
-  ext.export("extensionNumber", new TNumber(42));
-  IFunc f = (ArrayList<Value> args, VM vm, Value _this) -> {
-    return new TString("Hello " + (args.size()>0?TString.from(args.get(0)).get():"World") + "!");
-  };
-  ext.export("extensionFunction", new TFunc(f, "name"));
-  }
-}
 ```
 Miscellaneous:
 ```
