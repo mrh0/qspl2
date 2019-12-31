@@ -211,6 +211,13 @@ call[args, this], callAsync[args, this, callback(result, err)]
 timeout[milis, args], interval[milis, args], cancelExecution[id], cancelAllExecution[],
 httpGetAsync[url, type], httpPostAsync[url, type, data]
 ```
+Import/Export:
+```
+export var1; //Marks variable accessable for imports.
+import var1, func1, func2 from "path/file.qs"; //Executes file in a separate VM and imports variables marked as export from it's Scope to this Scope.
+import * from "path/file.qs"; //Imports all exports from file.
+import externalVar1 from "com.mrh.qspl.extension.ClassName@filepath.jar"; //Imports 'externalVar1' from a extension class in an jar
+```
 Miscellaneous:
 ```
 //One Line Comment.
@@ -218,8 +225,6 @@ Miscellaneous:
 Line
 Comment */
 @notation text... (WIP)
-export var1; //Marks variable accessable for imports.
-import var1, func1, func2 from "path/file.qs"; //Executes file in a separate VM and imports variables marked as export from it's Scope to this Scope.
 delete var1; //Removes reference.
 ```
 
