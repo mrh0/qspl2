@@ -8,6 +8,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.var.Var;
 
@@ -253,14 +254,13 @@ public class TArray implements Value{
 		TArray a = new TArray();
 		a.add(v1);
 		a.getAll().add(v2);
-		System.out.println("new array" + a.getAll());
 		return a;
 	}
 	
 	public static TArray from(Value v) {
 		if(v instanceof TArray)
 			return (TArray)v;
-		System.err.println(v + " is not an array.");
+		Console.g.err(v + " is not an array.");
 		return null;
 	}
 

@@ -31,6 +31,11 @@ public class Tokenizer {
 	
 	int curLine = 1;
 	
+	boolean lastWasPeriod = false;
+	boolean isFuncDef = false;
+	boolean isInclude = false;
+	boolean isIncludeFrom = false;
+	
 	public Tokenizer() {
 		w = "";
 		
@@ -131,8 +136,6 @@ public class Tokenizer {
 							i++;
 							set = StatementEndType.WHILE;
 						}
-					
-					
 				}
 				end();
 				if(isFuncDef) {
@@ -141,7 +144,16 @@ public class Tokenizer {
 					if(set == StatementEndType.WHILE)
 						Console.g.err("Invalid end '::' to function definition.");
 				}
+				if(isInclude) {
+					if(!isIncludeFrom)
+						gotNewToken(new Token("}", TokenType.seperator));
+					gotNewToken(new Token("import", TokenType.keyword));
+					if(set != StatementEndType.END)
+						Console.g.err("Invalid end to import.");
+				}
 				isFuncDef = false;
+				isInclude = false;
+				isIncludeFrom = false;
 				endStatement(set);
 				continue;
 			}
@@ -173,7 +185,7 @@ public class Tokenizer {
 				next(c, TokenType.operator);
 				continue;
 			}
-			if(c == '§') {
+			if(c == '$') {
 				end();
 				next(c, TokenType.identifier);
 				end();
@@ -296,7 +308,6 @@ public class Tokenizer {
 			return 0;
 		if(s.equals("%="))
 			return 0;
-		
 		if(s.equals(",")) //Quick fix
 			return 0;
 		Console.g.err("Unidentified Operator: '" + s + "'");
@@ -348,8 +359,7 @@ public class Tokenizer {
 		}
 	}
 	
-	boolean lastWasPeriod = false;
-	boolean isFuncDef = false;
+	
 	private Token end() {
 		//check if w is keyword
 		cur = Tokens.tokenSwapType(w, cur);
@@ -360,6 +370,8 @@ public class Tokenizer {
 		
 		if(cur == TokenType.operator)
 			opValue(w);
+		if(w.equals("*") && isInclude)
+			gotNewToken(new Token("ALL", TokenType.identifier));
 		
 		if(w.length() > 0 || cur == TokenType.string) {
 			Token t = null;
@@ -369,6 +381,15 @@ public class Tokenizer {
 					isFuncDef = true;
 					gotNewToken(new Token("new", TokenType.keyword));
 					gotNewToken(new Token("{", TokenType.seperator));
+				}
+				if(w.equals("import")) {
+					isInclude = true;
+					gotNewToken(new Token("new", TokenType.keyword));
+					gotNewToken(new Token("{", TokenType.seperator));
+				}
+				if(w.equals("from")) {
+					isIncludeFrom = true;
+					gotNewToken(new Token("}", TokenType.keyword));
 				}
 			}
 			
@@ -384,15 +405,12 @@ public class Tokenizer {
 				if(w.equals("."))
 					lastWasPeriod = true;
 				else {
-					if(!w.equals("func")) {
+					if(!w.equals("func") && !w.equals("import")) {
 						t = new Token(w, cur);
 						gotNewToken(t);
 					}
 				}
 			}
-			
-			//t = new Token(w, cur);
-			//gotNewToken(t);
 			
 			w = "";
 			
@@ -465,7 +483,6 @@ public class Tokenizer {
 	private void finishPart() {
 		while(!gmc().opStack.isEmpty())
 			gmc().postfixList.add(gmc().opStack.pop());
-		//System.out.println("FINISHED PART: " + gmc().postfixList);
 		ts = gmc().postfixList;
 	}
 	
@@ -482,14 +499,12 @@ public class Tokenizer {
 		if(prevIndent > lineIndent) {
 			for(int i = 0; i < prevIndent - lineIndent; i++) {
 				blockStack.pop();
-				//System.out.println("Popped:"+(i+1));
 			}
 		}
 		
 		if(prevIndent < lineIndent) {
 			for(int i = 0; i < lineIndent - prevIndent; i++) {
 				blockStack.push(new Block());
-				//System.out.println("Pushed:"+(i+1));
 			}
 			if(lastStatement!=null)
 				lastStatement.setBlock(blockStack.peek());
@@ -500,7 +515,6 @@ public class Tokenizer {
 		blockStack.peek().add(s);
 		for(int i = 0; i < lineIndent; i++)
 			ind+="\t";
-		//System.out.println(ind+s+"("+set+"):"+blockStack.size());
 		
 		prevIndent = lineIndent;
 		
@@ -512,6 +526,4 @@ public class Tokenizer {
 	private boolean isPreStatement() {
 		return ts.size() == 0;
 	}
-	
-	
 }

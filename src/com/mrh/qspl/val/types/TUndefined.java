@@ -18,7 +18,7 @@ public class TUndefined implements Value<Object>{
 	
 	@Override
 	public String toString() {
-		return "UNDEFINED";
+		return "undefined";//UNDEFINED
 	}
 
 	@Override

@@ -54,6 +54,8 @@ public class Main {
 			System.out.println("[PROGRAM OUTPUT]:");
 		if(outputCode)
 			System.out.println(code);
+		long time = System.currentTimeMillis();
 		new QSPL().insertCode(code).execute();
+		System.out.println("[Runtime: " + (System.currentTimeMillis() - time) + "ms]");
 	}
 }

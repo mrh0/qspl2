@@ -11,10 +11,10 @@ public class Tokens {
 		none			//nothing
 	}
 	
-	public static String[] keywords = {"out", "error", "exit", "else", "break", "prev", "continue", "in", "of", "func", "new", "§", "async", "#", "import"}; // as, is
+	public static String[] keywords = {"out", "error", "exit", "else", "break", "prev", "continue", "in", "of", "func", "new", "$", "async", "#", "include", "import", "export", "from", "delete"}; // as, is
 	
 	public static boolean isNewSymbol(String s) {
-		return s.equals("new") || s.equals("§");
+		return s.equals("new") || s.equals("$");
 	}
 	
 	public static boolean isKeyword(String s) {
@@ -109,7 +109,7 @@ public class Tokens {
 	}
 	
 	public static boolean isOperator(char c) {
-		if(c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '!' || c == '=' || c == '<' || c == '>' || c == '&' || c == '|' || c == '?' || c == ':' || c == '~' || c == '^' || c == ',' || c == '$')
+		if(c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '!' || c == '=' || c == '<' || c == '>' || c == '&' || c == '|' || c == '?' || c == ':' || c == '~' || c == '^' || c == ',')
 			return true;
 		return false;
 	}

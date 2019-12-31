@@ -1,5 +1,6 @@
 package com.mrh.qspl.val.types;
 
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.val.Value;
 
 public class TNumber implements Value<Double>, Comparable<Value>{
@@ -164,7 +165,7 @@ public class TNumber implements Value<Double>, Comparable<Value>{
 	public static TNumber from(Value v) {
 		if(v instanceof TNumber)
 			return (TNumber)v;
-		System.err.println(v + " is not a number.");
+		Console.g.err(v + " is not a number.");
 		return null;
 	}
 	

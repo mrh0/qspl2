@@ -1,12 +1,13 @@
 package com.mrh.qspl.val.types;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.var.Var;
-import com.mrh.qspl.vm.Scope;
 
 public class TObject implements Value{
 	
@@ -20,10 +21,18 @@ public class TObject implements Value{
 	
 	public TObject(Map<String, Value> m) {
 		map = m;
+		if(map == null) {
+			Console.g.err("Object defined as null, defauling to empty.");
+			map = new HashMap<>();
+		}
 	}
 	
 	public TObject(Map<String, Value> m, String[] keys) {
 		map = m;
+		if(map == null) {
+			Console.g.err("Object defined as null, defauling to empty.");
+			map = new HashMap<>();
+		}
 		argOrder = keys;
 	}
 	
@@ -168,7 +177,7 @@ public class TObject implements Value{
 	public static TObject from(Value v) {
 		if(v instanceof TObject)
 			return (TObject)v;
-		System.err.println(v + " is not an object.");
+		Console.g.err(v + " is not an object.");
 		return null;
 	}
 	
@@ -178,8 +187,11 @@ public class TObject implements Value{
 	}
 	
 	public Value get(String key) {
+		if(map == null) {
+			Console.g.err("Broken Object.");
+			return TUndefined.getInstance();
+		}
 		return map.getOrDefault(key, TUndefined.getInstance());
-		//return this;
 	}
 	
 	public String[] getKeys() {
@@ -252,5 +264,27 @@ public class TObject implements Value{
 	
 	public static void addPrototype(Var v){
 		prototype.put(v.getName(), v.get());
+	}
+	
+	protected class TObjectKeyIterator implements Iterator<Value>{
+		private Iterator<String> obj;
+		public TObjectKeyIterator(TObject obj) {
+			this.obj = obj.getMap().keySet().iterator();
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return obj.hasNext();
+		}
+
+		@Override
+		public TString next() {
+			return new TString(obj.next());
+		}
+		
+	}
+	
+	public Iterator keyIterator() {
+		return new TObjectKeyIterator(this);
 	}
 }

@@ -26,10 +26,10 @@ public class TUserFunc extends TFunc{
 	@Override
 	public String toString() {
 		if(parameterObject != null) {
-			String r = "user:func(";
+			String r = "func(";
 			for(int i = 0; i < paramaterList.length; i++) {
 				r += paramaterList[i];
-				if(parameterObject.get(paramaterList[i]) != null)
+				if(parameterObject.get(paramaterList[i]) != null && parameterObject.get(paramaterList[i]) != TUndefined.getInstance())
 					r += "=" + parameterObject.get(paramaterList[i]);
 				if(i+1 < paramaterList.length)
 					r += ",";

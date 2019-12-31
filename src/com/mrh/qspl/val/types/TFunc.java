@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.func.IFunc;
 import com.mrh.qspl.var.Var;
@@ -49,7 +50,7 @@ public class TFunc implements Value{
 			if(i+1 < paramaterList.length)
 				r += ",";
 		}
-		return "internal:func("+r+")";
+		return "ifunc("+r+")";
 	}
 	
 	@Override
@@ -166,7 +167,7 @@ public class TFunc implements Value{
 	public static TFunc from(Value v) {
 		if(v instanceof TFunc)
 			return (TFunc)v;
-		System.err.println(v + " is not a function.");
+		Console.g.err(v + " is not a function.");
 		return null;
 	}
 

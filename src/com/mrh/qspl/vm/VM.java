@@ -3,6 +3,7 @@ package com.mrh.qspl.vm;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Stack;
 
 import com.mrh.qspl.internal.common.Common;
@@ -11,6 +12,7 @@ import com.mrh.qspl.syntax.parser.Block;
 import com.mrh.qspl.syntax.tokenizer.Tokenizer;
 import com.mrh.qspl.val.Value;
 import com.mrh.qspl.val.types.TFunc;
+import com.mrh.qspl.val.types.TObject;
 import com.mrh.qspl.val.types.TUndefined;
 import com.mrh.qspl.val.types.TUserFunc;
 import com.mrh.qspl.var.Var;
@@ -29,9 +31,17 @@ public class VM {
 		ev = new ExpressionEvaluator(this, t);
 		eq = new ExecutionQueue();
 		scopeStack = new Stack<Scope>();
-		rootScope = createNewScope("root");
-		rootScope.setVariable("this", new Var("this", TUndefined.getInstance()));
-		Common.defineCommons(rootScope);
+		rootScope = createNewScope("origin");
+		//rootScope.setVariable("this", new Var("this", TUndefined.getInstance()));
+		//Common.defineCommons(rootScope);
+	}
+	
+	public VM(Tokenizer t, String root) {
+		Common.initPrototypes();
+		ev = new ExpressionEvaluator(this, t);
+		eq = new ExecutionQueue();
+		scopeStack = new Stack<Scope>();
+		rootScope = createNewScope(root);
 	}
 	
 	public int queueExecution(IQueueEntry qi) {
@@ -60,16 +70,20 @@ public class VM {
 	
 	public Scope createNewScope(String name) {
 		scopeStack.push(new Scope(name));
+		Console.g.setScope(scopeStack.peek());
 		return getCurrentScope();
 	}
 	
 	public Scope createNewScope(String name, boolean lock) {
 		scopeStack.push(new Scope(name, lock));
+		Console.g.setScope(scopeStack.peek());
 		return getCurrentScope();
 	}
 	
 	public Scope popScope() {
-		return scopeStack.pop();
+		Scope s = scopeStack.pop();
+		Console.g.setScope(scopeStack.peek());
+		return s;
 	}
 	
 	public Value executeFunction(TFunc func, ArrayList<Value> args, Value _this) {
@@ -108,6 +122,18 @@ public class VM {
 	
 	public void setValue(String name, Value v) {
 		getVar(name, true).set(v);
+	}
+	
+	public TObject getGlobalScopeAsObject() {
+		return new TObject(getCurrentScope().getAllValues());
+	}
+	
+	public Map<String, Value> getGlobalScopeExports() {
+		return getCurrentScope().getExports();
+	}
+	
+	protected void deleteVar(Var v) {
+		getCurrentScope().deleteVar(v);
 	}
 	
 	public void eval() {

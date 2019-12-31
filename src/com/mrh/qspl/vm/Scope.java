@@ -13,6 +13,7 @@ import com.mrh.qspl.var.Var;
 public class Scope {
 	private String name = "unknown scope";
 	private Map<String, Var> variables;
+	private Map<String, Value> exports;
 	private ArrayList<String> keyOrder = null;
 	private boolean depthLock = false;
 	
@@ -25,6 +26,7 @@ public class Scope {
 		this.depthLock = true;
 		this.name = name;
 		this.variables = new HashMap<String, Var>();
+		this.exports = null;
 		if(this.depthLock)
 			keyOrder = new ArrayList<String>();
 	}
@@ -42,6 +44,10 @@ public class Scope {
 			if(!this.keyOrder.contains(name))
 				this.keyOrder.add(name);
 		return variables.put(name, v);
+	}
+	
+	public Var setVariable(Var v) {
+		return setVariable(v.getName(), v);
 	}
 	
 	@Override
@@ -64,5 +70,23 @@ public class Scope {
 	
 	public String[] getKeyOrder() {
 		return keyOrder.toArray(new String[0]);
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void export(Var v) {
+		if(this.exports == null)
+			this.exports = new HashMap<String, Value>();
+		this.exports.put(v.getName(), v.get());
+	}
+	
+	public void deleteVar(Var v) {
+		this.variables.remove(v.getName());
+	}
+	
+	public Map<String, Value> getExports(){
+		return this.exports;
 	}
 }

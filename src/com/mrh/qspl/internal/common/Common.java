@@ -45,6 +45,7 @@ public class Common {
 		s.setVariable("true", new Var("true", new TNumber(1), true));
 		s.setVariable("false", new Var("false", new TNumber(0), true));
 		s.setVariable("UNDEFINED", new Var("UNDEFINED", TUndefined.getInstance(), true));
+		s.setVariable("undefined", new Var("undefined", TUndefined.getInstance(), true));
 		s.setVariable("UNDEF", new Var("UNDEF", TUndefined.getInstance(), true));
 		s.setVariable("null", new Var("null", TUndefined.getInstance(), true));
 		
@@ -57,9 +58,11 @@ public class Common {
 		
 		s.setVariable("PI", new Var("PI", new TNumber(Math.PI), true));
 		s.setVariable("INF", new Var("INF", new TNumber(Double.POSITIVE_INFINITY), true));
+		s.setVariable("INFINITY", new Var("INFINITY", new TNumber(Double.POSITIVE_INFINITY), true));
 		s.setVariable("NEGINF", new Var("NEGINF", new TNumber(Double.NEGATIVE_INFINITY), true));
+		s.setVariable("NEGATIVE_INFINITY", new Var("NEGATIVE_INFINITY", new TNumber(Double.NEGATIVE_INFINITY), true));
 		
-		s.setVariable("ROOT_PATH", new Var("ROOT_PATH", new TString(FileIO.getPath()), true));
+		s.setVariable("PROGRAM_PATH", new Var("PROGRAM_PATH", new TString(FileIO.getPath()), true));
 		
 		IFunc f = (ArrayList<Value> args, VM vm, Value _this) -> {
 			if(args.size() == 0)

@@ -1,5 +1,6 @@
 package com.mrh.qspl.val.types;
 
+import com.mrh.qspl.io.console.Console;
 import com.mrh.qspl.val.Value;
 
 public class TString implements Value<String>, Comparable<Value>{
@@ -167,7 +168,7 @@ public class TString implements Value<String>, Comparable<Value>{
 	public static TString from(Value v) {
 		if(v instanceof TString)
 			return (TString)v;
-		System.err.println(v + " is not a string.");
+		Console.g.err(v + " is not a string.");
 		return null;
 	}
 }

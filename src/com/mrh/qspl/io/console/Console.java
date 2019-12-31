@@ -2,10 +2,13 @@ package com.mrh.qspl.io.console;
 
 import java.io.PrintStream;
 
+import com.mrh.qspl.vm.Scope;
+
 public class Console {
 	public static Console g;
 	
 	private int currentLine = 0;
+	private Scope currentScope;
 	
 	public static final PrintStream defaultLogStream = System.out;
 	public static final PrintStream defaultErrStream = System.err;
@@ -13,14 +16,14 @@ public class Console {
 	private PrintStream errStream;
 	
 	private String getLogPrefix() {
-		return "[OUT:"+currentLine+"]: ";
+		return "[OUT:"+currentLine+""+getScope()+"]: ";
 	}
 	
 	private String logSurfix = "";
 	private String logSeperator = ",";
 	
 	private String getErrPrefix() {
-		return "[ERR:"+currentLine+"]: ";
+		return "[ERR:"+currentLine+""+getScope()+"]: ";
 	}
 	
 	private String errSurfix = "";
@@ -64,5 +67,13 @@ public class Console {
 	
 	public void setCurrentLine(int i) {
 		currentLine = i;
+	}
+	
+	public void setScope(Scope s) {
+		this.currentScope = s;
+	}
+	
+	private String getScope() {
+		return currentScope == null?"":":"+currentScope.getName();
 	}
 }
