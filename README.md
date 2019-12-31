@@ -226,7 +226,7 @@ public class Test implements com.mrh.qspl.io.extension.Extension{
   public void extend(com.mrh.qspl.io.extension.ExtensionScope ext) {
   ext.export("extensionNumber", new TNumber(42));
   IFunc f = (ArrayList<Value> args, VM vm, Value _this) -> {
-    return new TString("Hello " + (args.size()>0?args.get(0):"World") + "!");
+    return new TString("Hello " + (args.size()>0?TString.from(args.get(0)).get():"World") + "!");
   };
   ext.export("extensionFunction", new TFunc(f, "name"));
   }
